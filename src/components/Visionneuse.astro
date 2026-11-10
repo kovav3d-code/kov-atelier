@@ -1,0 +1,64 @@
+---
+/** Visionneuse plein écran des réalisations : ouverte par tout bouton .lb-open (data-photos = [{src, alt}]). */
+---
+<dialog class="lb" id="visionneuse" aria-label="Photos de la réalisation">
+  <div class="lb-inner">
+    <button type="button" class="lb-btn lb-close" data-lb="fermer">Fermer</button>
+    <img class="lb-img" alt="" />
+    <p class="lb-legende" aria-live="polite"></p>
+    <div class="lb-nav">
+      <button type="button" class="lb-btn" data-lb="prec">Précédente</button>
+      <button type="button" class="lb-btn" data-lb="suiv">Suivante</button>
+    </div>
+  </div>
+</dialog>
+<script>
+  const dlg = document.getElementById('visionneuse') as HTMLDialogElement | null;
+  if (dlg) {
+    const img = dlg.querySelector<HTMLImageElement>('.lb-img')!;
+    const legende = dlg.querySelector<HTMLElement>('.lb-legende')!;
+    const nav = dlg.querySelector<HTMLElement>('.lb-nav')!;
+    let photos: { src: string; alt: string }[] = [];
+    let titre = '';
+    let i = 0;
+    const afficher = () => {
+      img.src = photos[i].src;
+      img.alt = photos[i].alt;
+      legende.textContent = photos.length > 1 ? `${titre} · ${i + 1} / ${photos.length}` : titre;
+      nav.hidden = photos.length < 2;
+    };
+    const aller = (pas: number) => { i = (i + pas + photos.length) % photos.length; afficher(); };
+    document.addEventListener('click', (e) => {
+      const b = (e.target as HTMLElement).closest<HTMLElement>('.lb-open');
+      if (!b) return;
+      try { photos = JSON.parse(b.dataset.photos ?? '[]'); } catch { photos = []; }
+      if (!photos.length) return;
+      titre = b.dataset.titre ?? '';
+      i = 0;
+      afficher();
+      dlg.showModal();
+    });
+    dlg.addEventListener('click', (e) => {
+      const t = e.target as HTMLElement;
+      const action = t.closest<HTMLElement>('[data-lb]')?.dataset.lb;
+      if (action === 'fermer' || t === dlg) dlg.close();
+      else if (action === 'prec') aller(-1);
+      else if (action === 'suiv') aller(1);
+    });
+    dlg.addEventListener('keydown', (e) => {
+      if (photos.length < 2) return;
+      if (e.key === 'ArrowRight') aller(1);
+      if (e.key === 'ArrowLeft') aller(-1);
+    });
+    // Balayage sur téléphone
+    let x0: number | null = null;
+    dlg.addEventListener('touchstart', (e) => { x0 = e.touches[0].clientX; }, { passive: true });
+    dlg.addEventListener('touchend', (e) => {
+      if (x0 === null || photos.length < 2) return;
+      const dx = e.changedTouches[0].clientX - x0;
+      if (Math.abs(dx) > 50) aller(dx < 0 ? 1 : -1);
+      x0 = null;
+    });
+    dlg.addEventListener('close', () => { img.removeAttribute('src'); });
+  }
+</script>
