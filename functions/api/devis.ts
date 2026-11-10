@@ -14,7 +14,7 @@ import { envoyerEmail, emailAtelier, emailClient, enBase64, type PieceJointe } f
 /** Au-delà, les fichiers ne sont pas joints à l'e-mail atelier (limite Resend : 40 Mo encodés) ; les liens restent. */
 const MAX_JOINTS = 25 * 1024 * 1024;
 import { controleAntispam, configIncomplete } from '../_lib/antispam';
-import { alerteTelegram, ligne, telephoneCliquable, lienGmail } from '../_lib/telegram';
+import { message, ligne, telephoneCliquable, boutonsDemande, envoyerFichiersTelegram } from '../_lib/telegram';
 
 const MESSAGE_SPAM = 'La vérification antispam a échoué. Rechargez la page puis réessayez.';
 
@@ -113,7 +113,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env, waitUnti
   }
   const mA = emailAtelier({ ...d, prestationLibelle: prestation!.label }, reference, liens, pieces.length > 0);
   const mC = emailClient(reference, prestation!.label, stockes.length);
-  const telegram = alerteTelegram(env, [
+  const telegram = message(env, [
     `<b>Nouvelle demande de devis</b> · ${reference}`,
     '',
     ligne('Client', `${d.nom}${d.entreprise ? ` (${d.entreprise})` : ' (particulier)'}`),
@@ -125,8 +125,8 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env, waitUnti
     ligne('Délai', d.delai), ligne('Budget', d.budget),
     `<b>Fichiers</b> : ${stockes.length ? `${stockes.length} (joints à l’e-mail)` : 'aucun'}`,
     '',
-    'Fiche détaillée dans Claude (Tâches planifiées → Devis Kov Atelier) dans l’heure : réponds-y avec ton prix et ton délai.',
-  ], [{ text: 'Ouvrir la demande dans Gmail', url: lienGmail(reference) }]);
+    stockes.length ? 'Photos et fichiers juste en dessous.' : null,
+  ].filter(Boolean).join('\n'), boutonsDemande(reference)).then(() => envoyerFichiersTelegram(env, reference, fichiers));
   const [atelier, client] = await Promise.allSettled([
     envoyerEmail(env, { to: env.MAIL_ATELIER, replyTo: d.email, ...mA, attachments: pieces })
       .catch((e) => (pieces.length
@@ -134,9 +134,9 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env, waitUnti
         : Promise.reject(e))), // repli sans pièces jointes
     envoyerEmail(env, { to: d.email, replyTo: env.MAIL_ATELIER, ...mC }),
   ]);
-  await telegram;
   if (atelier.status === 'rejected') console.error('Notification atelier non envoyée', reference, atelier.reason);
   if (client.status === 'rejected') console.error('Confirmation client non envoyée', reference, client.reason);
+  waitUntil(telegram.catch((e) => console.error('Telegram', reference, e)));
   waitUntil(
     env.DB.batch([
       env.DB.prepare('UPDATE demandes SET email_atelier_envoye = ?1 WHERE id = ?2').bind(atelier.status === 'fulfilled' ? 1 : 0, reference),

@@ -10,7 +10,7 @@ export function enBase64(octets: Uint8Array): string {
   return btoa(bin);
 }
 
-export async function envoyerEmail(env: Env, msg: { to: string; subject: string; html: string; text: string; replyTo?: string; attachments?: PieceJointe[] }) {
+export async function envoyerEmail(env: Env, msg: { to: string; subject: string; html: string; text: string; replyTo?: string; bcc?: string; attachments?: PieceJointe[] }) {
   if (!env.RESEND_API_KEY) throw new Error('RESEND_API_KEY manquante');
   const r = await fetch('https://api.resend.com/emails', {
     method: 'POST',
@@ -18,6 +18,7 @@ export async function envoyerEmail(env: Env, msg: { to: string; subject: string;
     body: JSON.stringify({
       from: env.MAIL_FROM, to: [msg.to], subject: msg.subject, html: msg.html, text: msg.text,
       ...(msg.replyTo ? { reply_to: msg.replyTo } : {}),
+      ...(msg.bcc ? { bcc: [msg.bcc] } : {}),
       ...(msg.attachments?.length ? { attachments: msg.attachments } : {}),
     }),
   });
