@@ -22,6 +22,13 @@ function initialiser(form: HTMLFormElement) {
   const pre = new URLSearchParams(location.search).get('prestation');
   if (pre) form.querySelector<HTMLInputElement>(`input[name="prestation"][value="${CSS.escape(pre)}"]`)?.click();
 
+  // Plusieurs prestations possibles ; « Je ne sais pas encore » exclut les autres choix (et inversement).
+  const cases = Array.from(form.querySelectorAll<HTMLInputElement>('input[name="prestation"]'));
+  for (const c of cases) c.addEventListener('change', () => {
+    if (!c.checked) return;
+    for (const autre of cases) if (autre !== c && (c.value === 'inconnu' || autre.value === 'inconnu')) autre.checked = false;
+  });
+
   let fichiers: File[] = [];
   let commence = false;
   const ext = (n: string) => (n.includes('.') ? n.split('.').pop()!.toLowerCase() : '');
@@ -87,7 +94,7 @@ function initialiser(form: HTMLFormElement) {
     const fd = new FormData(form);
     const v = (k: string) => String(fd.get(k) ?? '').trim();
     const erreurs: Record<string, string> = {};
-    if (!v('prestation')) erreurs.prestation = 'Choisissez un type de prestation, ou « Je ne sais pas encore ».';
+    if (!fd.getAll('prestation').length) erreurs.prestation = 'Choisissez au moins une prestation, ou « Je ne sais pas encore ».';
     if (v('description').length < 10) erreurs.description = 'Décrivez votre besoin en quelques mots (10 caractères minimum).';
     if (v('nom').length < 2) erreurs.nom = 'Indiquez votre nom et prénom.';
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v('email'))) erreurs.email = 'Indiquez une adresse e-mail valide, par exemple nom@domaine.fr.';

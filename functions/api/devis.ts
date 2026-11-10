@@ -46,11 +46,16 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env, waitUnti
     dimensions: v('dimensions') || null, quantite: v('quantite') || null, materiau: v('materiau') || null,
     delai: v('delai') || null, budget: v('budget') || null,
   };
-  const prestation = PRESTATIONS.find((p) => p.value === d.prestation);
+  // Une ou plusieurs prestations cochées, combinées en un seul libellé (« Modélisation 3D + Impression 3D »).
+  const cochees = fd.getAll('prestation').map(String);
+  const choisies = PRESTATIONS.filter((p) => cochees.includes(p.value));
+  const prestation = choisies.length
+    ? { value: choisies.map((p) => p.value).join(','), label: choisies.map((p) => p.label).join(' + ') }
+    : undefined;
   if (d.nom.length < 2 || d.nom.length > LIMITES.nom) erreurs.nom = 'Indiquez votre nom et prénom.';
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(d.email) || d.email.length > LIMITES.email) erreurs.email = 'Adresse e-mail invalide.';
   if (d.telephone && !/^[+0-9 ().-]{6,30}$/.test(d.telephone)) erreurs.telephone = 'Numéro de téléphone invalide.';
-  if (!prestation) erreurs.prestation = 'Choisissez un type de prestation.';
+  if (!prestation) erreurs.prestation = 'Choisissez au moins une prestation.';
   if (d.description.length < 10 || d.description.length > LIMITES.description) erreurs.description = 'Description trop courte ou trop longue.';
   if ((d.entreprise?.length ?? 0) > LIMITES.entreprise) erreurs.entreprise = 'Nom d’entreprise trop long.';
   for (const k of ['dimensions', 'quantite', 'materiau'] as const) if ((d[k]?.length ?? 0) > LIMITES.court) erreurs[k] = 'Texte trop long.';

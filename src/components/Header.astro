@@ -1,6 +1,6 @@
 ---
 import { Image } from 'astro:assets';
-import marque from '../assets/brand/marque.png';
+import logo from '../assets/brand/logo-horizontal.png';
 import Icon from './Icon.astro';
 import { NAV } from '../config/site';
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
@@ -9,8 +9,7 @@ const { masquerCta = false } = Astro.props;
 <header class="site-header">
   <div class="wrap header-inner">
     <a class="brand" href="/" aria-label="Kov Atelier, retour à l’accueil">
-      <Image src={marque} alt="" width={84} height={84} loading="eager" />
-      <span class="brand-word"><b>KOV</b><span>ATELIER</span></span>
+      <Image src={logo} alt="Kov Atelier" height={104} loading="eager" class="brand-logo" />
     </a>
     <nav class="main-nav" id="menu" aria-label="Navigation principale">
       <ul>

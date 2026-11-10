@@ -1,4 +1,6 @@
 ---
+import { Image } from 'astro:assets';
+import logo from '../assets/brand/logo-horizontal.png';
 import { SITE, NAV, MONTRER_RESERVES } from '../config/site';
 const annee = new Date().getFullYear();
 ---
@@ -6,7 +8,7 @@ const annee = new Date().getFullYear();
   <div class="wrap">
     <div class="footer-grid">
       <div>
-        <span class="brand-word"><b>KOV</b><span>ATELIER</span></span>
+        <Image src={logo} alt="Kov Atelier" height={112} class="footer-logo" />
         <p class="footer-about">Conception, modélisation et impression 3D sur mesure à {SITE.ville}, en {SITE.departement}. À côté du Luxembourg, pour les professionnels et les particuliers de Thionville, Metz, de la Moselle et du Grand-Duché. Expédition dans le monde entier.</p>
       </div>
       <div>

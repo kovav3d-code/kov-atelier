@@ -95,7 +95,9 @@ ul, ol { margin: 0; }
 }
 .header-inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; height: 72px; }
 .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; flex-shrink: 0; }
-.brand img { width: 42px; height: 42px; border-radius: 50%; background: #FBF8F7; }
+.brand .brand-logo { width: auto; height: 52px; display: block; }
+.footer-logo { width: auto; height: 56px; display: block; margin-bottom: 4px; }
+@media (max-width: 600px) { .brand .brand-logo { height: 44px; } }
 .brand-word { display: grid; line-height: 1; }
 .brand-word b { font-weight: 500; font-size: 1.02rem; letter-spacing: .34em; }
 .brand-word span { font-size: .6rem; letter-spacing: .46em; color: var(--text-2); margin-top: 5px; }

@@ -34,10 +34,11 @@ const accept = FICHIERS.extensions.map((e) => `.${e}`).join(',');
             <p class="hint">Les champs marqués <span class="req" aria-hidden="true">*</span><span class="sr-only">d’un astérisque</span> sont obligatoires.</p>
 
             <div class="field">
-              <span class="field-label" id="l-prestation">Type de prestation <span class="req" aria-hidden="true">*</span></span>
-              <div class="chips" role="radiogroup" aria-labelledby="l-prestation" aria-describedby="e-prestation" aria-required="true" data-champ="prestation">
+              <span class="field-label" id="l-prestation">Prestations souhaitées <span class="req" aria-hidden="true">*</span></span>
+              <p class="field-help" id="h-prestation">Plusieurs choix possibles, par exemple Modélisation 3D et Impression 3D.</p>
+              <div class="chips" role="group" aria-labelledby="l-prestation" aria-describedby="h-prestation e-prestation" data-champ="prestation">
                 {PRESTATIONS.map((p) => (
-                  <label class="chip"><input type="radio" name="prestation" value={p.value} /><span>{p.label}</span></label>
+                  <label class="chip"><input type="checkbox" name="prestation" value={p.value} /><span>{p.label}</span></label>
                 ))}
               </div>
               <p class="error" id="e-prestation"></p>
