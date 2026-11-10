@@ -198,6 +198,8 @@ ul, ol { margin: 0; }
 .car-slide { flex: 0 0 100%; height: 100%; scroll-snap-align: start; scroll-snap-stop: always; }
 .car-slide img { width: 100%; height: 100%; object-fit: cover; }
 .g-frame.contain .car-slide img { object-fit: contain; }
+.g-frame.fond-noir { background: #000; }
+.car-video video { display: block; width: 100%; height: 100%; object-fit: contain; background: #000; }
 .car-btn { position: absolute; top: 50%; translate: 0 -50%; display: grid; place-items: center; width: 38px; height: 38px; padding: 0; border: 0; border-radius: 50%; background: rgba(18, 23, 28, .72); color: #fff; cursor: pointer; opacity: .85; transition: opacity .2s ease, background-color .2s ease; }
 .car-btn[hidden] { display: none; }
 .car-btn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }

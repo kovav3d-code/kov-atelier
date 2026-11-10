@@ -24,6 +24,8 @@ const realisations = defineCollection({
       photos: z.array(z.object({ src: image(), alt: z.string() })).min(1),
       nature: z.enum(['photo', 'rendu']).optional(), // « rendu » = image de synthèse, pas une photo de pièce fabriquée
       ajustement: z.enum(['cover', 'contain']).default('cover'),
+      // Vidéo en boucle (ex. rotation à 360°) affichée en première vue de la carte ; fichiers dans public/videos/.
+      video: z.object({ mp4: z.string(), poster: z.string(), alt: z.string() }).optional(),
       typeProjet: z.string().optional(),
       besoin: z.string().optional(),
       solution: z.string().optional(),
