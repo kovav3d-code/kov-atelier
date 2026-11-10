@@ -4,6 +4,7 @@ import { json, echapper } from '../_lib/env';
 import { LIMITES } from '../../src/config/devis';
 import { controleAntispam, configIncomplete } from '../_lib/antispam';
 import { envoyerEmail } from '../_lib/emails';
+import { alerteTelegram, ligne, telephoneCliquable, lienGmail } from '../_lib/telegram';
 
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   if (configIncomplete(env)) return json({ ok: false, message: 'Le formulaire est momentanément indisponible. Merci de réessayer plus tard.' }, 503);
@@ -38,6 +39,12 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     });
     await env.DB.prepare('UPDATE messages SET email_atelier_envoye = 1 WHERE id = ?1').bind(id).run();
   } catch (e) { console.error('Notification message non envoyée', id, e); }
+  await alerteTelegram(env, [
+    `<b>Nouveau message (page Contact)</b>`,
+    '',
+    ligne('De', d.nom), telephoneCliquable(d.telephone), ligne('E-mail', d.email),
+    ligne('Message', d.message, 800),
+  ], [{ text: 'Ouvrir dans Gmail', url: lienGmail(`Nouveau message de ${d.nom}`) }]);
   return json({ ok: true });
 };
 

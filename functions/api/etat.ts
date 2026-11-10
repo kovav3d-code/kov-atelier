@@ -11,6 +11,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ env }) => {
   return json({
     secrets: { TURNSTILE_SECRET_KEY: present('TURNSTILE_SECRET_KEY'), RESEND_API_KEY: present('RESEND_API_KEY') },
     variables: { MAIL_FROM: present('MAIL_FROM'), MAIL_ATELIER: present('MAIL_ATELIER'), SITE_URL: present('SITE_URL'), ENVIRONMENT: String(e.ENVIRONMENT ?? 'NON — manquant') },
+    telegram: { TELEGRAM_BOT_TOKEN: present('TELEGRAM_BOT_TOKEN'), TELEGRAM_CHAT_ID: present('TELEGRAM_CHAT_ID') },
     liaisons: { 'DB (base D1)': present('DB'), 'FICHIERS (stockage R2)': present('FICHIERS') },
   });
 };

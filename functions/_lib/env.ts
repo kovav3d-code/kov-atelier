@@ -9,6 +9,8 @@ export interface Env {
   TURNSTILE_SECRET_KEY?: string; // secret
   ACCESS_TEAM_DOMAIN?: string;   // ex. "kovatelier.cloudflareaccess.com"
   ACCESS_AUD?: string;           // « Application Audience (AUD) Tag » de Cloudflare Access
+  TELEGRAM_BOT_TOKEN?: string;   // secret facultatif : alerte Telegram instantanée
+  TELEGRAM_CHAT_ID?: string;     // secret facultatif : identifiant de la conversation Telegram
 }
 
 export const json = (data: unknown, status = 200) =>
