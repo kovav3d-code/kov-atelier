@@ -56,36 +56,25 @@ const BESOINS = [
   description="Modélisation et impression 3D sur mesure à Florange, près de Thionville, Metz et du Luxembourg : prototypes, pièces techniques. Expédition partout."
   jsonLd={jsonLd}
 >
-  <section class="hero-x" aria-labelledby="t-hero">
-    <div class="hero-x-media" aria-hidden="true">
-      <Image src={heroImg} alt="" widths={[900, 1400, 2000]} sizes="100vw" loading="eager" fetchpriority="high" />
-    </div>
-    <div class="hero-x-overlay" aria-hidden="true"></div>
-    <div class="wrap hero-x-inner">
-      <div class="hero-x-content">
-        <p class="hero-x-greeting anim-up" style="--d:.1s">Atelier d’impression 3D · Florange</p>
-        <h1 class="hero-x-title anim-up" id="t-hero" style="--d:.2s">De votre idée<br /> à la pièce réelle.</h1>
-        <p class="hero-x-sub anim-up" style="--d:.3s"><span class="texte-degrade">Conception, modélisation et impression 3D sur mesure</span></p>
-        <p class="hero-x-desc anim-up" style="--d:.4s">Prototypes, pièces techniques et créations personnalisées pour professionnels et particuliers. Vous pouvez partir d’un croquis, d’une photo, d’un plan ou d’un fichier 3D.</p>
-        <div class="hero-x-cta anim-up" style="--d:.5s">
-          <a class="btn btn-primary" href="#realisations" data-cta="hero">Voir nos réalisations</a>
-          <a class="btn btn-verre" href="/services">Nos services</a>
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="title-block">
+          <h1>De votre idée<br /> à la pièce réelle.</h1>
+          <div class="cote" aria-hidden="true"><i></i><span>sur mesure</span><i></i></div>
         </div>
-      </div>
-      <div class="hero-x-footer anim-up" style="--d:.6s">
-        <div class="verre">
-          <p class="dispo"><span class="pulse-dot" aria-hidden="true"></span>Disponible pour de nouveaux projets</p>
-          <p class="verre-txt">Florange, à côté du Luxembourg. Expédition dans le monde entier.</p>
+        <p class="lead">Conception, modélisation et impression 3D sur mesure à Florange. Prototypes, pièces techniques et réalisations personnalisées pour professionnels et particuliers.</p>
+        <div class="hero-actions">
+          <a class="btn btn-ghost" href="#realisations">Découvrir nos réalisations</a>
         </div>
-        <a class="scroll-indicator" href="#services" aria-label="Défiler vers les services"><span class="wheel"></span></a>
-        <ul class="hero-x-stats" aria-label="L’atelier en bref">
-          <li><strong>Résine &amp; filament</strong><span>Impression 3D</span></li>
-          <li class="stat-line" aria-hidden="true"></li>
-          <li><strong>SolidWorks · ZBrush</strong><span>Conception et sculpture</span></li>
-          <li class="stat-line" aria-hidden="true"></li>
-          <li><strong>Sur mesure</strong><span>De la pièce unique à la série</span></li>
-        </ul>
+        <p class="hero-note">Vous pouvez partir d’un croquis, d’un plan technique, d’une photo, d’un fichier 3D ou d’une simple idée.</p>
       </div>
+      <figure class="hero-figure">
+        <div class="frame">
+          <Image src={heroImg} alt="Rendu 3D d’un moule aluminium en deux parties conçu par Kov Atelier pour une pièce automobile des années 70" widths={[600, 900, 1300]} sizes="(max-width: 960px) 100vw, 560px" loading="eager" fetchpriority="high" />
+        </div>
+        <figcaption>Moule pour une pièce automobile des années 70, conçu pour l’usinage 5 axes en aluminium (rendu 3D).</figcaption>
+      </figure>
     </div>
   </section>
 
