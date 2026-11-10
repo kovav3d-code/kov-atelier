@@ -6,7 +6,7 @@
  * 4. notification de l'atelier et confirmation au client (Resend)
  */
 import type { Env } from '../_lib/env';
-import { json } from '../_lib/env';
+import { json, echapper } from '../_lib/env';
 import { PRESTATIONS, DELAIS, BUDGETS, FICHIERS, LIMITES, formatTaille } from '../../src/config/devis';
 import { contenuValide, extension, extensionAutorisee, nomPropre } from '../_lib/fichiers';
 import { envoyerEmail, emailAtelier, emailClient, enBase64, type PieceJointe } from '../_lib/emails';
@@ -15,6 +15,7 @@ import { envoyerEmail, emailAtelier, emailClient, enBase64, type PieceJointe } f
 const MAX_JOINTS = 25 * 1024 * 1024;
 import { controleAntispam, configIncomplete } from '../_lib/antispam';
 import { message, ligne, telephoneCliquable, boutonsDemande, envoyerFichiersTelegram } from '../_lib/telegram';
+import { mesurerStl, suggererPrix, type MesureStl } from '../_lib/estimation';
 
 const MESSAGE_SPAM = 'La vérification antispam a échoué. Rechargez la page puis réessayez.';
 
@@ -113,6 +114,10 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env, waitUnti
   }
   const mA = emailAtelier({ ...d, prestationLibelle: prestation!.label }, reference, liens, pieces.length > 0);
   const mC = emailClient(reference, prestation!.label, stockes.length);
+  // Suggestion de prix indicative (Telegram uniquement) : volume mesuré dans les STL du client.
+  const stl: MesureStl[] = [];
+  for (const f of fichiers) if (extension(f.name) === 'stl') { try { const m = mesurerStl(f.name, await f.arrayBuffer()); if (m) stl.push(m); } catch { /* fichier illisible : ignoré */ } }
+  const sugg = suggererPrix({ prestations: choisies.map((p) => p.value), materiau: d.materiau, dimensions: d.dimensions, quantite: d.quantite, delai: d.delai, stl });
   const telegram = message(env, [
     `<b>Nouvelle demande de devis</b> · ${reference}`,
     '',
@@ -124,6 +129,11 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env, waitUnti
     ligne('Dimensions', d.dimensions), ligne('Quantité', d.quantite), ligne('Matériau', d.materiau),
     ligne('Délai', d.delai), ligne('Budget', d.budget),
     `<b>Fichiers</b> : ${stockes.length ? `${stockes.length} (joints à l’e-mail)` : 'aucun'}`,
+    '',
+    ...stl.map((m) => `<b>STL ${echapper(m.nom)}</b> : ${m.boite.map((x) => x.toFixed(0)).join(' × ')} mm, ${m.volumeCm3.toFixed(1)} cm³, ${m.triangles} triangles${m.ferme ? '' : ', maillage NON fermé'}`),
+    '',
+    `<b>Ma suggestion de prix : ${sugg.bas} – ${sugg.haut} €</b>`,
+    `<i>${sugg.notes.join(' · ')}. Indicatif, à ajuster ; le client ne voit pas ce montant.</i>`,
     '',
     stockes.length ? 'Photos et fichiers juste en dessous.' : null,
   ].filter(Boolean).join('\n'), boutonsDemande(reference)).then(() => envoyerFichiersTelegram(env, reference, fichiers));
