@@ -1,0 +1,23 @@
+{
+  "name": "kov-atelier",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview:cf": "wrangler pages dev dist",
+    "db:init:local": "wrangler d1 execute kov-atelier --local --file=schema.sql",
+    "db:init:remote": "wrangler d1 execute kov-atelier --remote --file=schema.sql"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "@fontsource-variable/manrope": "^5.3.0",
+    "astro": "^5.18.2",
+    "sharp": "^0.35.5"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261109.1",
+    "wrangler": "^4.159.0"
+  }
+}

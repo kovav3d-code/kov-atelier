@@ -1,0 +1,32 @@
+---
+/** Pictogrammes au trait, dessinés pour le site (aucune banque d'icônes). */
+interface Props { name: keyof typeof ICONS; class?: string }
+const ICONS = {
+  // Services (24)
+  modelisation: { vb: 24, d: 'M12 2.5 3.5 7v10l8.5 4.5 8.5-4.5V7L12 2.5ZM3.5 7 12 11.5 20.5 7M12 11.5v10' },
+  impression: { vb: 24, d: 'M12 3 3 7.5 12 12l9-4.5L12 3ZM3 12l9 4.5 9-4.5M3 16.5 12 21l9-4.5' },
+  prototype: { vb: 24, d: 'M4.5 11a7.5 7.5 0 0 1 13.1-4.4L19.5 8.5M19.5 4v4.5H15M19.5 13a7.5 7.5 0 0 1-13.1 4.4L4.5 15.5M4.5 20v-4.5H9' },
+  reproduction: { vb: 24, d: 'M8.5 8.5h11v11h-11zM5 15.5V4.5h11' },
+  composant: { vb: 24, d: 'M4 3.5h6v10.5h10v6.5H4V3.5ZM7 17.3v.01M16.8 17.3v.01M7 7.2v.01' },
+  artistique: { vb: 24, d: 'M12 12.5a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM4.5 20.5c.7-3.9 3.7-6.3 7.5-6.3s6.8 2.4 7.5 6.3' },
+  // Étapes (48)
+  decrire: { vb: 48, d: 'M12 5h17l9 9v29H12V5ZM29 5v9h9M18 22h14M18 28h14M18 34h9' },
+  etudier: { vb: 48, d: 'M8 8h26v32H8zM14 16h14M14 22h8M30 34a7 7 0 1 0 0-14 7 7 0 0 0 0 14ZM35 32l7 7' },
+  fabriquer: { vb: 48, d: 'M10 40h28M13 34h22v6H13zM16 28h16v6H16zM19 22h10v6H19zM24 6v8M20 14h8l-4 5-4-5Z' },
+  livrer: { vb: 48, d: 'M6 15 24 7l18 8v18l-18 8-18-8V15ZM6 15l18 8 18-8M24 23v18M15 11l18 8v6' },
+  // Atouts (24)
+  interlocuteur: { vb: 24, d: 'M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM4.5 21c.6-3.8 3.6-6 7.5-6s6.9 2.2 7.5 6' },
+  chaine: { vb: 24, d: 'M3 12a3 3 0 1 0 6 0 3 3 0 0 0-6 0ZM15 9h6v6h-6zM9 12h5.5M12 9.5l2.5 2.5-2.5 2.5' },
+  outils: { vb: 24, d: 'M4 17c2-8 5-11 8-11s6 3 8 11M2.5 15.5h3v3h-3zM18.5 15.5h3v3h-3zM10.5 4.5h3v3h-3z' },
+  lieu: { vb: 24, d: 'M12 21.5s-7-6.2-7-11.5a7 7 0 0 1 14 0c0 5.3-7 11.5-7 11.5ZM12 12.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z' },
+  // Interface
+  televerser: { vb: 24, d: 'M12 15V3.5M7.5 8 12 3.5 16.5 8M4 14.5V20h16v-5.5' },
+  valide: { vb: 24, d: 'M12 21.5a9.5 9.5 0 1 0 0-19 9.5 9.5 0 0 0 0 19ZM7.5 12.2l3 3 6-6.4' },
+  telephone: { vb: 24, d: 'M5 3.5h4l2 5-2.5 1.5a11 11 0 0 0 5.5 5.5l1.5-2.5 5 2v4a2 2 0 0 1-2 2A16.5 16.5 0 0 1 3 5.5a2 2 0 0 1 2-2Z' },
+  email: { vb: 24, d: 'M3.5 5.5h17v13h-17zM3.5 6l8.5 7 8.5-7' },
+  menu: { vb: 24, d: 'M3.5 7h17M3.5 12h17M3.5 17h17' },
+} as const;
+const { name, class: cls } = Astro.props;
+const icon = ICONS[name];
+---
+<svg class={cls} viewBox={`0 0 ${icon.vb} ${icon.vb}`} fill="none" stroke="currentColor" stroke-width={icon.vb === 48 ? 2 : 1.5} stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d={icon.d} /></svg>

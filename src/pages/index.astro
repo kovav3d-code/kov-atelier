@@ -1,0 +1,155 @@
+---
+import Base from '../layouts/Base.astro';
+import Services from '../components/Services.astro';
+import Steps from '../components/Steps.astro';
+import RealisationCard from '../components/RealisationCard.astro';
+import Icon from '../components/Icon.astro';
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import heroImg from '../assets/realisations/moule-rendu.jpg';
+import { SITE } from '../config/site';
+import { SERVICES } from '../config/services';
+
+const realisations = (await getCollection('realisations', (r) => r.data.miseEnAvant && r.id !== 'moule-deux-parties')) // le moule est déjà dans le héros
+  .sort((a, b) => a.data.ordre - b.data.ordre)
+  .slice(0, 4);
+
+// Données structurées : uniquement des informations vérifiées (les champs non confirmés sont omis).
+const url = Astro.site!.toString();
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  '@id': `${url}#atelier`,
+  name: SITE.nom,
+  url,
+  description: 'Atelier indépendant de conception, modélisation et impression 3D sur mesure à Florange (Moselle).',
+  address: { '@type': 'PostalAddress', addressLocality: SITE.ville, addressRegion: SITE.departement, addressCountry: SITE.codePays },
+  areaServed: [
+    ...['Florange', 'Thionville', 'Metz'].map((name) => ({ '@type': 'City', name })),
+    { '@type': 'AdministrativeArea', name: 'Moselle' },
+    { '@type': 'Country', name: 'Luxembourg' },
+    { '@type': 'Country', name: 'France' },
+  ],
+  ...(SITE.telephone ? { telephone: SITE.telephone } : {}),
+  ...(SITE.email ? { email: SITE.email } : {}),
+  ...(SITE.googleBusinessUrl ? { sameAs: [SITE.googleBusinessUrl] } : {}),
+  makesOffer: SERVICES.map((s) => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name: s.titre, url: `${url}services#${s.id}` } })),
+};
+
+const ATOUTS = [
+  { icon: 'interlocuteur', titre: 'Un interlocuteur unique', texte: 'Vous échangez directement avec l’atelier qui conçoit et fabrique votre pièce, sans intermédiaire.' },
+  { icon: 'chaine', titre: 'De la conception à la fabrication', texte: 'Pas besoin de trouver un dessinateur puis un imprimeur : le modèle et la pièce sont réalisés au même endroit.' },
+  { icon: 'outils', titre: 'Technique et organique', texte: 'SolidWorks et Shapr3D pour les pièces mécaniques, Blender et ZBrush pour les formes libres et la sculpture.' },
+  { icon: 'lieu', titre: 'À côté du Luxembourg, livraison partout', texte: 'Basé à Florange, à côté de la frontière luxembourgeoise, l’atelier travaille pour la Moselle et le Luxembourg, et expédie les pièces dans le monde entier.' },
+] as const;
+
+const BESOINS = [
+  { titre: 'Pièce obsolète ou introuvable', texte: 'Remodélisée d’après l’original ou des photos, puis refabriquée.' },
+  { titre: 'Gabarits, supports et outillages', texte: 'Pour faciliter un montage, un contrôle ou un rangement.' },
+  { titre: 'Prototype avant fabrication', texte: 'Valider une forme ou un assemblage avant d’investir.' },
+  { titre: 'Boîtier ou carter sur mesure', texte: 'Adapté à vos composants et à l’encombrement disponible.' },
+  { titre: 'Fichier 3D à reprendre', texte: 'Correction, modification ou adaptation d’un modèle existant.' },
+];
+---
+<Base
+  title="Impression 3D et modélisation sur mesure à Florange | Kov Atelier"
+  description="Modélisation et impression 3D sur mesure à Florange, près de Thionville, Metz et du Luxembourg : prototypes, pièces techniques. Expédition partout."
+  jsonLd={jsonLd}
+>
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="title-block">
+          <h1>De votre idée<br /> à la pièce réelle.</h1>
+          <div class="cote" aria-hidden="true"><i></i><span>sur mesure</span><i></i></div>
+        </div>
+        <p class="lead">Conception, modélisation et impression 3D sur mesure à Florange. Prototypes, pièces techniques et réalisations personnalisées pour professionnels et particuliers.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="/devis" data-cta="hero">Demander un devis</a>
+          <a class="btn btn-ghost" href="#realisations">Découvrir nos réalisations</a>
+        </div>
+        <p class="hero-note">Vous pouvez partir d’un croquis, d’un plan technique, d’une photo, d’un fichier 3D ou d’une simple idée.</p>
+      </div>
+      <figure class="hero-figure">
+        <div class="frame">
+          <Image src={heroImg} alt="Rendu 3D d’un moule aluminium en deux parties conçu par Kov Atelier pour une pièce automobile des années 70" widths={[600, 900, 1300]} sizes="(max-width: 960px) 100vw, 560px" loading="eager" fetchpriority="high" />
+        </div>
+        <figcaption>Moule pour une pièce automobile des années 70, conçu pour l’usinage 5 axes en aluminium (rendu 3D).</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section section--alt" id="services" aria-labelledby="t-services">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="t-services">Ce que l’atelier réalise pour vous</h2>
+        <p>Une seule adresse pour concevoir, reproduire et fabriquer vos pièces en impression 3D. Atelier à Florange, à côté du Luxembourg, avec expédition dans le monde entier.</p>
+      </div>
+      <Services />
+    </div>
+  </section>
+
+  <section class="section" id="realisations" aria-labelledby="t-real">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="t-real">Nos réalisations</h2>
+        <p>Pièces techniques, impression résine et sculpture numérique : un aperçu du travail de l’atelier.</p>
+      </div>
+      <ul class="gallery gallery--home">
+        {realisations.map((r) => <RealisationCard r={r} tailles="(max-width: 600px) 100vw, 590px" />)}
+      </ul>
+      <p class="section-foot"><a class="link" href="/realisations">Voir toutes les réalisations</a></p>
+    </div>
+  </section>
+
+  <section class="section section--alt" id="methode" aria-labelledby="t-methode">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="t-methode">Comment se déroule un projet</h2>
+        <p>Quatre étapes, que vous partiez d’une idée ou d’un fichier prêt à imprimer.</p>
+      </div>
+      <Steps />
+    </div>
+  </section>
+
+  <section class="section" id="atelier" aria-labelledby="t-atouts">
+    <div class="wrap atouts-grid">
+      <div class="section-head">
+        <h2 id="t-atouts">Pourquoi confier votre projet à Kov Atelier</h2>
+        <p>Un atelier indépendant et polyvalent, qui suit votre projet du premier échange à la pièce finie.</p>
+      </div>
+      <ul class="atouts">
+        {ATOUTS.map((a) => (
+          <li class="atout"><Icon name={a.icon} /><div><h3>{a.titre}</h3><p>{a.texte}</p></div></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--dark" id="professionnels" aria-labelledby="t-pros">
+    <div class="wrap pros-grid">
+      <div class="section-head">
+        <h2 id="t-pros">Une pièce introuvable ne devrait pas immobiliser une machine.</h2>
+        <p>Entreprises industrielles, garages, artisans, bureaux d’études : l’atelier conçoit et fabrique les pièces dont votre activité a besoin, à partir de vos plans, d’une pièce existante ou d’une simple photo.</p>
+        <div class="hero-actions"><a class="btn btn-primary" href="/devis" data-cta="professionnels">Demander un devis</a></div>
+      </div>
+      <div>
+        <ul class="besoins">
+          {BESOINS.map((b) => <li><span><strong>{b.titre}</strong>{b.texte}</span></li>)}
+        </ul>
+        <p class="secteurs">Vos plans et fichiers peuvent être joints directement à la demande : STEP, STL, OBJ, 3MF, PDF ou photos.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-final" aria-labelledby="t-cta">
+    <div class="wrap">
+      <h2 id="t-cta">Une pièce à créer, à reproduire ou à améliorer ?</h2>
+      <p>Décrivez votre projet en quelques minutes. Une photo ou une description suffit pour commencer.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="/devis" data-cta="final">Demander un devis</a>
+        <a class="btn btn-ghost" href="/services">Voir les services</a>
+      </div>
+    </div>
+  </section>
+</Base>

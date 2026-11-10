@@ -1,0 +1,25 @@
+# Configuration Cloudflare Pages (site + fonctions serveur)
+name = "kov-atelier"
+pages_build_output_dir = "dist"
+compatibility_date = "2025-09-01"
+
+[vars]
+SITE_URL = "https://kov-atelier.pages.dev"                # → "https://kov-atelier.fr" une fois le domaine branché
+MAIL_FROM = "Kov Atelier <onboarding@resend.dev>"      # provisoire (n’écrit qu’au propriétaire du compte Resend) → "Kov Atelier <devis@kov-atelier.fr>" après vérification du domaine
+MAIL_ATELIER = "kovav3d@gmail.com"
+ENVIRONMENT = "production"
+ACCESS_TEAM_DOMAIN = ""                                 # ex. kovatelier.cloudflareaccess.com
+ACCESS_AUD = ""                                         # tag AUD de l'application Access /admin
+
+[[d1_databases]]
+binding = "DB"
+database_name = "kov-atelier"
+database_id = "57e0a385-a6e5-47a8-9d2c-6d99d4f0f707"   # base créée le 10/11/2026, juridiction UE
+
+[[r2_buckets]]
+binding = "FICHIERS"
+bucket_name = "kov-atelier-fichiers"
+jurisdiction = "eu"                                     # bucket créé en juridiction Union européenne
+
+# Secrets (jamais dans ce fichier) : RESEND_API_KEY, TURNSTILE_SECRET_KEY
+# → wrangler pages secret put RESEND_API_KEY   (ou tableau de bord Cloudflare > Pages > Paramètres)

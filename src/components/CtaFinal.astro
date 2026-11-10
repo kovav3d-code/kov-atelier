@@ -1,0 +1,10 @@
+---
+const { titre = 'Une pièce à créer, à reproduire ou à améliorer ?', texte = 'Décrivez votre projet en quelques minutes. Une photo ou une description suffit pour commencer.', source = 'final' } = Astro.props;
+---
+<section class="cta-final">
+  <div class="wrap">
+    <h2>{titre}</h2>
+    <p>{texte}</p>
+    <div class="hero-actions"><a class="btn btn-primary" href="/devis" data-cta={source}>Demander un devis</a></div>
+  </div>
+</section>

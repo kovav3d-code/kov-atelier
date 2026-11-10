@@ -1,0 +1,31 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+interface Props { r: CollectionEntry<'realisations'>; details?: boolean; tailles?: string; eager?: boolean }
+const { r, details = false, tailles = '(max-width: 600px) 100vw, (max-width: 960px) 50vw, 400px', eager = false } = Astro.props;
+const d = r.data;
+const [principale] = d.photos;
+---
+<li class="g-item" data-categories={d.categories.join('|')}>
+  <figure>
+    <div class:list={['g-frame', { contain: d.ajustement === 'contain' }]}>
+      <Image src={principale.src} alt={principale.alt} widths={[480, 800, 1200]} sizes={tailles} loading={eager ? 'eager' : 'lazy'} />
+      {d.photos.length > 1 && <span class="g-count">{d.photos.length} photos</span>}
+    </div>
+    <figcaption>
+      <span class="g-title">{d.titre}</span>
+      <span class="g-meta">
+        {d.categories.map((c) => <span>{c}</span>)}
+        {d.nature === 'rendu' && <span class="g-nature">Rendu 3D</span>}
+      </span>
+      {details && (d.besoin || d.solution || d.technologie || d.typeProjet) && (
+        <dl class="g-details">
+          {d.typeProjet && <><dt>Type de projet</dt><dd>{d.typeProjet}</dd></>}
+          {d.besoin && <><dt>Besoin initial</dt><dd>{d.besoin}</dd></>}
+          {d.solution && <><dt>Solution apportée</dt><dd>{d.solution}</dd></>}
+          {d.technologie && <><dt>Technologie</dt><dd>{d.technologie}</dd></>}
+        </dl>
+      )}
+    </figcaption>
+  </figure>
+</li>

@@ -1,0 +1,6 @@
+# Copier en .dev.vars pour le développement local (fichier ignoré par Git)
+ENVIRONMENT=development
+SITE_URL=http://localhost:8788
+# Laisser vides en local : Turnstile et l'envoi d'e-mails sont alors ignorés (mode development uniquement)
+# RESEND_API_KEY=
+# TURNSTILE_SECRET_KEY=

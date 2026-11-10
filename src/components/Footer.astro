@@ -1,0 +1,36 @@
+---
+import { SITE, NAV, MONTRER_RESERVES } from '../config/site';
+const annee = new Date().getFullYear();
+---
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <span class="brand-word"><b>KOV</b><span>ATELIER</span></span>
+        <p class="footer-about">Conception, modélisation et impression 3D sur mesure à {SITE.ville}, en {SITE.departement}. À côté du Luxembourg, pour les professionnels et les particuliers de Thionville, Metz, de la Moselle et du Grand-Duché. Expédition dans le monde entier.</p>
+      </div>
+      <div>
+        <h2>Le site</h2>
+        <ul>
+          {NAV.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+          <li><a href="/devis" data-cta="pied-de-page">Demander un devis</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Contact</h2>
+        <ul>
+          <li>{SITE.nom}, {SITE.ville} ({SITE.departement})</li>
+          {SITE.telephone && <li><a href={`tel:${SITE.telephone.replace(/\s/g, '')}`}>{SITE.telephone}</a></li>}
+          {SITE.email && <li><a href={`mailto:${SITE.email}`}>{SITE.email}</a></li>}
+          {SITE.googleBusinessUrl && <li><a href={SITE.googleBusinessUrl} rel="noopener" target="_blank">Fiche Google</a></li>}
+          {MONTRER_RESERVES && !SITE.telephone && <li><span class="placeholder">Téléphone à confirmer</span></li>}
+          {MONTRER_RESERVES && !SITE.email && <li><span class="placeholder">E-mail à confirmer</span></li>}
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© {annee} {SITE.nom}</span>
+      <span class="footer-links"><a href="/mentions-legales">Mentions légales</a><a href="/politique-de-confidentialite">Politique de confidentialité</a></span>
+    </div>
+  </div>
+</footer>

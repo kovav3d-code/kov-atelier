@@ -1,0 +1,13 @@
+---
+import Base from '../layouts/Base.astro';
+import Steps from '../components/Steps.astro';
+import CtaFinal from '../components/CtaFinal.astro';
+---
+<Base title="Comment se déroule un projet d’impression 3D | Kov Atelier" description="De la description de votre besoin à la livraison de la pièce : les quatre étapes d’un projet de modélisation ou d’impression 3D avec Kov Atelier.">
+  <section class="page-head"><div class="wrap">
+    <h1>Comment ça marche</h1>
+    <p class="lead">Que vous partiez d’une idée, d’une photo ou d’un fichier prêt à imprimer, le déroulement reste simple.</p>
+  </div></section>
+  <section class="wrap" style="padding-bottom:clamp(64px,8vw,112px)"><Steps /></section>
+  <CtaFinal titre="Prêt à décrire votre projet ?" source="methode-final" />
+</Base>

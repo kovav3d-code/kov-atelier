@@ -1,0 +1,51 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import CtaFinal from '../components/CtaFinal.astro';
+import { SERVICES } from '../config/services';
+import { SITE } from '../config/site';
+const url = Astro.site!.toString();
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  itemListElement: SERVICES.map((s, i) => ({
+    '@type': 'ListItem', position: i + 1,
+    item: {
+      '@type': 'Service', name: s.titre, description: s.resume, url: `${url}services#${s.id}`,
+      provider: { '@type': 'LocalBusiness', '@id': `${url}#atelier`, name: SITE.nom },
+      areaServed: ['Florange', 'Thionville', 'Metz', 'Moselle', 'Luxembourg'],
+    },
+  })),
+};
+---
+<Base title="Services : modélisation, impression 3D, prototypage | Kov Atelier" description="Modélisation 3D, impression 3D résine et filament, prototypage, reproduction de pièces, composants techniques et sculpture numérique à Florange (Moselle)." jsonLd={jsonLd}>
+  <section class="page-head"><div class="wrap">
+    <h1>Nos services</h1>
+    <p class="lead">De la modélisation à la pièce fabriquée, pour les professionnels et les particuliers de Moselle, du Luxembourg et d’ailleurs : les pièces sont expédiées dans le monde entier.</p>
+    <nav class="sommaire" aria-label="Accès direct aux services">
+      {SERVICES.map((s) => <a href={`#${s.id}`}>{s.titre}</a>)}
+    </nav>
+  </div></section>
+  <div class="wrap services-detail">
+    {SERVICES.map((s) => (
+      <section class="service-detail" id={s.id} aria-labelledby={`t-${s.id}`}>
+        <div class="sd-intro">
+          <Icon name={s.icon} />
+          <h2 id={`t-${s.id}`}>{s.titre}</h2>
+          <p class="lead">{s.resume}</p>
+          <a class="btn btn-primary" href={`/devis?prestation=${s.prestation}`} data-cta={`service-${s.prestation}`}>Demander un devis</a>
+        </div>
+        <div class="sd-corps">
+          <p>{s.texte}</p>
+          <div class="sd-listes">
+            {s.listes.map((l) => (
+              <div><h3>{l.titre}</h3><ul>{l.items.map((it) => <li>{it}</li>)}</ul></div>
+            ))}
+          </div>
+          {s.note && <p class="sd-note">{s.note}</p>}
+        </div>
+      </section>
+    ))}
+  </div>
+  <CtaFinal titre="Vous ne savez pas quelle prestation choisir ?" texte="Décrivez simplement votre besoin : l’atelier vous oriente vers la solution adaptée." source="services-final" />
+</Base>

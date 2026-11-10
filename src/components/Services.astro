@@ -1,0 +1,14 @@
+---
+import Icon from './Icon.astro';
+import { SERVICES } from '../config/services';
+---
+<div class="services-grid">
+  {SERVICES.map((s) => (
+    <article class="service">
+      <Icon name={s.icon} />
+      <h3>{s.titre}</h3>
+      <p>{s.resume}</p>
+      <a class="link" href={`/services#${s.id}`}>En savoir plus<span class="sr-only"> sur {s.titre.toLowerCase()}</span></a>
+    </article>
+  ))}
+</div>

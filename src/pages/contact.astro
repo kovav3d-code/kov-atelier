@@ -1,0 +1,83 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { SITE, APERCU, MONTRER_RESERVES } from '../config/site';
+const turnstileKey = SITE.turnstileSiteKey ?? import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
+---
+<Base title="Contact | Kov Atelier, impression 3D à Florange" description="Contacter Kov Atelier, atelier de conception et d’impression 3D sur mesure à Florange (Moselle), près de Thionville, Metz et du Luxembourg.">
+  <section class="page-head"><div class="wrap">
+    <h1>Contact</h1>
+    <p class="lead">Une question avant de vous lancer ? Écrivez à l’atelier. Pour un projet avec des photos ou des fichiers, la demande de devis est plus adaptée.</p>
+  </div></section>
+  <section class="wrap contact-grid">
+    <div class="contact-infos">
+      <h2>{SITE.nom}</h2>
+      <div class="contact-ligne"><Icon name="lieu" /><p><strong>{SITE.ville}, {SITE.departement}</strong>Atelier indépendant à côté de la frontière luxembourgeoise. Projets de Thionville, Metz, de la Moselle et du Luxembourg, et expédition dans le monde entier.</p></div>
+      {SITE.telephone
+        ? <div class="contact-ligne"><Icon name="telephone" /><p><strong>Téléphone</strong><a href={`tel:${SITE.telephone.replace(/\s/g, '')}`}>{SITE.telephone}</a></p></div>
+        : MONTRER_RESERVES && <div class="contact-ligne"><Icon name="telephone" /><p><span class="todo">Téléphone professionnel à confirmer</span></p></div>}
+      {SITE.email
+        ? <div class="contact-ligne"><Icon name="email" /><p><strong>E-mail</strong><a href={`mailto:${SITE.email}`}>{SITE.email}</a></p></div>
+        : MONTRER_RESERVES && <div class="contact-ligne"><Icon name="email" /><p><span class="todo">E-mail professionnel à confirmer</span></p></div>}
+      {SITE.googleBusinessUrl
+        ? <p><a class="link" href={SITE.googleBusinessUrl} target="_blank" rel="noopener">Voir la fiche Google de l’atelier</a></p>
+        : MONTRER_RESERVES && <p><span class="todo">Lien de la fiche Google Business Profile à fournir</span></p>}
+      <div class="contact-devis">
+        <strong>Vous avez un projet ?</strong>
+        <p>La demande de devis permet de joindre photos, plans et fichiers 3D.</p>
+        <a class="btn btn-primary" href="/devis" data-cta="contact">Demander un devis</a>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <form id="form-contact" action="/api/contact" method="post" novalidate data-apercu={APERCU ? '1' : undefined}>
+        <fieldset class="form-section" style="margin-bottom:20px">
+          <legend>Envoyer un message</legend>
+          <p class="hint">Les champs marqués <span class="req" aria-hidden="true">*</span><span class="sr-only">d’un astérisque</span> sont obligatoires.</p>
+          <div class="field">
+            <label for="c-nom">Nom et prénom <span class="req" aria-hidden="true">*</span></label>
+            <input type="text" id="c-nom" name="nom" required maxlength="120" autocomplete="name" aria-describedby="ce-nom" />
+            <p class="error" id="ce-nom"></p>
+          </div>
+          <div class="grid-2">
+            <div class="field">
+              <label for="c-email">Adresse e-mail <span class="req" aria-hidden="true">*</span></label>
+              <input type="email" id="c-email" name="email" required maxlength="254" autocomplete="email" inputmode="email" aria-describedby="ce-email" />
+              <p class="error" id="ce-email"></p>
+            </div>
+            <div class="field">
+              <label for="c-telephone">Téléphone <span class="opt">(facultatif)</span></label>
+              <input type="tel" id="c-telephone" name="telephone" maxlength="30" autocomplete="tel" aria-describedby="ce-telephone" />
+              <p class="error" id="ce-telephone"></p>
+            </div>
+          </div>
+          <div class="field">
+            <label for="c-message">Message <span class="req" aria-hidden="true">*</span></label>
+            <textarea id="c-message" name="message" required maxlength="3000" aria-describedby="ce-message"></textarea>
+            <p class="error" id="ce-message"></p>
+          </div>
+        </fieldset>
+        <div class="hp" aria-hidden="true"><label>Laisser vide <input type="text" name="site_web" tabindex="-1" autocomplete="off" /></label></div>
+        <input type="hidden" name="t0" />
+        {turnstileKey
+          ? <div class="cf-turnstile antispam" data-sitekey={turnstileKey} data-language="fr" data-theme="light" data-size="flexible"></div>
+          : MONTRER_RESERVES && <div class="antispam antispam-preview">Vérification antispam (Cloudflare Turnstile) : elle s’affiche ici sur le site en ligne.</div>}
+        <div class="submit-row">
+          <div class="form-alert" role="alert" hidden></div>
+          <button class="btn btn-primary" type="submit">Envoyer le message</button>
+          <p class="rgpd">Vos informations servent uniquement à vous répondre. <a href="/politique-de-confidentialite">Politique de confidentialité</a></p>
+        </div>
+      </form>
+      <div class="form-result" id="c-resultat" hidden tabindex="-1">
+        <Icon name="valide" />
+        <h2>Message envoyé</h2>
+        <p>Merci, votre message a bien été transmis à l’atelier. Vous recevrez une réponse par e-mail.</p>
+        <a class="btn btn-ghost" href="/">Retour à l’accueil</a>
+      </div>
+    </div>
+  </section>
+  {turnstileKey && <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>}
+</Base>
+<script>
+  import '../scripts/contact-form';
+</script>

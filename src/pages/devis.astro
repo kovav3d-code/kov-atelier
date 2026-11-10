@@ -1,0 +1,155 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { PRESTATIONS, DELAIS, BUDGETS, FICHIERS, LIMITES } from '../config/devis';
+import { SITE, APERCU, MONTRER_RESERVES } from '../config/site';
+const turnstileKey = SITE.turnstileSiteKey ?? import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
+const accept = FICHIERS.extensions.map((e) => `.${e}`).join(',');
+---
+<Base
+  title="Demander un devis d’impression ou de modélisation 3D | Kov Atelier"
+  description="Envoyez votre projet d’impression 3D, de modélisation ou de reproduction de pièce : description, photos ou fichiers STL, STEP, PDF. Étude personnalisée par l’atelier."
+  masquerCtaMobile
+>
+  <section class="devis">
+    <div class="wrap devis-grid">
+      <aside class="devis-aside">
+        <h1>Demander un devis</h1>
+        <p class="lead">Décrivez votre projet, même s’il n’est encore qu’une idée ou une photo. L’atelier étudie chaque demande et vous répond personnellement.</p>
+        <div class="ensuite">
+          <h2>Après l’envoi</h2>
+          <ol>
+            <li>Vous recevez un e-mail de confirmation avec la référence de votre demande.</li>
+            <li>L’atelier étudie la faisabilité et revient vers vous si des précisions sont utiles.</li>
+            <li>Vous recevez une proposition adaptée à votre projet.</li>
+          </ol>
+        </div>
+        <p class="aside-note">Pas encore de fichier ? Une description ou une photo suffit pour démarrer.</p>
+      </aside>
+
+      <div class="form-card">
+        <form id="form-devis" action="/api/devis" method="post" enctype="multipart/form-data" novalidate data-apercu={APERCU ? '1' : undefined}>
+          <fieldset class="form-section">
+            <legend>Votre projet</legend>
+            <p class="hint">Les champs marqués <span class="req" aria-hidden="true">*</span><span class="sr-only">d’un astérisque</span> sont obligatoires.</p>
+
+            <div class="field">
+              <span class="field-label" id="l-prestation">Type de prestation <span class="req" aria-hidden="true">*</span></span>
+              <div class="chips" role="radiogroup" aria-labelledby="l-prestation" aria-describedby="e-prestation" aria-required="true" data-champ="prestation">
+                {PRESTATIONS.map((p) => (
+                  <label class="chip"><input type="radio" name="prestation" value={p.value} /><span>{p.label}</span></label>
+                ))}
+              </div>
+              <p class="error" id="e-prestation"></p>
+            </div>
+
+            <div class="field">
+              <label for="description">Description du besoin <span class="req" aria-hidden="true">*</span></label>
+              <textarea id="description" name="description" required maxlength={LIMITES.description} aria-describedby="h-description e-description" placeholder="Ex. : support cassé sur une machine, à reproduire à partir de la pièce d’origine."></textarea>
+              <p class="field-help" id="h-description">À quoi servira la pièce, d’où vous partez (croquis, pièce existante, fichier) et vos contraintes éventuelles.</p>
+              <p class="error" id="e-description"></p>
+            </div>
+
+            <details class="precisions">
+              <summary><span>Précisions techniques<small>Facultatif : dimensions, quantité, matériau, délai, budget</small></span></summary>
+              <div class="grid-2">
+                <div class="field">
+                  <label for="dimensions">Dimensions approximatives</label>
+                  <input type="text" id="dimensions" name="dimensions" maxlength={LIMITES.court} placeholder="Ex. : 120 × 40 × 15 mm" />
+                </div>
+                <div class="field">
+                  <label for="quantite">Quantité souhaitée</label>
+                  <input type="text" id="quantite" name="quantite" maxlength={LIMITES.court} inputmode="numeric" placeholder="Ex. : 1, 10, 50" />
+                </div>
+              </div>
+              <div class="field">
+                <label for="materiau">Matériau préféré, si connu</label>
+                <input type="text" id="materiau" name="materiau" maxlength={LIMITES.court} placeholder="Ex. : résine, PLA, PETG, ou « je ne sais pas »" />
+              </div>
+              <div class="grid-2">
+                <div class="field">
+                  <label for="delai">Délai souhaité</label>
+                  <select id="delai" name="delai"><option value="">Choisir</option>{DELAIS.map((d) => <option>{d}</option>)}</select>
+                </div>
+                <div class="field">
+                  <label for="budget">Budget envisagé</label>
+                  <select id="budget" name="budget"><option value="">Choisir</option>{BUDGETS.map((b) => <option>{b}</option>)}</select>
+                </div>
+              </div>
+            </details>
+          </fieldset>
+
+          <fieldset class="form-section">
+            <legend>Fichiers <span class="opt">(facultatif)</span></legend>
+            <p class="hint">Photos, croquis, plans ou fichiers 3D. Vous pourrez aussi les envoyer plus tard.</p>
+            <label class="dropzone" id="dropzone">
+              <Icon name="televerser" />
+              <strong><span class="d-only">Glissez vos fichiers ici</span><span class="t-only">Ajoutez photos, plans ou fichiers 3D</span></strong>
+              <span class="btn btn-ghost">Choisir des fichiers</span>
+              <small>STL, OBJ, STEP, 3MF, PDF, JPG, PNG ou ZIP</small>
+              <small>20 Mo maximum par fichier, 40 Mo au total, 10 fichiers</small>
+              <input class="sr-only" type="file" id="fichiers" name="fichiers" multiple accept={accept} aria-describedby="e-fichiers" />
+            </label>
+            <p class="error" id="e-fichiers" aria-live="polite"></p>
+            <ul class="files-list" id="liste-fichiers" aria-label="Fichiers sélectionnés"></ul>
+            <p class="files-total" id="total-fichiers" aria-live="polite" hidden></p>
+          </fieldset>
+
+          <fieldset class="form-section">
+            <legend>Vos coordonnées</legend>
+            <div class="grid-2">
+              <div class="field">
+                <label for="nom">Nom et prénom <span class="req" aria-hidden="true">*</span></label>
+                <input type="text" id="nom" name="nom" required maxlength={LIMITES.nom} autocomplete="name" aria-describedby="e-nom" />
+                <p class="error" id="e-nom"></p>
+              </div>
+              <div class="field">
+                <label for="entreprise">Entreprise <span class="opt">(facultatif)</span></label>
+                <input type="text" id="entreprise" name="entreprise" maxlength={LIMITES.entreprise} autocomplete="organization" />
+              </div>
+              <div class="field">
+                <label for="email">Adresse e-mail <span class="req" aria-hidden="true">*</span></label>
+                <input type="email" id="email" name="email" required maxlength={LIMITES.email} autocomplete="email" inputmode="email" aria-describedby="e-email" />
+                <p class="error" id="e-email"></p>
+              </div>
+              <div class="field">
+                <label for="telephone">Téléphone <span class="opt">(facultatif)</span></label>
+                <input type="tel" id="telephone" name="telephone" maxlength={LIMITES.telephone} autocomplete="tel" aria-describedby="e-telephone" />
+                <p class="error" id="e-telephone"></p>
+              </div>
+            </div>
+          </fieldset>
+
+          <div class="hp" aria-hidden="true"><label>Laisser vide <input type="text" name="site_web" tabindex="-1" autocomplete="off" /></label></div>
+          <input type="hidden" name="t0" id="t0" />
+
+          {turnstileKey
+            ? <div class="cf-turnstile antispam" data-sitekey={turnstileKey} data-language="fr" data-theme="light" data-size="flexible"></div>
+            : MONTRER_RESERVES && <div class="antispam antispam-preview">Vérification antispam (Cloudflare Turnstile) : elle s’affiche ici sur le site en ligne.</div>}
+
+          <div class="submit-row">
+            <div class="form-alert" id="alerte" role="alert" hidden></div>
+            <div class="progress" id="progression" hidden><i></i></div>
+            <button class="btn btn-primary" type="submit" id="envoyer">Envoyer ma demande de devis</button>
+            <p class="rgpd">Vos informations servent uniquement à étudier votre demande et à vous répondre. <a href="/politique-de-confidentialite">Politique de confidentialité</a></p>
+          </div>
+        </form>
+
+        <div class="form-result" id="resultat" hidden tabindex="-1">
+          <Icon name="valide" />
+          <h2>Demande envoyée</h2>
+          <p>Référence de votre demande : <span class="ref" id="r-ref"></span></p>
+          <p id="r-conf-ok">Un e-mail de confirmation a été envoyé à <strong id="r-email"></strong>. Pensez à vérifier vos courriers indésirables.</p>
+          <p id="r-conf-ko" hidden>Votre demande est bien enregistrée. Notez cette référence, elle facilitera vos échanges avec l’atelier.</p>
+          <p>L’atelier étudie votre projet et vous répond personnellement.</p>
+          <a class="btn btn-ghost" href="/">Retour à l’accueil</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  {turnstileKey && <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>}
+</Base>
+
+<script>
+  import '../scripts/devis-form';
+</script>

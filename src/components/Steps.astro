@@ -1,0 +1,19 @@
+---
+import Icon from './Icon.astro';
+const ETAPES = [
+  { n: '01', icon: 'decrire', titre: 'Décrivez votre projet', texte: 'Vous expliquez votre besoin et joignez, si vous en avez, un croquis, une photo, un plan ou un fichier 3D.' },
+  { n: '02', icon: 'etudier', titre: 'Étude et devis', texte: 'Kov Atelier analyse la faisabilité et prépare une proposition personnalisée.' },
+  { n: '03', icon: 'fabriquer', titre: 'Conception et fabrication', texte: 'Modélisation, ajustements et fabrication selon le projet.' },
+  { n: '04', icon: 'livrer', titre: 'Livraison', texte: 'Vous recevez le modèle numérique, ou la pièce fabriquée expédiée chez vous, en France comme à l’étranger.' },
+] as const;
+---
+<ol class="steps">
+  {ETAPES.map((e) => (
+    <li class="step">
+      <span class="step-num" aria-hidden="true">{e.n}</span>
+      <Icon name={e.icon} />
+      <h3><span class="sr-only">Étape {Number(e.n)} : </span>{e.titre}</h3>
+      <p>{e.texte}</p>
+    </li>
+  ))}
+</ol>

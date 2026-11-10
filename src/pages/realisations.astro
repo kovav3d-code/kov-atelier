@@ -1,0 +1,34 @@
+---
+import Base from '../layouts/Base.astro';
+import RealisationCard from '../components/RealisationCard.astro';
+import CtaFinal from '../components/CtaFinal.astro';
+import { getCollection } from 'astro:content';
+import { CATEGORIES } from '../content.config';
+const toutes = (await getCollection('realisations')).sort((a, b) => a.data.ordre - b.data.ordre);
+const presentes = CATEGORIES.filter((c) => toutes.some((r) => r.data.categories.includes(c)));
+---
+<Base title="Réalisations en impression et modélisation 3D | Kov Atelier" description="Pièces mécaniques, conception 3D, impression résine et sculpture numérique réalisées par Kov Atelier à Florange (Moselle).">
+  <section class="page-head"><div class="wrap">
+    <h1>Nos réalisations</h1>
+    <p class="lead">Un aperçu des pièces et des modèles réalisés à l’atelier. Filtrez par type de projet.</p>
+  </div></section>
+  <section class="wrap" style="padding-bottom:clamp(64px,8vw,112px)">
+    <div class="filters" role="group" aria-label="Filtrer les réalisations">
+      <button class="filter" type="button" aria-pressed="true" data-filtre="">Toutes</button>
+      {presentes.map((c) => <button class="filter" type="button" aria-pressed="false" data-filtre={c}>{c}</button>)}
+    </div>
+    <ul class="gallery" id="galerie">
+      {toutes.map((r) => <RealisationCard r={r} details />)}
+    </ul>
+  </section>
+  <CtaFinal titre="Un projet comparable ?" source="realisations-final" />
+</Base>
+<script>
+  const boutons = document.querySelectorAll<HTMLButtonElement>('[data-filtre]');
+  const items = document.querySelectorAll<HTMLElement>('#galerie .g-item');
+  boutons.forEach((b) => b.addEventListener('click', () => {
+    boutons.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    const f = b.dataset.filtre;
+    items.forEach((i) => { i.hidden = !!f && !(i.dataset.categories ?? '').split('|').includes(f); });
+  }));
+</script>
