@@ -1,19 +1,13 @@
 ---
-titre: Grille de compteur pour Volkswagen Coccinelle
-categories: ["Pièces mécaniques", "Conception 3D"]
+titre: Grille ajourée avec bague
+categories: ["Pièces mécaniques"]
 nature: photo
 photos:
-  - src: ../../assets/realisations/grille-coccinelle-montee.jpg
-    alt: Grille de compteur à lamelles montée sur le tableau de bord d’une Volkswagen Coccinelle, autour du compteur d’origine
   - src: ../../assets/realisations/grille.jpg
-    alt: La même grille finie en noir, avec ses lamelles parallèles et la bague du compteur d’un seul tenant
-  - src: ../../assets/realisations/grille-coccinelle-rendu.jpg
-    alt: Rendu 3D de la grille de compteur, vue de face avec la bague centrale et les lamelles
-  - src: ../../assets/realisations/grille-coccinelle-rendu-detail.jpg
-    alt: Rendu 3D en vue arrière montrant la bague du compteur et l’attache des lamelles
-typeProjet: "Pièce d’habillage automobile sur mesure"
-besoin: "Refaire la grille de compteur du tableau de bord d’une Coccinelle, à poser autour du compteur d’origine."
-solution: "Grille modélisée en 3D, lamelles et bague de compteur d’un seul tenant, essayée sur le tableau de bord puis fabriquée."
+    alt: Grille noire à lamelles parallèles intégrant une bague circulaire, posée sur un plan de travail noir
+typeProjet: "Pièce sur mesure"
+besoin: "Remplacer un élément d’habillage introuvable en intégrant un logement circulaire aux dimensions exactes de l’accessoire à installer."
+solution: "Pièce modélisée d’après les cotes relevées, avec lamelles régulières et bague intégrée d’un seul tenant, puis fabriquée et finie en noir."
 miseEnAvant: true
 ordre: 2
 aConfirmer: false
