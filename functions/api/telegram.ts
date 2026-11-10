@@ -66,7 +66,7 @@ async function surBouton(env: Env, data: string) {
       console.error('Réponse client non envoyée', ref, err);
       const domaine = /domain|verify|testing emails|own email/i.test(String(err));
       await message(env, domaine
-        ? 'Non envoyé : tant que le domaine kov-atelier.fr n’est pas vérifié chez Resend, les e-mails ne peuvent partir que vers ta propre adresse. Branche le domaine, puis réessaie avec « Envoyer au client ».'
+        ? 'Non envoyé : tant que le domaine kov-atelier.com n’est pas vérifié chez Resend, les e-mails ne peuvent partir que vers ta propre adresse. Branche le domaine, puis réessaie avec « Envoyer au client ».'
         : `Non envoyé, erreur technique : ${echapper(String(err).slice(0, 300))}`);
     }
   }

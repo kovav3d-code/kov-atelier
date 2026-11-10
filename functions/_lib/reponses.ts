@@ -7,7 +7,7 @@ import { echapper } from './env';
 export type Demande = { id: string; nom: string; email: string; telephone: string | null; prestation: string; description: string };
 export type TypeReponse = 'prix' | 'appel' | 'questions';
 
-const SIGNATURE = ['Valéry', 'Kov Atelier · Florange (Moselle), à côté du Luxembourg', 'kov-atelier.pages.dev'];
+const SIGNATURE = ['Valéry', 'Kov Atelier · Florange (Moselle), à côté du Luxembourg', 'kov-atelier.com'];
 const prenom = (nom: string) => nom.trim().split(/\s+/)[0] ?? '';
 const resume = (d: Demande) => (d.description.length > 160 ? `${d.description.slice(0, 157)}…` : d.description);
 
