@@ -1,0 +1,117 @@
+---
+/**
+ * Animation de l'accueil : une imprimante 3D imprime le buste du logo couche par couche,
+ * puis zoom sur la pièce finie, en boucle. SVG + un peu de JavaScript, aux couleurs du site.
+ * Mouvement réduit demandé par l'utilisateur → image fixe de la pièce terminée.
+ */
+import buste from '../assets/brand/buste.png';
+// Largeur du buste par couche (de bas en haut), mesurée sur l'image : [gauche, droite] en fraction de la largeur.
+const PROFIL = [[0.296,0.7],[0.22,0.771],[0.157,0.839],[0.139,0.857],[0.081,0.919],[0.049,0.946],[0.022,0.973],[0.013,0.987],[0,0.996],[0.013,0.987],[0.054,0.955],[0.121,0.906],[0.161,0.87],[0.197,0.825],[0.247,0.749],[0.283,0.673],[0.278,0.668],[0.269,0.659],[0.269,0.655],[0.269,0.664],[0.238,0.668],[0.233,0.601],[0.233,0.753],[0.184,0.749],[0.17,0.758],[0.157,0.758],[0.152,0.758],[0.152,0.758],[0.161,0.785],[0.161,0.78],[0.166,0.78],[0.17,0.78],[0.179,0.785],[0.215,0.785],[0.224,0.78],[0.242,0.767],[0.278,0.758],[0.318,0.749],[0.354,0.735],[0.404,0.709]];
+---
+<div class="imprimante" data-imprimante data-profil={JSON.stringify(PROFIL)}>
+  <svg viewBox="0 0 400 420" role="img" aria-label="Animation : une imprimante 3D imprime un buste couche par couche, puis la pièce terminée apparaît en gros plan">
+    <defs>
+      <clipPath id="imp-revele"><rect class="imp-clip" x="0" y="352" width="400" height="0" /></clipPath>
+      <linearGradient id="imp-montant" x1="0" x2="1"><stop offset="0" stop-color="#2A3138" /><stop offset="1" stop-color="#3A434C" /></linearGradient>
+      <radialGradient id="imp-halo"><stop offset="0" stop-color="#2864DC" stop-opacity=".55" /><stop offset="1" stop-color="#2864DC" stop-opacity="0" /></radialGradient>
+    </defs>
+    <g class="imp-camera">
+      <!-- Cadre -->
+      <rect x="40" y="368" width="320" height="26" rx="5" fill="#12171C" stroke="#4A535C" />
+      <rect x="58" y="34" width="14" height="338" rx="3" fill="url(#imp-montant)" stroke="#4A535C" />
+      <rect x="328" y="34" width="14" height="338" rx="3" fill="url(#imp-montant)" stroke="#4A535C" />
+      <rect x="50" y="26" width="300" height="14" rx="4" fill="#2A3138" stroke="#4A535C" />
+      <rect x="140" y="40" width="4" height="320" fill="#4A535C" opacity=".7" />
+      <rect x="256" y="40" width="4" height="320" fill="#4A535C" opacity=".7" />
+      <circle cx="80" cy="381" r="3" fill="#2864DC" class="imp-led" />
+      <rect x="296" y="377" width="44" height="8" rx="2" fill="#20252B" stroke="#4A535C" />
+      <!-- Plateau -->
+      <rect x="92" y="352" width="216" height="10" rx="2" fill="#2A3138" stroke="#89939C" stroke-width=".8" />
+      <rect x="112" y="362" width="8" height="8" fill="#4A535C" /><rect x="280" y="362" width="8" height="8" fill="#4A535C" />
+      <!-- Pièce imprimée -->
+      <g class="imp-piece" clip-path="url(#imp-revele)">
+        <image href={buste.src} x="125" y="179" width="150" height="173" />
+      </g>
+      <line class="imp-couche" x1="0" y1="352" x2="0" y2="352" stroke="#8FB0F5" stroke-width="2" stroke-linecap="round" />
+      <!-- Axe X (monte avec la tête) -->
+      <g class="imp-axe">
+        <rect x="64" y="-40" width="272" height="9" rx="3" fill="#20252B" stroke="#89939C" stroke-width=".8" />
+      </g>
+      <!-- Tête d'impression -->
+      <g class="imp-tete">
+        <circle cx="0" cy="0" r="14" fill="url(#imp-halo)" class="imp-halo" />
+        <rect x="-17" y="-40" width="34" height="26" rx="4" fill="#2A3138" stroke="#89939C" stroke-width=".8" />
+        <rect x="-10" y="-35" width="20" height="4" rx="1" fill="#4A535C" />
+        <path d="M-7 -14 H7 L2 -3 H-2 Z" fill="#89939C" />
+        <path d="M-2 -3 H2 L0.6 0 H-0.6 Z" fill="#D9DDDF" />
+        <circle cx="11" cy="-20" r="2" fill="#2864DC" class="imp-led" />
+      </g>
+      <path class="imp-cable" d="" fill="none" stroke="#4A535C" stroke-width="2" />
+    </g>
+  </svg>
+</div>
+
+<script>
+  for (const racine of document.querySelectorAll<HTMLElement>('[data-imprimante]')) {
+    const profil: [number, number][] = JSON.parse(racine.dataset.profil ?? '[]');
+    const $ = <T extends Element>(s: string) => racine.querySelector<T>(s)!;
+    const camera = $<SVGGElement>('.imp-camera'), clip = $<SVGRectElement>('.imp-clip'), piece = $<SVGGElement>('.imp-piece');
+    const couche = $<SVGLineElement>('.imp-couche'), tete = $<SVGGElement>('.imp-tete'), axe = $<SVGGElement>('.imp-axe');
+    const halo = $<SVGCircleElement>('.imp-halo'), cable = $<SVGPathElement>('.imp-cable');
+    // Géométrie (unités du SVG)
+    const BX = 125, BW = 150, BH = 173, PLATEAU = 352, CX = 200, CY = PLATEAU - BH / 2;
+    const REPOS = { x: 300, y: 120 };
+    // Chronologie (secondes)
+    const T = { depart: 0.8, impression: 7.5, retour: 0.7, zoom: 1.2, pause: 1.8, sortie: 1.0, vide: 0.4 };
+    const total = Object.values(T).reduce((a, b) => a + b, 0);
+    const doux = (x: number) => (x < 0.5 ? 2 * x * x : 1 - (-2 * x + 2) ** 2 / 2);
+    const lerp = (a: number, b: number, k: number) => a + (b - a) * k;
+    const bornes = (p: number) => profil[Math.min(profil.length - 1, Math.max(0, Math.floor(p * profil.length)))] ?? [0.4, 0.6];
+
+    function dessiner(t: number) {
+      let p = 0, hx = REPOS.x, hy = REPOS.y, zoom = 1, opacite = 1, chauffe = 0;
+      const t1 = T.depart, t2 = t1 + T.impression, t3 = t2 + T.retour, t4 = t3 + T.zoom, t5 = t4 + T.pause, t6 = t5 + T.sortie;
+      const debut = { x: BX + BW * 0.5, y: PLATEAU };
+      if (t < t1) { const k = doux(t / t1); hx = lerp(REPOS.x, debut.x, k); hy = lerp(REPOS.y, debut.y, k); }
+      else if (t < t2) {
+        p = (t - t1) / T.impression;
+        const [g, d] = bornes(p);
+        const va = 0.5 + 0.5 * Math.sin((t - t1) * 11);
+        hx = BX + BW * lerp(g, d, va); hy = PLATEAU - p * BH; chauffe = 1;
+      } else {
+        p = 1;
+        if (t < t3) { const k = doux((t - t2) / T.retour); hx = lerp(BX + BW * 0.5, REPOS.x, k); hy = lerp(PLATEAU - BH, REPOS.y - 40, k); }
+        else { hx = REPOS.x; hy = REPOS.y - 40; }
+        if (t >= t3 && t < t4) zoom = lerp(1, 1.75, doux((t - t3) / T.zoom));
+        else if (t >= t4 && t < t5) zoom = 1.75;
+        else if (t >= t5 && t < t6) { const k = doux((t - t5) / T.sortie); zoom = lerp(1.75, 1, k); opacite = 1 - k; }
+        else if (t >= t6) { opacite = 0; }
+      }
+      const h = p * BH;
+      clip.setAttribute('y', String(PLATEAU - h)); clip.setAttribute('height', String(h));
+      piece.style.opacity = String(opacite);
+      const [g, d] = bornes(p);
+      couche.setAttribute('x1', String(BX + BW * g)); couche.setAttribute('x2', String(BX + BW * d));
+      couche.setAttribute('y1', String(PLATEAU - h)); couche.setAttribute('y2', String(PLATEAU - h));
+      couche.style.opacity = chauffe ? '.9' : '0';
+      halo.style.opacity = chauffe ? '1' : '0';
+      tete.setAttribute('transform', `translate(${hx.toFixed(1)} ${hy.toFixed(1)})`);
+      axe.setAttribute('transform', `translate(0 ${(hy - 18).toFixed(1)})`);
+      cable.setAttribute('d', `M 330 34 Q ${((hx + 330) / 2).toFixed(1)} ${(Math.min(hy, 200) - 60).toFixed(1)} ${hx.toFixed(1)} ${(hy - 40).toFixed(1)}`);
+      camera.setAttribute('transform', `translate(${CX} ${CY}) scale(${zoom.toFixed(3)}) translate(${-CX} ${-CY})`);
+    }
+
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) { dessiner(T.depart + T.impression + T.retour); continue; }
+    let visible = true, debut = performance.now(), arret = 0;
+    new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !visible) { debut += performance.now() - arret; visible = true; requestAnimationFrame(boucle); }
+      else if (!e.isIntersecting && visible) { visible = false; arret = performance.now(); }
+    }).observe(racine);
+    function boucle(now: number) {
+      if (!visible) return;
+      dessiner(((now - debut) / 1000) % total);
+      requestAnimationFrame(boucle);
+    }
+    requestAnimationFrame(boucle);
+  }
+</script>

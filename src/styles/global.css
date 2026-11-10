@@ -147,7 +147,11 @@ ul, ol { margin: 0; }
 .hero-figure img { transform: scale(1.12); }
 .hero-figure img { width: 100%; height: 100%; object-fit: contain; }
 .hero-figure figcaption { margin-top: 12px; font-size: .85rem; color: var(--text-2); }
-@media (max-width: 960px) { .hero-grid { grid-template-columns: 1fr; } }
+@media (max-width: 719px) { .hero-grid { grid-template-columns: 1fr; } }
+.hero-anim { align-self: center; }
+.imprimante { width: 100%; max-width: 520px; margin-inline: auto; }
+.imprimante svg { display: block; width: 100%; height: auto; overflow: hidden; }
+@media (max-width: 719px) { .imprimante { max-width: 360px; } }
 
 /* Signature : cote de dessin technique sous le titre */
 .cote { display: flex; align-items: center; gap: 12px; height: 20px; margin-top: 24px; border-inline: 1px solid var(--metal); transform-origin: left center; animation: coter .9s .25s cubic-bezier(.2, .7, .2, 1) both; }

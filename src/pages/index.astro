@@ -6,14 +6,14 @@ import RealisationCard from '../components/RealisationCard.astro';
 import Icon from '../components/Icon.astro';
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
-import heroImg from '../assets/realisations/moule-eclate-face.jpg';
+import ImprimanteAnimee from '../components/ImprimanteAnimee.astro';
 import grilleRendu from '../assets/realisations/grille-coccinelle-rendu.jpg';
 import grillePiece from '../assets/realisations/grille.jpg';
 import grilleMontee from '../assets/realisations/grille-coccinelle-montee.jpg';
 import { SITE } from '../config/site';
 import { SERVICES } from '../config/services';
 
-const realisations = (await getCollection('realisations', (r) => r.data.miseEnAvant && !['moule-deux-parties', 'grille-ajouree'].includes(r.id))) // moule : héros ; grille : section « Du fichier à la pièce montée »
+const realisations = (await getCollection('realisations', (r) => r.data.miseEnAvant && r.id !== 'grille-ajouree')) // grille : section « Du fichier à la pièce montée »
   .sort((a, b) => a.data.ordre - b.data.ordre)
   .slice(0, 4);
 
@@ -72,11 +72,8 @@ const BESOINS = [
         </div>
         <p class="hero-note">Vous pouvez partir d’un croquis, d’un plan technique, d’une photo, d’un fichier 3D ou d’une simple idée.</p>
       </div>
-      <figure class="hero-figure">
-        <div class="frame">
-          <Image src={heroImg} alt="Vue éclatée en 3D d’un moule conçu par Kov Atelier pour une pièce automobile des années 70 : plaques, colonnes de guidage et empreinte" widths={[600, 900, 1300]} sizes="(max-width: 960px) 100vw, 560px" loading="eager" fetchpriority="high" />
-        </div>
-        <figcaption>Vue éclatée d’un moule pour une pièce automobile des années 70, conçu pour l’usinage 5 axes en aluminium (rendu 3D).</figcaption>
+      <figure class="hero-figure hero-anim">
+        <ImprimanteAnimee />
       </figure>
     </div>
   </section>
