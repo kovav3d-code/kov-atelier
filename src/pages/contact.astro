@@ -60,7 +60,7 @@ const turnstileKey = SITE.turnstileSiteKey ?? import.meta.env.PUBLIC_TURNSTILE_S
         <div class="hp" aria-hidden="true"><label>Laisser vide <input type="text" name="site_web" tabindex="-1" autocomplete="off" /></label></div>
         <input type="hidden" name="t0" />
         {turnstileKey
-          ? <div class="cf-turnstile antispam" data-sitekey={turnstileKey} data-language="fr" data-theme="light" data-size="flexible"></div>
+          ? <div class="cf-turnstile antispam" data-sitekey={turnstileKey} data-language="fr" data-theme="dark" data-size="flexible"></div>
           : MONTRER_RESERVES && <div class="antispam antispam-preview">Vérification antispam (Cloudflare Turnstile) : elle s’affiche ici sur le site en ligne.</div>}
         <div class="submit-row">
           <div class="form-alert" role="alert" hidden></div>
