@@ -143,8 +143,9 @@ ul, ol { margin: 0; }
 .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
 .hero-note { margin-top: 26px; font-size: .95rem; color: var(--text-2); max-width: 32em; }
 .hero-figure { margin: 0; }
-.hero-figure .frame { background: #202020; border-radius: var(--r-md); overflow: hidden; aspect-ratio: 5 / 4; }
-.hero-figure img { width: 100%; height: 100%; object-fit: cover; }
+.hero-figure .frame { background: #1E1E1E; border-radius: var(--r-md); overflow: hidden; aspect-ratio: 1 / 1; }
+.hero-figure img { transform: scale(1.12); }
+.hero-figure img { width: 100%; height: 100%; object-fit: contain; }
 .hero-figure figcaption { margin-top: 12px; font-size: .85rem; color: var(--text-2); }
 @media (max-width: 960px) { .hero-grid { grid-template-columns: 1fr; } }
 
@@ -409,3 +410,13 @@ button.g-frame:focus-visible { outline: 2px solid var(--bleu); outline-offset: 3
 .contact-devis { margin-top: 10px; padding: 22px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
 .contact-devis p { color: var(--text-2); margin: 6px 0 16px; }
 @media (max-width: 960px) { .contact-grid { grid-template-columns: 1fr; } }
+
+/* ---------- Parcours d'une pièce (accueil) ---------- */
+.parcours-etapes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(16px, 2.5vw, 32px); margin: 0; padding: 0; list-style: none; }
+.parcours-etapes figure { margin: 0; }
+.parcours-img { aspect-ratio: 4 / 3; overflow: hidden; border-radius: var(--r-sm); background: var(--graphite); }
+.parcours-img img { width: 100%; height: 100%; object-fit: cover; }
+.parcours-etapes figcaption { display: grid; gap: 4px; margin-top: 14px; color: var(--text-2); font-size: .95rem; }
+.parcours-etapes figcaption strong { color: var(--text); font-size: 1.05rem; }
+.parcours-num { font-size: .8rem; font-weight: 700; letter-spacing: 2px; color: var(--bleu-clair); }
+@media (max-width: 768px) { .parcours-etapes { grid-template-columns: 1fr; } }
