@@ -188,20 +188,19 @@ ul, ol { margin: 0; }
 .g-frame img { width: 100%; height: 100%; object-fit: cover; }
 .g-frame.contain { background: transparent; } /* cadre de la couleur du fond de la section */
 .g-frame.contain img { object-fit: contain; }
-button.g-frame { display: block; width: 100%; padding: 0; border: 0; font: inherit; color: inherit; cursor: zoom-in; }
-button.g-frame:focus-visible { outline: 2px solid var(--bleu); outline-offset: 3px; }
-
-/* ---------- Visionneuse ---------- */
-.lb { width: 100vw; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: rgba(12, 16, 20, .96); color: var(--on-dark); }
-.lb::backdrop { background: rgba(12, 16, 20, .96); }
-.lb-inner { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 64px 16px 24px; }
-.lb-img { max-width: min(1200px, 100%); max-height: calc(100dvh - 190px); object-fit: contain; border-radius: var(--r-sm); }
-.lb-legende { margin: 0; font-size: .95rem; color: var(--on-dark-2); text-align: center; }
-.lb-nav { display: flex; gap: 10px; }
-.lb-nav[hidden] { display: none; }
-.lb-btn { min-height: 44px; padding: 0 18px; border: 1.5px solid #4A535C; border-radius: 6px; background: transparent; color: var(--on-dark); font: inherit; font-weight: 600; cursor: pointer; }
-.lb-btn:hover { border-color: var(--on-dark); }
-.lb-close { position: absolute; top: 14px; right: 16px; }
+.carrousel .car-piste { display: flex; width: 100%; height: 100%; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+.carrousel .car-piste::-webkit-scrollbar { display: none; }
+.carrousel .car-piste:focus-visible { outline: 2px solid var(--bleu); outline-offset: -2px; }
+.car-slide { flex: 0 0 100%; height: 100%; scroll-snap-align: start; scroll-snap-stop: always; }
+.car-slide img { width: 100%; height: 100%; object-fit: cover; }
+.g-frame.contain .car-slide img { object-fit: contain; }
+.car-btn { position: absolute; top: 50%; translate: 0 -50%; display: grid; place-items: center; width: 38px; height: 38px; padding: 0; border: 0; border-radius: 50%; background: rgba(18, 23, 28, .72); color: #fff; cursor: pointer; opacity: .85; transition: opacity .2s ease, background-color .2s ease; }
+.car-btn[hidden] { display: none; }
+.car-btn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.car-btn:hover { background: rgba(18, 23, 28, .92); opacity: 1; }
+.car-prec { left: 10px; }
+.car-suiv { right: 10px; }
+@media (hover: hover) { .carrousel .car-btn { opacity: 0; } .carrousel:hover .car-btn, .carrousel .car-btn:focus-visible { opacity: .9; } }
 .g-count { position: absolute; right: 10px; bottom: 10px; padding: 3px 8px; border-radius: 4px; background: rgba(18, 23, 28, .78); color: var(--on-dark); font-size: .78rem; font-weight: 600; }
 .g-item figcaption { display: grid; gap: 4px; margin-top: 12px; }
 .g-title { font-weight: 650; font-size: 1.02rem; }
