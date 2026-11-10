@@ -9,7 +9,7 @@ export const PRESTATIONS = [
   { value: 'inconnu', label: 'Je ne sais pas encore' },
 ] as const;
 
-export const DELAIS = ['Pas de délai particulier', 'Sous un mois', 'Sous deux semaines', 'Urgent (précisez dans la description)'];
+export const DELAIS = ['Pas de délai particulier', 'Sous un mois', 'Sous deux semaines', 'Urgent (+40 €)'];
 export const BUDGETS = ['Je ne sais pas encore', 'Moins de 100 €', '100 à 300 €', '300 à 1 000 €', 'Plus de 1 000 €'];
 
 export const FICHIERS = {

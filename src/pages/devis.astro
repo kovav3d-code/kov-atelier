@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
-import { PRESTATIONS, DELAIS, BUDGETS, FICHIERS, LIMITES } from '../config/devis';
+import { PRESTATIONS, DELAIS, FICHIERS, LIMITES } from '../config/devis';
 import { SITE, APERCU, MONTRER_RESERVES } from '../config/site';
 const turnstileKey = SITE.turnstileSiteKey ?? import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
 const accept = FICHIERS.extensions.map((e) => `.${e}`).join(',');
@@ -51,33 +51,11 @@ const accept = FICHIERS.extensions.map((e) => `.${e}`).join(',');
               <p class="error" id="e-description"></p>
             </div>
 
-            <details class="precisions">
-              <summary><span>Précisions techniques<small>Facultatif : dimensions, quantité, matériau, délai, budget</small></span></summary>
-              <div class="grid-2">
-                <div class="field">
-                  <label for="dimensions">Dimensions approximatives</label>
-                  <input type="text" id="dimensions" name="dimensions" maxlength={LIMITES.court} placeholder="Ex. : 120 × 40 × 15 mm" />
-                </div>
-                <div class="field">
-                  <label for="quantite">Quantité souhaitée</label>
-                  <input type="text" id="quantite" name="quantite" maxlength={LIMITES.court} inputmode="numeric" placeholder="Ex. : 1, 10, 50" />
-                </div>
-              </div>
-              <div class="field">
-                <label for="materiau">Matériau préféré, si connu</label>
-                <input type="text" id="materiau" name="materiau" maxlength={LIMITES.court} placeholder="Ex. : résine, PLA, PETG, ou « je ne sais pas »" />
-              </div>
-              <div class="grid-2">
-                <div class="field">
-                  <label for="delai">Délai souhaité</label>
-                  <select id="delai" name="delai"><option value="">Choisir</option>{DELAIS.map((d) => <option>{d}</option>)}</select>
-                </div>
-                <div class="field">
-                  <label for="budget">Budget envisagé</label>
-                  <select id="budget" name="budget"><option value="">Choisir</option>{BUDGETS.map((b) => <option>{b}</option>)}</select>
-                </div>
-              </div>
-            </details>
+            <div class="field field-delai">
+              <label for="delai">Délai souhaité <span class="opt">(facultatif)</span></label>
+              <select id="delai" name="delai"><option value="">Choisir</option>{DELAIS.map((d) => <option>{d}</option>)}</select>
+              <p class="field-help">Le mode urgent ajoute 40 € au devis.</p>
+            </div>
           </fieldset>
 
           <fieldset class="form-section">
@@ -105,17 +83,13 @@ const accept = FICHIERS.extensions.map((e) => `.${e}`).join(',');
                 <p class="error" id="e-nom"></p>
               </div>
               <div class="field">
-                <label for="entreprise">Entreprise <span class="opt">(facultatif)</span></label>
-                <input type="text" id="entreprise" name="entreprise" maxlength={LIMITES.entreprise} autocomplete="organization" />
-              </div>
-              <div class="field">
                 <label for="email">Adresse e-mail <span class="req" aria-hidden="true">*</span></label>
                 <input type="email" id="email" name="email" required maxlength={LIMITES.email} autocomplete="email" inputmode="email" aria-describedby="e-email" />
                 <p class="error" id="e-email"></p>
               </div>
               <div class="field">
-                <label for="telephone">Téléphone <span class="opt">(facultatif)</span></label>
-                <input type="tel" id="telephone" name="telephone" maxlength={LIMITES.telephone} autocomplete="tel" aria-describedby="e-telephone" />
+                <label for="telephone">Téléphone <span class="req" aria-hidden="true">*</span></label>
+                <input type="tel" id="telephone" name="telephone" required maxlength={LIMITES.telephone} autocomplete="tel" inputmode="tel" aria-describedby="e-telephone" />
                 <p class="error" id="e-telephone"></p>
               </div>
             </div>

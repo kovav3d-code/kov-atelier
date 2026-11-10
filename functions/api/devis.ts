@@ -55,7 +55,8 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env, waitUnti
     : undefined;
   if (d.nom.length < 2 || d.nom.length > LIMITES.nom) erreurs.nom = 'Indiquez votre nom et prénom.';
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(d.email) || d.email.length > LIMITES.email) erreurs.email = 'Adresse e-mail invalide.';
-  if (d.telephone && !/^[+0-9 ().-]{6,30}$/.test(d.telephone)) erreurs.telephone = 'Numéro de téléphone invalide.';
+  if (!d.telephone) erreurs.telephone = 'Indiquez un numéro de téléphone.';
+  else if (!/^[+0-9 ().-]{6,30}$/.test(d.telephone)) erreurs.telephone = 'Numéro de téléphone invalide.';
   if (!prestation) erreurs.prestation = 'Choisissez au moins une prestation.';
   if (d.description.length < 10 || d.description.length > LIMITES.description) erreurs.description = 'Description trop courte ou trop longue.';
   if ((d.entreprise?.length ?? 0) > LIMITES.entreprise) erreurs.entreprise = 'Nom d’entreprise trop long.';
@@ -121,7 +122,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env, waitUnti
   const telegram = message(env, [
     `<b>Nouvelle demande de devis</b> · ${reference}`,
     '',
-    ligne('Client', `${d.nom}${d.entreprise ? ` (${d.entreprise})` : ' (particulier)'}`),
+    ligne('Client', `${d.nom}${d.entreprise ? ` (${d.entreprise})` : ''}`),
     telephoneCliquable(d.telephone) ?? '<b>Téléphone</b> : non indiqué',
     ligne('E-mail', d.email),
     ligne('Prestation', prestation!.label),

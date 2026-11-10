@@ -98,7 +98,8 @@ function initialiser(form: HTMLFormElement) {
     if (v('description').length < 10) erreurs.description = 'Décrivez votre besoin en quelques mots (10 caractères minimum).';
     if (v('nom').length < 2) erreurs.nom = 'Indiquez votre nom et prénom.';
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v('email'))) erreurs.email = 'Indiquez une adresse e-mail valide, par exemple nom@domaine.fr.';
-    if (v('telephone') && !/^[+0-9 ().-]{6,30}$/.test(v('telephone'))) erreurs.telephone = 'Utilisez uniquement des chiffres, des espaces et les signes + ( ) -.';
+    if (!v('telephone')) erreurs.telephone = 'Indiquez un numéro de téléphone pour que l’atelier puisse vous joindre.';
+    else if (!/^[+0-9 ().-]{6,30}$/.test(v('telephone'))) erreurs.telephone = 'Utilisez uniquement des chiffres, des espaces et les signes + ( ) -.';
     for (const k of ['prestation', 'description', 'nom', 'email', 'telephone']) afficherErreur(k, erreurs[k] ?? '');
     const premier = Object.keys(erreurs)[0];
     if (premier) form.querySelector<HTMLElement>(`[name="${premier}"]`)?.focus();

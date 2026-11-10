@@ -87,7 +87,8 @@ export function suggererPrix(p: {
     }
   }
   const maj = p.delai ? TARIFS.delai[p.delai] : undefined;
-  if (maj) { bas *= maj; haut *= maj; notes.push(`délai court : +${Math.round((maj - 1) * 100)} %`); }
+  if (maj?.fois) { bas *= maj.fois; haut *= maj.fois; notes.push(`délai court : +${Math.round((maj.fois - 1) * 100)} %`); }
+  if (maj?.plus) { bas += maj.plus; haut += maj.plus; notes.push(`mode urgent : +${maj.plus} €`); }
   bas = Math.max(TARIFS.minimumCommande, arrondi(bas)); haut = Math.max(bas, arrondi(haut));
   return { bas, haut, notes };
 }
