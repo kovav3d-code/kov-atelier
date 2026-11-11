@@ -124,7 +124,7 @@ const BESOINS = [
         <p>Pièces techniques, impression résine et sculpture numérique : un aperçu du travail de l’atelier.</p>
       </div>
       <ul class="gallery gallery--home">
-        {realisations.map((r) => <RealisationCard r={r} tailles="(max-width: 600px) 100vw, 590px" />)}
+        {realisations.map((r, i) => <RealisationCard r={r} impression={i === 0} tailles={i === 0 ? '(max-width: 1240px) 100vw, 1200px' : '(max-width: 600px) 100vw, 590px'} />)}
       </ul>
       <p class="section-foot"><a class="link" href="/realisations">Voir toutes les réalisations</a></p>
     </div>
