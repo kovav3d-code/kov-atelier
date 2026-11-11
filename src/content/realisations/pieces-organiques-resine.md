@@ -1,7 +1,7 @@
 ---
 titre: Pièces organiques imprimées en résine
 categories: ["Impression résine"]
-ajustement: contain
+ajustement: cover
 photos:
   - src: ../../assets/realisations/pieces-resine.jpg
     alt: Trois queues à écailles et pointes et un socle à gueule ouverte, imprimés en résine grise

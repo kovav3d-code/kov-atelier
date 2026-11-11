@@ -1,20 +1,16 @@
 ---
-titre: Grille de compteur pour Volkswagen Coccinelle
+titre: Panneau de compteurs en aluminium (concept)
 categories: ["Pièces mécaniques", "Conception 3D"]
-nature: photo
-ajustement: contain
+nature: rendu
 photos:
-  - src: ../../assets/realisations/grille-coccinelle-montee.jpg
-    alt: Grille de compteur à lamelles montée sur le tableau de bord d’une Volkswagen Coccinelle, autour du compteur d’origine
-  - src: ../../assets/realisations/grille.jpg
-    alt: La même grille finie en noir, avec ses lamelles parallèles et la bague du compteur d’un seul tenant
-  - src: ../../assets/realisations/grille-coccinelle-rendu.png
-    alt: Rendu 3D de la grille de compteur, vue de face avec la bague centrale et les lamelles
-  - src: ../../assets/realisations/grille-coccinelle-rendu-detail.jpg
-    alt: Rendu 3D en vue arrière montrant la bague du compteur et l’attache des lamelles
-typeProjet: "Pièce d’habillage automobile sur mesure"
-besoin: "Refaire la grille de compteur du tableau de bord d’une Coccinelle, à poser autour du compteur d’origine."
-solution: "Grille modélisée en 3D, lamelles et bague de compteur d’un seul tenant, essayée sur le tableau de bord puis fabriquée."
+  - src: ../../assets/realisations/panneau-compteurs-tableau-de-bord.jpg
+    alt: Visuel de présentation du panneau de compteurs en aluminium monté sur le tableau de bord crème d’une voiture ancienne, avec trois compteurs à lunette chromée
+  - src: ../../assets/realisations/panneau-compteurs-studio.jpg
+    alt: Visuel du panneau seul en aluminium satiné, avec ses trois ouvertures de compteurs, ses grilles en nid d’abeille et ses quatre vis de fixation
+typeProjet: "Concept d’habillage automobile"
+besoin: "Imaginer un panneau de compteurs sur mesure pour le tableau de bord d’une voiture ancienne, avec trois compteurs."
+solution: "Panneau en aluminium satiné : bagues polies autour des compteurs, graduations gravées, grilles en nid d’abeille, fente de passage de câbles et quatre vis de fixation apparentes. Visuels de présentation du concept."
+technologie: "Conception 3D, visuels de présentation"
 miseEnAvant: true
 ordre: 2
 aConfirmer: false

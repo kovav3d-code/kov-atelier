@@ -8,9 +8,9 @@ video:
   poster: /videos/creature-360-poster.jpg
   alt: Rotation à 360° d’une créature biomécanique sculptée en 3D, cage thoracique apparente et longs membres recourbés
 photos:
-  - src: ../../assets/realisations/creature-biomeca-face.png
+  - src: ../../assets/realisations/creature-biomeca-face.jpg
     alt: Créature biomécanique vue de face, cage thoracique ouverte, bras tendus et quatre longs membres recourbés
-  - src: ../../assets/realisations/creature-biomeca-dos.png
+  - src: ../../assets/realisations/creature-biomeca-dos.jpg
     alt: La même créature vue de dos, carapace et membres recourbés
 typeProjet: "Sculpture numérique"
 solution: "Créature sculptée en 3D, détaillée jusqu’aux côtes et aux articulations, présentée en rotation complète."
