@@ -15,7 +15,7 @@ import { SERVICES } from '../config/services';
 
 const realisations = (await getCollection('realisations', (r) => r.data.miseEnAvant && r.id !== 'grille-ajouree')) // grille : section « Du fichier à la pièce montée »
   .sort((a, b) => a.data.ordre - b.data.ordre)
-  .slice(0, 4);
+  .slice(0, 5);
 
 // Données structurées : uniquement des informations vérifiées (les champs non confirmés sont omis).
 const url = Astro.site!.toString();
