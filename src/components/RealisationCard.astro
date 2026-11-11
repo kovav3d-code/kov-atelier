@@ -109,5 +109,29 @@ const n = d.photos.length + (d.video ? 1 : 0);
       if (e.key === 'ArrowLeft') { e.preventDefault(); aller(courant() - 1); }
     });
     window.addEventListener('resize', maj);
+
+    // Défilement automatique toutes les 3 s, en boucle ; en pause au survol, au toucher, au clavier,
+    // hors écran, pendant l'effet d'impression, et désactivé si l'utilisateur limite les animations.
+    if (n > 1 && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      let visible = false;
+      let pause = false;
+      let repriseApres = 0;
+      const suspendre = () => { repriseApres = Date.now() + 8000; };
+      c.addEventListener('mouseenter', () => { pause = true; });
+      c.addEventListener('mouseleave', () => { pause = false; });
+      c.addEventListener('focusin', () => { pause = true; });
+      c.addEventListener('focusout', () => { pause = false; });
+      piste.addEventListener('pointerdown', suspendre);
+      piste.addEventListener('touchstart', suspendre, { passive: true });
+      prec.addEventListener('click', suspendre);
+      suiv.addEventListener('click', suspendre);
+      new IntersectionObserver(([e]) => { visible = e.isIntersecting && e.intersectionRatio > 0.4; }, { threshold: [0, 0.4, 1] }).observe(c);
+      setInterval(() => {
+        if (!visible || pause || document.hidden || Date.now() < repriseApres) return;
+        if (c.classList.contains('attente') || c.classList.contains('en-cours')) return;
+        const i = courant();
+        aller(i >= n - 1 ? 0 : i + 1);
+      }, 3000);
+    }
   }
 </script>

@@ -6,13 +6,13 @@ ajustement: contain
 photos:
   - src: ../../assets/realisations/buste-imprime-exterieur.jpg
     alt: Buste imprimé en 3D d’un homme à lunettes et barbe courte, finition noir brillant, photographié en extérieur
-  - src: ../../assets/realisations/buste-imprime-studio.jpg
+  - src: ../../assets/realisations/buste-imprime-studio.png
     alt: Buste imprimé en 3D d’un homme barbu, finition noir brillant, vu de trois quarts sur fond clair
-  - src: ../../assets/realisations/buste-trois-quarts.jpg
+  - src: ../../assets/realisations/buste-trois-quarts.png
     alt: Sculpture numérique d’un buste d’homme à lunettes et barbe courte, vue de trois quarts sur piédouche
-  - src: ../../assets/realisations/buste-visage.jpg
+  - src: ../../assets/realisations/buste-visage.png
     alt: Gros plan du visage sculpté, détail des lunettes, des sourcils et de la barbe
-  - src: ../../assets/realisations/buste-face.jpg
+  - src: ../../assets/realisations/buste-face.png
     alt: Buste sculpté vu de face, chemise boutonnée et piédouche
 typeProjet: "Commande personnalisée"
 besoin: "Un client souhaitait offrir un buste personnalisé en cadeau d’anniversaire."

@@ -1,7 +1,7 @@
 ---
 titre: Plaques QR code en relief
 categories: ["Conception 3D"]
-ajustement: cover
+ajustement: contain
 photos:
   - src: ../../assets/realisations/plaques-qr.jpg
     alt: Deux plaques imprimées avec QR code en relief, « Accédez à notre site web » et « Kov’Atelier »

@@ -1,8 +1,9 @@
 ---
 titre: Contenant fileté à anse
 categories: ["Pièces mécaniques"]
+ajustement: contain
 photos:
-  - src: ../../assets/realisations/bouchon-filete.jpg
+  - src: ../../assets/realisations/bouchon-filete.png
     alt: Bouchon gris à anse articulée soulevé au-dessus d’un corps fileté
   - src: ../../assets/realisations/gourde-situation.jpg
     alt: Contenant métallique cylindrique à anse et molette latérale posé sur un banc en forêt

@@ -2,8 +2,9 @@
 titre: Support d’écran
 categories: ["Conception 3D", "Pièces mécaniques"]
 nature: rendu
+ajustement: contain
 photos:
-  - src: ../../assets/realisations/support-ecran.jpg
+  - src: ../../assets/realisations/support-ecran.png
     alt: Rendu 3D d’un boîtier support d’écran ouvert, avec découpes, logements et points de fixation aux angles
 typeProjet: "Boîtier technique"
 besoin: "Intégrer un écran et son électronique dans un boîtier sur mesure, avec les ouvertures nécessaires à la connectique."

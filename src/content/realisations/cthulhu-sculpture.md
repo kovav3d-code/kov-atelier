@@ -2,6 +2,7 @@
 titre: Créature ailée en sculpture numérique
 categories: ["Projets artistiques", "Conception 3D"]
 nature: rendu
+ajustement: contain
 photos:
   - src: ../../assets/realisations/cthulhu-sculpture.jpg
     alt: Sculpture numérique d’une créature à tentacules et ailes membraneuses, accroupie sur un socle cubique, vue dans le logiciel de modélisation
