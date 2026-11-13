@@ -530,3 +530,52 @@ ul, ol { margin: 0; }
 .service-prix { margin-top: 10px; font-size: .92rem; color: var(--text-2); }
 .service-prix strong { color: var(--bleu-clair); font-size: 1.05rem; }
 .services-note { margin-top: 22px; font-size: .88rem; color: var(--text-2); }
+
+/* ---------- Animations de l'accueil (apparition au défilement, discrètes) ---------- */
+/* Haut de page : titre, texte et boutons arrivent l'un après l'autre au chargement */
+.hero .title-block h1, .hero .lead, .hero-actions, .hero-note, .hero-faits { animation: kov-monte .8s cubic-bezier(.2, .7, .2, 1) both; }
+.hero .lead { animation-delay: .12s; }
+.hero .hero-actions { animation-delay: .22s; }
+.hero .hero-note { animation-delay: .32s; }
+.hero .hero-faits { animation-delay: .42s; }
+.hero-faits li::before { animation: kov-point 2.4s ease-in-out infinite; }
+.hero-faits li:nth-child(2)::before { animation-delay: .4s; }
+.hero-faits li:nth-child(3)::before { animation-delay: .8s; }
+.hero-faits li:nth-child(4)::before { animation-delay: 1.2s; }
+@keyframes kov-monte { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+@keyframes kov-point { 0%, 100% { box-shadow: 0 0 0 0 rgba(143, 176, 245, .0); } 50% { box-shadow: 0 0 0 5px rgba(143, 176, 245, .18); } }
+
+/* Apparition au défilement (activée par le script de l'accueil uniquement) */
+.anim-pret .revele { opacity: 0; transform: translateY(22px); transition: opacity .7s cubic-bezier(.2, .7, .2, 1), transform .7s cubic-bezier(.2, .7, .2, 1); transition-delay: calc(var(--i, 0) * 90ms); }
+.anim-pret .revele.vu { opacity: 1; transform: none; }
+/* Étapes : le trait du haut se trace de gauche à droite */
+.anim-pret .step.revele { border-top-color: transparent; position: relative; }
+.anim-pret .step.revele::before { content: ""; position: absolute; left: 0; right: 0; top: -2px; height: 2px; background: var(--ink); transform: scaleX(0); transform-origin: left; transition: transform .9s cubic-bezier(.2, .7, .2, 1) calc(var(--i, 0) * 140ms + .15s); }
+.anim-pret .step.revele.vu::before { transform: scaleX(1); }
+/* Besoins des professionnels : les puces se cochent une à une */
+.anim-pret .besoins li.revele::before { transition: background-color .4s ease calc(var(--i, 0) * 120ms + .35s), border-color .4s ease calc(var(--i, 0) * 120ms + .35s), transform .4s ease calc(var(--i, 0) * 120ms + .35s); }
+.anim-pret .besoins li.revele.vu::before { background: var(--bleu-clair); border-color: var(--bleu-clair); transform: rotate(45deg); }
+
+/* Prestations : l'icône s'allume et la carte se soulève légèrement au survol */
+.service { transition: background-color .25s ease; }
+.service svg { transition: color .25s ease, transform .35s cubic-bezier(.2, .7, .2, 1); }
+@media (hover: hover) {
+  .service:hover { background: color-mix(in srgb, var(--surface) 55%, transparent); }
+  .service:hover svg { color: var(--bleu-clair); transform: translateY(-3px) rotate(-4deg); }
+  .modele:hover .modele-titre { color: var(--bleu-clair); }
+  .atelier-bande figure img { transition: transform .5s cubic-bezier(.2, .7, .2, 1); }
+  .atelier-bande figure:hover img { transform: scale(1.04); }
+  .atelier-bande figure { overflow: hidden; border-radius: var(--r-sm); }
+}
+.modele-titre { transition: color .2s ease; }
+
+/* En-tête : ombre discrète dès qu'on a défilé */
+.site-header { transition: box-shadow .3s ease, border-color .3s ease; }
+.site-header.defile { box-shadow: 0 8px 24px rgba(0, 0, 0, .28); }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero .title-block h1, .hero .lead, .hero-actions, .hero-note, .hero-faits, .hero-faits li::before { animation: none; }
+  .anim-pret .revele { opacity: 1; transform: none; transition: none; }
+  .anim-pret .step.revele::before { transform: scaleX(1); transition: none; }
+  .service svg, .atelier-bande figure img { transition: none; }
+}

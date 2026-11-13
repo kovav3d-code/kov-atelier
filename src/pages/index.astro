@@ -158,3 +158,32 @@ const BESOINS = [
     </div>
   </section>
 </Base>
+<script>
+  // Apparition au défilement : chaque bloc arrive en douceur, les éléments d'une même liste en cascade.
+  const reduit = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const entete = document.querySelector('.site-header');
+  const majEntete = () => entete?.classList.toggle('defile', scrollY > 8);
+  addEventListener('scroll', majEntete, { passive: true }); majEntete();
+  if (!reduit && 'IntersectionObserver' in window) {
+    const groupes = [
+      '#professionnels .section-head', '#professionnels .besoins li', '#professionnels .secteurs',
+      '#services .section-head', '#services .service', '#services .services-note',
+      '#realisations .section-head', '#realisations .modele', '#realisations .sous-titre-real', '#realisations .atelier-bande li',
+      '#methode .section-head', '#methode .step',
+      '#atelier .section-head', '#atelier .atout',
+      '.cta-final h2', '.cta-final p', '.cta-final .hero-actions',
+    ];
+    const vus = new IntersectionObserver((entrees) => {
+      for (const e of entrees) if (e.isIntersecting) { e.target.classList.add('vu'); vus.unobserve(e.target); }
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
+    for (const sel of groupes) {
+      document.querySelectorAll<HTMLElement>(sel).forEach((el, i) => {
+        // Déjà visible au chargement : on ne cache rien.
+        if (el.getBoundingClientRect().top < innerHeight * 0.9) return;
+        el.classList.add('revele'); el.style.setProperty('--i', String(i % 6));
+        vus.observe(el);
+      });
+    }
+    document.documentElement.classList.add('anim-pret');
+  }
+</script>
