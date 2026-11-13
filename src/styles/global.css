@@ -525,3 +525,8 @@ ul, ol { margin: 0; }
 .solution-titre span { color: var(--bleu-clair); }
 .solution-fig { margin-top: -8px; }
 .solution-lien { text-align: center; margin: 4px 0 0; }
+
+/* Prix de départ des prestations */
+.service-prix { margin-top: 10px; font-size: .92rem; color: var(--text-2); }
+.service-prix strong { color: var(--bleu-clair); font-size: 1.05rem; }
+.services-note { margin-top: 22px; font-size: .88rem; color: var(--text-2); }

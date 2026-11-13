@@ -4,7 +4,7 @@
  */
 export const SERVICES = [
   {
-    id: 'conception-modelisation-3d', prestation: 'modelisation', icon: 'modelisation',
+    id: 'conception-modelisation-3d', prix: '49 €', prestation: 'modelisation', icon: 'modelisation',
     titre: 'Conception et modélisation 3D',
     resume: 'Votre croquis, votre plan ou votre idée devient un modèle 3D précis, prêt à être fabriqué ou transmis à un autre prestataire.',
     texte: 'Vous n’avez pas besoin de savoir dessiner en 3D. À partir de ce que vous avez sous la main, l’atelier construit un modèle numérique fidèle, que vous pouvez faire fabriquer ici ou ailleurs.',
@@ -15,7 +15,7 @@ export const SERVICES = [
     note: 'SolidWorks et Shapr3D pour les pièces mécaniques, Blender et ZBrush pour les formes libres.',
   },
   {
-    id: 'impression-3d-sur-mesure', prestation: 'impression', icon: 'impression',
+    id: 'impression-3d-sur-mesure', prix: '29 €', prestation: 'impression', icon: 'impression',
     titre: 'Impression 3D sur mesure',
     resume: 'La résine pour les détails fins, le filament pour les pièces robustes et économiques. Une pièce unique ou plusieurs exemplaires.',
     texte: 'Vous avez déjà un fichier, ou l’atelier le crée pour vous. La technologie d’impression est choisie selon l’usage de la pièce, pas l’inverse.',
@@ -26,7 +26,7 @@ export const SERVICES = [
     note: 'Fichiers acceptés : STL, OBJ, 3MF ou STEP. Un fichier qui ne s’imprime pas correctement peut être corrigé.',
   },
   {
-    id: 'prototypage', prestation: 'prototype', icon: 'prototype',
+    id: 'prototypage', prix: '79 €', prestation: 'prototype', icon: 'prototype',
     titre: 'Prototypage',
     resume: 'Tester une forme, un assemblage ou un mécanisme en main avant d’engager une fabrication plus coûteuse.',
     texte: 'Un prototype permet de vérifier une idée concrètement : l’encombrement, l’assemblage avec l’existant, la prise en main ou le fonctionnement d’un mécanisme. Les ajustements entre deux versions se font directement dans le modèle 3D.',
@@ -36,7 +36,7 @@ export const SERVICES = [
     note: 'Pour les entrepreneurs et inventeurs : votre idée peut partir d’un simple croquis.',
   },
   {
-    id: 'reproduction-modification', prestation: 'reproduction', icon: 'reproduction',
+    id: 'reproduction-modification', prix: '49 €', prestation: 'reproduction', icon: 'reproduction',
     titre: 'Reproduction et modification de pièces',
     resume: 'Une pièce cassée, introuvable ou plus fabriquée ? Elle est remodélisée à partir de l’original ou de photos, puis refabriquée.',
     texte: 'Clip cassé, pièce d’un appareil ancien, élément de machine qui n’est plus produit : quand une pièce manque, elle peut souvent être reproduite en impression 3D, à l’identique ou améliorée.',
@@ -47,7 +47,7 @@ export const SERVICES = [
     note: 'La faisabilité dépend des contraintes de la pièce (efforts, chaleur, frottement) : elle est étudiée avant tout devis.',
   },
   {
-    id: 'composants-techniques', prestation: 'composant', icon: 'composant',
+    id: 'composants-techniques', prix: '39 €', prestation: 'composant', icon: 'composant',
     titre: 'Composants techniques',
     resume: 'Supports, gabarits, boîtiers, outillages : des pièces fonctionnelles adaptées à votre machine, votre véhicule ou votre poste de travail.',
     texte: 'Les pièces qui rendent service au quotidien, dessinées pour votre situation précise plutôt que choisies dans un catalogue.',
@@ -57,7 +57,7 @@ export const SERVICES = [
     note: 'Professionnels : vos plans PDF ou fichiers STEP peuvent être joints directement à la demande de devis.',
   },
   {
-    id: 'modelisation-artistique', prestation: 'artistique', icon: 'artistique',
+    id: 'modelisation-artistique', prix: '99 €', prestation: 'artistique', icon: 'artistique',
     titre: 'Modélisation artistique et organique',
     resume: 'Sculpture numérique, bustes, objets décoratifs et créations personnalisées, du modèle à la pièce finie.',
     texte: 'Pour les formes que les logiciels de mécanique dessinent mal : visages, personnages, ornements, objets décoratifs. Le modèle est sculpté numériquement, puis imprimé, en résine lorsque les détails fins l’exigent.',

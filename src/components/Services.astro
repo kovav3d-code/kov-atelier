@@ -8,6 +8,7 @@ import { SERVICES } from '../config/services';
       <Icon name={s.icon} />
       <h3>{s.titre}</h3>
       <p>{s.resume}</p>
+      <p class="service-prix">À partir de <strong>{s.prix}</strong></p>
       <a class="link" href={`/services#${s.id}`}>En savoir plus<span class="sr-only"> sur {s.titre.toLowerCase()}</span></a>
     </article>
   ))}
