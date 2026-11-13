@@ -19,6 +19,7 @@ const { title, description, ogImage = ogDefaut, jsonLd, masquerCtaMobile = false
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const og = await getImage({ src: ogImage, width: 1200, format: 'jpg' });
 const ogUrl = new URL(og.src, Astro.site);
+import NavImprimante from '../components/NavImprimante.astro';
 ---
 <!doctype html>
 <html lang="fr">
@@ -47,6 +48,7 @@ const ogUrl = new URL(og.src, Astro.site);
     <Header masquerCta={masquerCtaMobile} />
     <main id="contenu"><slot /></main>
     <Footer />
+    <NavImprimante />
     {!masquerCtaMobile && (
       <div class="mobile-cta"><a class="btn btn-primary" href="/devis" data-cta="barre-mobile">Demander un devis</a></div>
     )}
