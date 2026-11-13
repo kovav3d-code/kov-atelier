@@ -1,14 +1,26 @@
 ---
 // Grille de modèles 3D en rotation 360° (Three.js pour les fichiers, vidéo pour les rotations déjà rendues).
 // Fond transparent : les modèles se posent directement sur le fond du site.
-import { MODELES } from '../config/galerie';
-interface Props { limite?: number }
-const { limite } = Astro.props;
+import fs from 'node:fs';
+import path from 'node:path';
+import { MODELES as TOUS } from '../config/galerie';
+// N'affiche que les modèles dont la vidéo ou le fichier est bien présent dans public/ (vérifié au build).
+const present = (u?: string) => !!u && fs.existsSync(path.join(process.cwd(), 'public', u));
+const MODELES = TOUS.filter((m) => present(m.fichier) || present(m.video?.mp4));
+interface Props { limite?: number; filtres?: boolean }
+const { limite, filtres = false } = Astro.props;
+const categories = [...new Set(MODELES.map((m) => m.categorie))];
 const liste = limite ? MODELES.slice(0, limite) : MODELES;
 ---
+{filtres && (
+  <div class="filters" role="group" aria-label="Filtrer les modèles">
+    <button class="filter" type="button" aria-pressed="true" data-filtre-modele="">Tous</button>
+    {categories.map((c) => <button class="filter" type="button" aria-pressed="false" data-filtre-modele={c}>{c}</button>)}
+  </div>
+)}
 <ul class="modeles-grille">
   {liste.map((m) => (
-    <li class="modele">
+    <li class="modele" data-categorie={m.categorie}>
       <div class="modele-scene">
         {m.fichier ? (
           <div class="modele-canvas" data-modele-3d data-fichier={m.fichier} data-couleur={m.couleur} role="img" aria-label={m.alt}></div>
@@ -25,3 +37,10 @@ const liste = limite ? MODELES.slice(0, limite) : MODELES;
   ))}
 </ul>
 <script is:inline type="module" src="/scripts/visionneuse-3d.js"></script>
+<script is:inline>
+  document.querySelectorAll('[data-filtre-modele]').forEach((b, _, tous) => b.addEventListener('click', () => {
+    tous.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    const f = b.dataset.filtreModele;
+    document.querySelectorAll('.modeles-grille .modele').forEach((li) => { li.hidden = !!f && li.dataset.categorie !== f; });
+  }));
+</script>

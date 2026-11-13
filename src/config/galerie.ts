@@ -29,14 +29,24 @@ export type Modele3D = {
   alt: string;
   fichier?: string;
   couleur?: string; // couleur du matériau pour un .stl (sans couleur propre)
+  categorie: 'Pièces techniques' | 'Sculptures et figurines';
   video?: { mp4: string; poster: string };
 };
 
 export const MODELES: Modele3D[] = [
+  { id: 'buste-portrait', titre: 'Buste portrait', legende: 'Sculpture numérique, impression résine', categorie: 'Sculptures et figurines', alt: 'Rotation à 360° d’un buste d’homme sculpté en 3D, barbe courte et chemise à col', video: { mp4: '/videos/modeles/buste-portrait-360.mp4', poster: '/videos/modeles/buste-portrait-360.jpg' } },
+  { id: 'contenant-filete', titre: 'Contenant fileté à anse', legende: 'Assemblage de cinq pièces : corps, socle à robinet, bouchon, anse et molette', categorie: 'Pièces techniques', alt: 'Rotation à 360° d’un contenant cylindrique avec bouchon à anse et molette latérale', video: { mp4: '/videos/modeles/contenant-filete-360.mp4', poster: '/videos/modeles/contenant-filete-360.jpg' } },
+  { id: 'pignon-aspirateur', titre: 'Pignon de remplacement pour aspirateur robot', legende: 'Pièce introuvable remodélisée', categorie: 'Pièces techniques', alt: 'Rotation à 360° d’un pignon denté avec moyeu central', video: { mp4: '/videos/modeles/pignon-aspirateur-360.mp4', poster: '/videos/modeles/pignon-aspirateur-360.jpg' } },
+  { id: 'clip-coffre', titre: 'Clip de coffre pour voiture ancienne', legende: 'Reproduction d’une pièce d’époque', categorie: 'Pièces techniques', alt: 'Rotation à 360° d’un clip arrondi à embase', video: { mp4: '/videos/modeles/clip-coffre-360.mp4', poster: '/videos/modeles/clip-coffre-360.jpg' } },
+  { id: 'boitier-ecran', titre: 'Boîtier support d’écran', legende: 'Conception sur mesure, découpes et fixations', categorie: 'Pièces techniques', alt: 'Rotation à 360° d’un boîtier rectangulaire ouvert avec découpes latérales', video: { mp4: '/videos/modeles/boitier-ecran-360.mp4', poster: '/videos/modeles/boitier-ecran-360.jpg' } },
+  { id: 'bouchon-parfum', titre: 'Bouchon de flacon de parfum', legende: 'Design sur mesure', categorie: 'Pièces techniques', alt: 'Rotation à 360° d’un bouchon de parfum cubique aux arêtes arrondies', video: { mp4: '/videos/modeles/bouchon-parfum-360.mp4', poster: '/videos/modeles/bouchon-parfum-360.jpg' } },
+  { id: 'angle-fenetre', titre: 'Angle de fenêtre', legende: 'Pièce de remplacement', categorie: 'Pièces techniques', alt: 'Rotation à 360° d’une pièce d’angle de fenêtre', video: { mp4: '/videos/modeles/angle-fenetre-360.mp4', poster: '/videos/modeles/angle-fenetre-360.jpg' } },
+  { id: 'anneau-spot', titre: 'Anneau de fixation pour spot', legende: 'Présenté avec ses supports d’impression', categorie: 'Pièces techniques', alt: 'Rotation à 360° d’un anneau de fixation de spot entouré de ses supports d’impression', video: { mp4: '/videos/modeles/anneau-spot-360.mp4', poster: '/videos/modeles/anneau-spot-360.jpg' } },
   {
     id: 'creature-biomecanique',
     titre: 'Créature biomécanique',
     legende: 'Sculpture numérique (ZBrush)',
+    categorie: 'Sculptures et figurines',
     alt: 'Rotation à 360° d’une créature biomécanique sculptée en 3D, cage thoracique apparente et longs membres recourbés',
     video: { mp4: '/videos/creature-360.mp4', poster: '/videos/creature-360-poster.jpg' },
   },
