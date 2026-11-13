@@ -602,3 +602,49 @@ ul, ol { margin: 0; }
   .nav-imp-niveaux a:not(.actif):not(:hover) { opacity: .7; }
 }
 @media (prefers-reduced-motion: reduce) { .nav-imp-plateau, .nav-imp-led { transition: none; animation: none; } }
+
+/* ---------- Animation : l'artisan forge une lame (boucle) ---------- */
+.forge { margin: 28px 0 0; max-width: 560px; }
+.forge-svg { display: block; width: 100%; height: auto; overflow: visible; }
+.forge-sol { stroke: var(--line-strong); stroke-width: 2; }
+.forge-metal { fill: #3A434C; stroke: #5B6570; stroke-width: 1.5; stroke-linejoin: round; }
+.forge-bouche { fill: #1A1F25; }
+.forge-corps { fill: #4A535C; stroke: #5B6570; stroke-width: 1.2; stroke-linejoin: round; }
+.forge-tablier { fill: #2A3037; stroke: #5B6570; stroke-width: 1.2; }
+.forge-cheveux { fill: none; stroke: #2A3037; stroke-width: 6; stroke-linecap: round; }
+.forge-bras { fill: none; stroke: #4A535C; stroke-width: 10; stroke-linecap: round; }
+.forge-pince, .forge-manche { fill: #6B4A2E; stroke: none; }
+.forge-pince { stroke: #89939C; stroke-width: 3; stroke-linecap: round; }
+.forge-tete { fill: #89939C; stroke: #A9B2BA; stroke-width: 1; }
+.forge-garde { fill: #89939C; }
+.forge-poignee { fill: #6B4A2E; }
+.forge-etincelles circle { fill: #FFD27A; opacity: 0; }
+
+.forge-frappe { transform-box: view-box; transform-origin: 150px 118px; animation: forge-marteau 1.5s cubic-bezier(.5, 0, .5, 1) infinite; }
+@keyframes forge-marteau {
+  0% { transform: rotate(-58deg); }
+  52% { transform: rotate(-66deg); }
+  68% { transform: rotate(8deg); animation-timing-function: ease-out; }
+  74% { transform: rotate(1deg); }
+  100% { transform: rotate(-58deg); }
+}
+.forge-artisan { transform-box: view-box; transform-origin: 140px 214px; animation: forge-corps 1.5s ease-in-out infinite; }
+@keyframes forge-corps { 0%, 52%, 100% { transform: translateY(0); } 68% { transform: translateY(3px) rotate(1deg); } }
+.forge-lame { animation: forge-chauffe 1.5s ease-out infinite; }
+@keyframes forge-chauffe { 0%, 66% { filter: brightness(.95); } 69% { filter: brightness(1.45) saturate(1.2); } 100% { filter: brightness(.95); } }
+.forge-halo { animation: forge-halo 1.5s ease-out infinite; }
+@keyframes forge-halo { 0%, 66% { opacity: .55; } 69% { opacity: 1; } 100% { opacity: .55; } }
+.forge-etincelles circle { animation: forge-etincelle 1.5s ease-out infinite; }
+.forge-etincelles circle:nth-child(2n) { animation-duration: 1.5s; animation-delay: .02s; }
+@keyframes forge-etincelle {
+  0%, 67% { opacity: 0; transform: translate(0, 0); }
+  69% { opacity: 1; transform: translate(0, 0); }
+  95% { opacity: 0; transform: translate(var(--dx), calc(var(--dy) + 30px)); }
+  100% { opacity: 0; }
+}
+.forge-braise { animation: forge-braise 3s ease-in-out infinite; }
+@keyframes forge-braise { 50% { opacity: .55; } }
+@media (prefers-reduced-motion: reduce) {
+  .forge-frappe, .forge-artisan, .forge-lame, .forge-halo, .forge-etincelles circle, .forge-braise { animation: none; }
+  .forge-frappe { transform: rotate(-58deg); }
+}

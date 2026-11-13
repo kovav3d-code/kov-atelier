@@ -4,11 +4,13 @@ import CtaFinal from '../components/CtaFinal.astro';
 import { Image } from 'astro:assets';
 import { ATELIER } from '../config/galerie';
 import Modeles3D from '../components/Modeles3D.astro';
+import Forgeron from '../components/Forgeron.astro';
 ---
 <Base title="Réalisations en impression et modélisation 3D | Kov Atelier" description="Modèles 3D conçus et sculptés à l’atelier, et photos de pièces imprimées en résine et en filament par Kov Atelier à Florange (Moselle).">
   <section class="page-head"><div class="wrap">
     <h1>Nos réalisations</h1>
     <p class="lead">Les modèles 3D conçus à l’atelier, puis les pièces bien réelles qui en sortent.</p>
+    <Forgeron />
     <nav class="real-nav" aria-label="Sections de la page">
       <a href="#modeles-3d">Modèles 3D</a>
       <a href="#en-vrai">Photos et vidéos de l’atelier</a>
