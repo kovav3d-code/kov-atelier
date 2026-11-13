@@ -1,0 +1,27 @@
+---
+// Grille de modèles 3D en rotation 360° (Three.js pour les fichiers, vidéo pour les rotations déjà rendues).
+// Fond transparent : les modèles se posent directement sur le fond du site.
+import { MODELES } from '../config/galerie';
+interface Props { limite?: number }
+const { limite } = Astro.props;
+const liste = limite ? MODELES.slice(0, limite) : MODELES;
+---
+<ul class="modeles-grille">
+  {liste.map((m) => (
+    <li class="modele">
+      <div class="modele-scene">
+        {m.fichier ? (
+          <div class="modele-canvas" data-modele-3d data-fichier={m.fichier} data-couleur={m.couleur} role="img" aria-label={m.alt}></div>
+        ) : m.video && (
+          <video data-boucle muted loop playsinline preload="metadata" poster={m.video.poster} aria-label={m.alt}>
+            <source src={m.video.mp4} type="video/mp4" />
+          </video>
+        )}
+        <span class="modele-badge" aria-hidden="true">360°</span>
+      </div>
+      <p class="modele-titre">{m.titre}</p>
+      {m.legende && <p class="modele-legende">{m.legende}</p>}
+    </li>
+  ))}
+</ul>
+<script is:inline type="module" src="/scripts/visionneuse-3d.js"></script>

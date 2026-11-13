@@ -2,7 +2,8 @@
 import Base from '../layouts/Base.astro';
 import CtaFinal from '../components/CtaFinal.astro';
 import { Image } from 'astro:assets';
-import { MODELES, ATELIER } from '../config/galerie';
+import { ATELIER } from '../config/galerie';
+import Modeles3D from '../components/Modeles3D.astro';
 ---
 <Base title="Réalisations en impression et modélisation 3D | Kov Atelier" description="Modèles 3D conçus et sculptés à l’atelier, et photos de pièces imprimées en résine et en filament par Kov Atelier à Florange (Moselle).">
   <section class="page-head"><div class="wrap">
@@ -20,24 +21,7 @@ import { MODELES, ATELIER } from '../config/galerie';
         <h2 id="t-modeles">Modèles 3D</h2>
         <p>Pièces techniques, sculptures et figurines modélisées à l’atelier. Chaque modèle tourne sur lui-même : faites-le pivoter au doigt ou à la souris.</p>
       </div>
-      <ul class="modeles-grille">
-        {MODELES.map((m) => (
-          <li class="modele">
-            <div class="modele-scene">
-              {m.fichier ? (
-                <div class="modele-canvas" data-modele-3d data-fichier={m.fichier} data-couleur={m.couleur} role="img" aria-label={m.alt}></div>
-              ) : m.video && (
-                <video data-boucle muted loop playsinline preload="metadata" poster={m.video.poster} aria-label={m.alt}>
-                  <source src={m.video.mp4} type="video/mp4" />
-                </video>
-              )}
-              <span class="modele-badge" aria-hidden="true">360°</span>
-            </div>
-            <p class="modele-titre">{m.titre}</p>
-            {m.legende && <p class="modele-legende">{m.legende}</p>}
-          </li>
-        ))}
-      </ul>
+      <Modeles3D />
     </div>
   </section>
 
@@ -68,4 +52,3 @@ import { MODELES, ATELIER } from '../config/galerie';
 
   <CtaFinal titre="Un projet comparable ?" source="realisations-final" />
 </Base>
-<script is:inline type="module" src="/scripts/visionneuse-3d.js"></script>

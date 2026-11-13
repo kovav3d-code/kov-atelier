@@ -2,17 +2,16 @@
 import Base from '../layouts/Base.astro';
 import Services from '../components/Services.astro';
 import Steps from '../components/Steps.astro';
-import RealisationCard from '../components/RealisationCard.astro';
+import Modeles3D from '../components/Modeles3D.astro';
+import { Image } from 'astro:assets';
+import { ATELIER } from '../config/galerie';
 import Icon from '../components/Icon.astro';
-import { getCollection } from 'astro:content';
 import ImprimanteAnimee from '../components/ImprimanteAnimee.astro';
 import IntroVideo from '../components/IntroVideo.astro';
 import { SITE } from '../config/site';
 import { SERVICES } from '../config/services';
 
-const realisations = (await getCollection('realisations', (r) => r.data.miseEnAvant && r.id !== 'grille-ajouree'))
-  .sort((a, b) => a.data.ordre - b.data.ordre)
-  .slice(0, 5);
+const photosAtelier = ATELIER.filter((m) => m.type === 'photo').slice(0, 6);
 
 // Données structurées : uniquement des informations vérifiées (les champs non confirmés sont omis).
 const url = Astro.site!.toString();
@@ -95,10 +94,14 @@ const BESOINS = [
     <div class="wrap">
       <div class="section-head">
         <h2 id="t-real">Nos réalisations</h2>
-        <p>Pièces techniques, impression résine et sculpture numérique : un aperçu du travail de l’atelier.</p>
+        <p>Les modèles conçus à l’atelier, en rotation, puis les pièces bien réelles qui en sortent.</p>
       </div>
-      <ul class="gallery gallery--home">
-        {realisations.map((r, i) => <RealisationCard r={r} impression={i === 0} tailles={i === 0 ? '(max-width: 1240px) 100vw, 1200px' : '(max-width: 600px) 100vw, 590px'} />)}
+      <Modeles3D limite={6} />
+      <h3 class="sous-titre-real">En vrai, à l’atelier</h3>
+      <ul class="atelier-bande">
+        {photosAtelier.map((m) => m.type === 'photo' && (
+          <li><figure><Image src={m.src} alt={m.alt} widths={[360, 600]} sizes="(max-width: 600px) 50vw, 200px" loading="lazy" /><figcaption>{m.legende}</figcaption></figure></li>
+        ))}
       </ul>
       <p class="section-foot"><a class="link" href="/realisations">Voir toutes les réalisations</a></p>
     </div>

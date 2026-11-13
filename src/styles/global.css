@@ -471,7 +471,9 @@ ul, ol { margin: 0; }
 .real-nav a:hover { border-color: var(--bleu-clair); color: var(--bleu-clair); }
 .real-section { scroll-margin-top: 90px; }
 .modeles-grille { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 24px; }
-.modele-scene { position: relative; aspect-ratio: 1 / 1; border-radius: var(--r-md); overflow: hidden; background: radial-gradient(ellipse at 50% 40%, #2E353D 0%, var(--surface-2) 75%); border: 1px solid var(--line); }
+.modele-scene { position: relative; aspect-ratio: 1 / 1; }
+/* Le noir des rotations rendues disparaît dans le fond du site (mode « éclaircir ») */
+.modele-scene video { mix-blend-mode: lighten; object-fit: contain; }
 .modele-scene video, .modele-canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .modele-canvas canvas { display: block; width: 100%; height: 100%; cursor: grab; }
 .modele-canvas canvas:active { cursor: grabbing; }
@@ -504,3 +506,12 @@ ul, ol { margin: 0; }
 .solution-fig .imprimante { max-width: 440px; }
 .solution-fig.imp3d-actif .imprimante { display: none; }
 @media (max-width: 719px) { .solution-fig .imp3d { max-width: none; aspect-ratio: 4 / 3; } }
+
+/* Accueil : bande de photos de l'atelier sous les modèles 3D */
+.sous-titre-real { margin: clamp(40px, 6vw, 64px) 0 18px; font-size: 1.25rem; }
+.atelier-bande { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; }
+.atelier-bande figure { margin: 0; }
+.atelier-bande img { display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: var(--r-sm); }
+.atelier-bande figcaption { margin-top: 8px; font-size: .82rem; color: var(--text-2); line-height: 1.35; }
+@media (max-width: 960px) { .atelier-bande { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 600px) { .atelier-bande { grid-template-columns: repeat(2, 1fr); } }
