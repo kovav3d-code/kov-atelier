@@ -464,3 +464,33 @@ ul, ol { margin: 0; }
   .hero-video::after { background: linear-gradient(to bottom, rgba(32, 37, 43, .72) 0%, rgba(32, 37, 43, .8) 45%, rgba(32, 37, 43, .92) 75%, var(--bg) 100%); }
 }
 
+
+/* Page Réalisations : modèles 3D en rotation + mur de photos de l'atelier */
+.real-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+.real-nav a { padding: 8px 16px; border: 1px solid var(--line); border-radius: 999px; color: var(--text); text-decoration: none; font-size: .92rem; }
+.real-nav a:hover { border-color: var(--bleu-clair); color: var(--bleu-clair); }
+.real-section { scroll-margin-top: 90px; }
+.modeles-grille { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 24px; }
+.modele-scene { position: relative; aspect-ratio: 1 / 1; border-radius: var(--r-md); overflow: hidden; background: radial-gradient(ellipse at 50% 40%, #2E353D 0%, var(--surface-2) 75%); border: 1px solid var(--line); }
+.modele-scene video, .modele-canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.modele-canvas canvas { display: block; width: 100%; height: 100%; cursor: grab; }
+.modele-canvas canvas:active { cursor: grabbing; }
+.modele-canvas::before { content: ""; position: absolute; left: 50%; top: 50%; width: 34px; height: 34px; margin: -17px; border-radius: 50%; border: 2px solid rgba(143, 176, 245, .25); border-top-color: var(--bleu-clair); animation: kov-tourne 1s linear infinite; }
+.modele-canvas.pret::before, .modele-canvas.erreur::before { display: none; }
+@keyframes kov-tourne { to { transform: rotate(360deg); } }
+.modele-badge { position: absolute; left: 12px; top: 12px; padding: 3px 9px; border-radius: 999px; background: rgba(32, 37, 43, .7); color: var(--bleu-clair); font-size: .75rem; font-weight: 600; letter-spacing: .04em; pointer-events: none; }
+.modele-titre { margin: 14px 0 0; font-weight: 600; }
+.modele-legende { margin: 2px 0 0; color: var(--text-2); font-size: .92rem; }
+.atelier-mur { list-style: none; margin: 0; padding: 0; columns: 3 300px; column-gap: 18px; }
+.atelier-item { break-inside: avoid; margin-bottom: 18px; }
+.atelier-item figure { margin: 0; border-radius: var(--r-md); overflow: hidden; background: var(--surface); border: 1px solid var(--line); }
+.atelier-item img, .atelier-item video { display: block; width: 100%; height: auto; }
+.atelier-item figcaption { padding: 10px 14px 12px; font-size: .9rem; color: var(--text-2); }
+@media (prefers-reduced-motion: reduce) { .modele-canvas::before { animation: none; } }
+
+/* Imprimante 3D (Three.js) du hero ; l'animation dessinée reste en secours */
+.imp3d { width: 100%; max-width: 560px; margin-inline: auto; aspect-ratio: 1 / 1; }
+.imp3d canvas { display: block; width: 100%; height: 100%; cursor: grab; }
+.imp3d canvas:active { cursor: grabbing; }
+.hero-anim.imp3d-actif .imprimante { display: none; }
+@media (max-width: 719px) { .imp3d { max-width: 380px; } }

@@ -1,34 +1,71 @@
 ---
 import Base from '../layouts/Base.astro';
-import RealisationCard from '../components/RealisationCard.astro';
 import CtaFinal from '../components/CtaFinal.astro';
-import { getCollection } from 'astro:content';
-import { CATEGORIES } from '../content.config';
-const toutes = (await getCollection('realisations')).sort((a, b) => a.data.ordre - b.data.ordre);
-const presentes = CATEGORIES.filter((c) => toutes.some((r) => r.data.categories.includes(c)));
+import { Image } from 'astro:assets';
+import { MODELES, ATELIER } from '../config/galerie';
 ---
-<Base title="Réalisations en impression et modélisation 3D | Kov Atelier" description="Pièces mécaniques, conception 3D, impression résine et sculpture numérique réalisées par Kov Atelier à Florange (Moselle).">
+<Base title="Réalisations en impression et modélisation 3D | Kov Atelier" description="Modèles 3D conçus et sculptés à l’atelier, et photos de pièces imprimées en résine et en filament par Kov Atelier à Florange (Moselle).">
   <section class="page-head"><div class="wrap">
     <h1>Nos réalisations</h1>
-    <p class="lead">Un aperçu des pièces et des modèles réalisés à l’atelier. Filtrez par type de projet.</p>
+    <p class="lead">Les modèles 3D conçus à l’atelier, puis les pièces bien réelles qui en sortent.</p>
+    <nav class="real-nav" aria-label="Sections de la page">
+      <a href="#modeles-3d">Modèles 3D</a>
+      <a href="#en-vrai">Photos et vidéos de l’atelier</a>
+    </nav>
   </div></section>
-  <section class="wrap" style="padding-bottom:clamp(64px,8vw,112px)">
-    <div class="filters" role="group" aria-label="Filtrer les réalisations">
-      <button class="filter" type="button" aria-pressed="true" data-filtre="">Toutes</button>
-      {presentes.map((c) => <button class="filter" type="button" aria-pressed="false" data-filtre={c}>{c}</button>)}
+
+  <section class="section real-section" id="modeles-3d" aria-labelledby="t-modeles">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="t-modeles">Modèles 3D</h2>
+        <p>Pièces techniques, sculptures et figurines modélisées à l’atelier. Chaque modèle tourne sur lui-même : faites-le pivoter au doigt ou à la souris.</p>
+      </div>
+      <ul class="modeles-grille">
+        {MODELES.map((m) => (
+          <li class="modele">
+            <div class="modele-scene">
+              {m.fichier ? (
+                <div class="modele-canvas" data-modele-3d data-fichier={m.fichier} data-couleur={m.couleur} role="img" aria-label={m.alt}></div>
+              ) : m.video && (
+                <video data-boucle muted loop playsinline preload="metadata" poster={m.video.poster} aria-label={m.alt}>
+                  <source src={m.video.mp4} type="video/mp4" />
+                </video>
+              )}
+              <span class="modele-badge" aria-hidden="true">360°</span>
+            </div>
+            <p class="modele-titre">{m.titre}</p>
+            {m.legende && <p class="modele-legende">{m.legende}</p>}
+          </li>
+        ))}
+      </ul>
     </div>
-    <ul class="gallery" id="galerie">
-      {toutes.map((r) => <RealisationCard r={r} details />)}
-    </ul>
   </section>
+
+  <section class="section real-section" id="en-vrai" aria-labelledby="t-vrai">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="t-vrai">En vrai, à l’atelier</h2>
+        <p>Les pièces imprimées, finies et montées : résine, filament, finitions, et quelques coulisses de fabrication.</p>
+      </div>
+      <ul class="atelier-mur">
+        {ATELIER.map((m, i) => (
+          <li class="atelier-item">
+            <figure>
+              {m.type === 'photo' ? (
+                <Image src={m.src} alt={m.alt} widths={[400, 700, 1000]} sizes="(max-width: 600px) 100vw, (max-width: 960px) 50vw, 380px" loading={i < 3 ? 'eager' : 'lazy'} />
+              ) : (
+                <video data-boucle muted loop playsinline preload="metadata" poster={m.poster} aria-label={m.alt}>
+                  <source src={m.mp4} type="video/mp4" />
+                </video>
+              )}
+              <figcaption>{m.legende}</figcaption>
+            </figure>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
   <CtaFinal titre="Un projet comparable ?" source="realisations-final" />
 </Base>
-<script>
-  const boutons = document.querySelectorAll<HTMLButtonElement>('[data-filtre]');
-  const items = document.querySelectorAll<HTMLElement>('#galerie .g-item');
-  boutons.forEach((b) => b.addEventListener('click', () => {
-    boutons.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
-    const f = b.dataset.filtre;
-    items.forEach((i) => { i.hidden = !!f && !(i.dataset.categories ?? '').split('|').includes(f); });
-  }));
-</script>
+<script is:inline type="module" src="/scripts/visionneuse-3d.js"></script>

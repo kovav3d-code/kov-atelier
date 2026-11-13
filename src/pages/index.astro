@@ -4,17 +4,13 @@ import Services from '../components/Services.astro';
 import Steps from '../components/Steps.astro';
 import RealisationCard from '../components/RealisationCard.astro';
 import Icon from '../components/Icon.astro';
-import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import ImprimanteAnimee from '../components/ImprimanteAnimee.astro';
 import IntroVideo from '../components/IntroVideo.astro';
-import grilleRendu from '../assets/realisations/grille-coccinelle-rendu.jpg';
-import grillePiece from '../assets/realisations/grille.jpg';
-import grilleMontee from '../assets/realisations/grille-coccinelle-montee.jpg';
 import { SITE } from '../config/site';
 import { SERVICES } from '../config/services';
 
-const realisations = (await getCollection('realisations', (r) => r.data.miseEnAvant && r.id !== 'grille-ajouree')) // grille : section « Du fichier à la pièce montée »
+const realisations = (await getCollection('realisations', (r) => r.data.miseEnAvant && r.id !== 'grille-ajouree'))
   .sort((a, b) => a.data.ordre - b.data.ordre)
   .slice(0, 5);
 
@@ -74,7 +70,7 @@ const BESOINS = [
         </div>
         <p class="hero-note">Vous pouvez partir d’un croquis, d’un plan technique, d’une photo, d’un fichier 3D ou d’une simple idée.</p>
       </div>
-      <figure class="hero-figure hero-anim">
+      <figure class="hero-figure hero-anim" data-imprimante-3d>
         <ImprimanteAnimee />
       </figure>
     </div>
@@ -87,35 +83,6 @@ const BESOINS = [
         <p>Une seule adresse pour concevoir, reproduire et fabriquer vos pièces en impression 3D. Atelier à Florange, à côté du Luxembourg, avec expédition dans le monde entier.</p>
       </div>
       <Services />
-    </div>
-  </section>
-
-  <section class="section parcours" aria-labelledby="t-parcours">
-    <div class="wrap">
-      <div class="section-head">
-        <h2 id="t-parcours">Du fichier à la pièce montée</h2>
-        <p>Une grille de compteur pour Volkswagen Coccinelle : modélisée en 3D, fabriquée à l’atelier, puis posée sur le tableau de bord.</p>
-      </div>
-      <ol class="parcours-etapes">
-        <li>
-          <figure>
-            <div class="parcours-img"><Image src={grilleRendu} alt="Rendu 3D de la grille de compteur avec sa bague et ses lamelles" widths={[500, 800]} sizes="(max-width: 768px) 100vw, 380px" /></div>
-            <figcaption><span class="parcours-num">01</span><strong>Modélisation 3D</strong>Lamelles et bague de compteur dessinées d’un seul tenant, aux cotes du tableau de bord.</figcaption>
-          </figure>
-        </li>
-        <li>
-          <figure>
-            <div class="parcours-img"><Image src={grillePiece} alt="La grille fabriquée, finie en noir, posée sur un plan de travail" widths={[500, 800]} sizes="(max-width: 768px) 100vw, 380px" /></div>
-            <figcaption><span class="parcours-num">02</span><strong>Fabrication</strong>La pièce est imprimée puis finie à l’atelier.</figcaption>
-          </figure>
-        </li>
-        <li>
-          <figure>
-            <div class="parcours-img"><Image src={grilleMontee} alt="La grille montée autour du compteur d’origine sur le tableau de bord d’une Coccinelle" widths={[500, 800]} sizes="(max-width: 768px) 100vw, 380px" /></div>
-            <figcaption><span class="parcours-num">03</span><strong>Pièce montée</strong>Essayée puis posée sur le véhicule, autour du compteur d’origine.</figcaption>
-          </figure>
-        </li>
-      </ol>
     </div>
   </section>
 
@@ -183,3 +150,4 @@ const BESOINS = [
     </div>
   </section>
 </Base>
+<script is:inline type="module" src="/scripts/imprimante-3d.js"></script>
