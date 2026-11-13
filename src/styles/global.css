@@ -494,3 +494,13 @@ ul, ol { margin: 0; }
 .imp3d canvas:active { cursor: grabbing; }
 .hero-anim.imp3d-actif .imprimante { display: none; }
 @media (max-width: 719px) { .imp3d { max-width: 380px; } }
+
+/* Hero sans illustration (l'imprimante est descendue juste avant les réalisations) */
+.hero-grid.hero-seul { grid-template-columns: minmax(0, 1fr); max-width: 52rem; }
+/* Imprimante 3D « Solution » */
+.solution-3d { padding-block: clamp(24px, 4vw, 56px); }
+.solution-fig { margin: 0; }
+.solution-fig .imp3d { max-width: 1100px; aspect-ratio: 16 / 9; }
+.solution-fig .imprimante { max-width: 440px; }
+.solution-fig.imp3d-actif .imprimante { display: none; }
+@media (max-width: 719px) { .solution-fig .imp3d { max-width: none; aspect-ratio: 4 / 3; } }
