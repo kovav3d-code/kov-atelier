@@ -48,8 +48,8 @@ async function monter(cadre) {
   const centre = boite.getCenter(new THREE.Vector3());
   enveloppe.position.sub(centre);
   const rayon = boite.getBoundingSphere(new THREE.Sphere()).radius;
-  const dist = rayon / Math.sin(THREE.MathUtils.degToRad(camera.fov / 2)) * 0.9;
-  camera.position.set(0, rayon * 0.35, dist);
+  const dist = rayon / Math.sin(THREE.MathUtils.degToRad(camera.fov / 2)) * 1.0;
+  camera.position.set(0, rayon * 0.6, dist);
   camera.near = dist / 100; camera.far = dist * 10; camera.updateProjectionMatrix();
   camera.lookAt(0, 0, 0);
 
