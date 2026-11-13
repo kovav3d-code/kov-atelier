@@ -1,5 +1,6 @@
 ---
-// Introduction animée plein écran, jouée à la première visite de la session.
+// Vidéo d'introduction jouée en fond du hero, derrière le texte (visible dès le départ).
+// Une fois par session ; ignorée si l'utilisateur limite les animations ou économise ses données.
 // N'apparaît que si les deux vidéos existent dans public/videos (vérifié au build).
 import fs from 'node:fs';
 import path from 'node:path';
@@ -10,52 +11,44 @@ const existe = (p: string) => fs.existsSync(path.join(process.cwd(), 'public', p
 const actif = existe(PORTRAIT) && existe(PAYSAGE);
 ---
 {actif && (
-  <div class="intro" id="intro" aria-hidden="true" data-portrait={PORTRAIT} data-paysage={PAYSAGE}>
-    <video class="intro-video" muted playsinline preload="auto"></video>
-    <div class="intro-voile"></div>
-    <div class="intro-barre"><span></span></div>
-    <button class="intro-passer" type="button" tabindex="-1">Passer</button>
+  <div class="hero-video" aria-hidden="true" data-portrait={PORTRAIT} data-paysage={PAYSAGE}>
+    <video muted playsinline preload="none"></video>
   </div>
   <script is:inline>
     (function () {
-      var intro = document.getElementById('intro');
-      if (!intro) return;
+      var bloc = document.currentScript && document.currentScript.previousElementSibling;
+      if (!bloc || !bloc.classList.contains('hero-video')) return;
+      var hero = bloc.closest('.hero');
       var deja = false;
       try { deja = sessionStorage.getItem('kov-intro') === '1'; } catch (e) {}
       var reduit = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       var eco = navigator.connection && navigator.connection.saveData;
-      if (deja || reduit || eco) { intro.remove(); return; }
+      if (!hero || deja || reduit || eco) { bloc.remove(); return; }
 
-      var video = intro.querySelector('video');
-      var barre = intro.querySelector('.intro-barre span');
-      var portrait = window.matchMedia('(orientation: portrait)').matches;
-      video.src = portrait ? intro.dataset.portrait : intro.dataset.paysage;
-      intro.classList.add('visible');
-      document.documentElement.classList.add('intro-active');
+      var video = bloc.querySelector('video');
+      var portrait = window.matchMedia('(max-width: 719px), (orientation: portrait)').matches;
+      video.src = portrait ? bloc.dataset.portrait : bloc.dataset.paysage;
+      video.preload = 'auto';
 
       var fini = false;
-      function fermer() {
+      function terminer() {
         if (fini) return;
         fini = true;
         try { sessionStorage.setItem('kov-intro', '1'); } catch (e) {}
-        intro.classList.add('sortie');
-        document.documentElement.classList.remove('intro-active');
-        setTimeout(function () { intro.remove(); }, 900);
+        hero.classList.add('video-fin');
+        hero.classList.remove('video-lecture');
+        setTimeout(function () { bloc.remove(); hero.classList.remove('video-fin'); }, 1800);
       }
-
+      video.addEventListener('playing', function () { if (!fini) hero.classList.add('video-lecture'); }, { once: true });
       video.addEventListener('timeupdate', function () {
-        if (video.duration) barre.style.transform = 'scaleX(' + (video.currentTime / video.duration) + ')';
+        if (video.duration && video.duration - video.currentTime < 0.9) terminer();
       });
-      video.addEventListener('playing', function () { intro.classList.add('lecture'); });
-      video.addEventListener('ended', function () { barre.style.transform = 'scaleX(1)'; setTimeout(fermer, 700); });
-      video.addEventListener('error', fermer);
-      intro.querySelector('.intro-passer').addEventListener('click', fermer);
-      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') fermer(); });
-      // Lecture automatique refusée, réseau lent ou vidéo bloquée : on n'attend pas.
+      video.addEventListener('ended', terminer);
+      video.addEventListener('error', terminer);
       var p = video.play();
-      if (p && p.catch) p.catch(fermer);
-      setTimeout(function () { if (!intro.classList.contains('lecture')) fermer(); }, 2500);
-      setTimeout(fermer, 9000);
+      if (p && p.catch) p.catch(terminer);
+      setTimeout(function () { if (!hero.classList.contains('video-lecture')) terminer(); }, 3000);
+      setTimeout(terminer, 9000);
     })();
   </script>
 )}
