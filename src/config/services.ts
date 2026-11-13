@@ -15,7 +15,7 @@ export const SERVICES = [
     note: 'SolidWorks et Shapr3D pour les pièces mécaniques, Blender et ZBrush pour les formes libres.',
   },
   {
-    id: 'impression-3d-sur-mesure', prix: '29 €', prestation: 'impression', icon: 'impression',
+    id: 'impression-3d-sur-mesure', prix: '5 €', prixUnite: 'la pièce, en série', prestation: 'impression', icon: 'impression',
     titre: 'Impression 3D sur mesure',
     resume: 'La résine pour les détails fins, le filament pour les pièces robustes et économiques. Une pièce unique ou plusieurs exemplaires.',
     texte: 'Vous avez déjà un fichier, ou l’atelier le crée pour vous. La technologie d’impression est choisie selon l’usage de la pièce, pas l’inverse.',
