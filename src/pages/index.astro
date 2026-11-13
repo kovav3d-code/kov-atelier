@@ -6,7 +6,6 @@ import Modeles3D from '../components/Modeles3D.astro';
 import { Image } from 'astro:assets';
 import { ATELIER } from '../config/galerie';
 import Icon from '../components/Icon.astro';
-import ImprimanteAnimee from '../components/ImprimanteAnimee.astro';
 import IntroVideo from '../components/IntroVideo.astro';
 import { SITE } from '../config/site';
 import { SERVICES } from '../config/services';
@@ -106,16 +105,6 @@ const BESOINS = [
     </div>
   </section>
 
-  <section class="section solution-3d" aria-labelledby="t-solution">
-    <div class="wrap">
-      <h2 class="solution-titre" id="t-solution">Votre problème. <span>Notre solution.</span></h2>
-      <figure class="solution-fig" data-imprimante-3d>
-        <ImprimanteAnimee />
-      </figure>
-      <p class="solution-lien"><a class="btn btn-primary" href="/devis" data-cta="solution">Décrire mon besoin</a></p>
-    </div>
-  </section>
-
   <section class="section" id="realisations" aria-labelledby="t-real">
     <div class="wrap">
       <div class="section-head">
@@ -169,4 +158,3 @@ const BESOINS = [
     </div>
   </section>
 </Base>
-<script is:inline type="module" src="/scripts/imprimante-3d.js"></script>
