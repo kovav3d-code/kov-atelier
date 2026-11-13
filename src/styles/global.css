@@ -515,3 +515,13 @@ ul, ol { margin: 0; }
 .atelier-bande figcaption { margin-top: 8px; font-size: .82rem; color: var(--text-2); line-height: 1.35; }
 @media (max-width: 960px) { .atelier-bande { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 600px) { .atelier-bande { grid-template-columns: repeat(2, 1fr); } }
+
+/* Hero : trois points de réassurance */
+.hero-faits { list-style: none; margin: 22px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px 22px; color: var(--text-2); font-size: .92rem; }
+.hero-faits li { display: flex; align-items: center; gap: 8px; }
+.hero-faits li::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--bleu-clair); flex: none; }
+/* Transition « Votre problème. Notre solution. » autour de l'imprimante */
+.solution-titre { text-align: center; font-size: clamp(1.7rem, 3.4vw, 2.6rem); margin: 0 0 8px; }
+.solution-titre span { color: var(--bleu-clair); }
+.solution-fig { margin-top: -8px; }
+.solution-lien { text-align: center; margin: 4px 0 0; }

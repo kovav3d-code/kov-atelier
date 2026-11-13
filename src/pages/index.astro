@@ -60,14 +60,36 @@ const BESOINS = [
     <div class="wrap hero-grid hero-seul">
       <div>
         <div class="title-block">
-          <h1>De votre idée<br /> à la pièce réelle.</h1>
+          <h1>Pièce introuvable ?<br /> On la conçoit et on la fabrique.</h1>
           <div class="cote" aria-hidden="true"><i></i><span>sur mesure</span><i></i></div>
         </div>
-        <p class="lead">Conception, modélisation et impression 3D sur mesure à Florange. Prototypes, pièces techniques et réalisations personnalisées pour professionnels et particuliers.</p>
+        <p class="lead">Modélisation et impression 3D sur mesure à Florange, à côté du Luxembourg. Pièces cassées ou obsolètes, prototypes, pièces techniques et créations personnalisées, pour les professionnels comme pour les particuliers.</p>
         <div class="hero-actions">
-          <a class="btn btn-ghost" href="#realisations">Découvrir nos réalisations</a>
+          <a class="btn btn-primary" href="/devis" data-cta="hero">Demander un devis</a>
+          <a class="btn btn-ghost" href="#realisations">Voir nos réalisations</a>
         </div>
         <p class="hero-note">Vous pouvez partir d’un croquis, d’un plan technique, d’une photo, d’un fichier 3D ou d’une simple idée.</p>
+        <ul class="hero-faits">
+          <li>Conception et fabrication au même endroit</li>
+          <li>Un seul interlocuteur, du premier échange à la pièce finie</li>
+          <li>Florange, Luxembourg, expédition partout</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--dark" id="professionnels" aria-labelledby="t-pros">
+    <div class="wrap pros-grid">
+      <div class="section-head">
+        <h2 id="t-pros">Une pièce introuvable ne devrait pas immobiliser une machine.</h2>
+        <p>Entreprises industrielles, garages, artisans, bureaux d’études : l’atelier conçoit et fabrique les pièces dont votre activité a besoin, à partir de vos plans, d’une pièce existante ou d’une simple photo.</p>
+        <div class="hero-actions"><a class="btn btn-primary" href="/devis" data-cta="professionnels">Demander un devis</a></div>
+      </div>
+      <div>
+        <ul class="besoins">
+          {BESOINS.map((b) => <li><span><strong>{b.titre}</strong>{b.texte}</span></li>)}
+        </ul>
+        <p class="secteurs">Vos plans et fichiers peuvent être joints directement à la demande : STEP, STL, OBJ, 3MF, PDF ou photos.</p>
       </div>
     </div>
   </section>
@@ -82,11 +104,13 @@ const BESOINS = [
     </div>
   </section>
 
-  <section class="section solution-3d" aria-label="Animation : une imprimante 3D imprime le mot Solution couche par couche">
+  <section class="section solution-3d" aria-labelledby="t-solution">
     <div class="wrap">
+      <h2 class="solution-titre" id="t-solution">Votre problème. <span>Notre solution.</span></h2>
       <figure class="solution-fig" data-imprimante-3d>
         <ImprimanteAnimee />
       </figure>
+      <p class="solution-lien"><a class="btn btn-primary" href="/devis" data-cta="solution">Décrire mon besoin</a></p>
     </div>
   </section>
 
@@ -131,21 +155,6 @@ const BESOINS = [
     </div>
   </section>
 
-  <section class="section section--dark" id="professionnels" aria-labelledby="t-pros">
-    <div class="wrap pros-grid">
-      <div class="section-head">
-        <h2 id="t-pros">Une pièce introuvable ne devrait pas immobiliser une machine.</h2>
-        <p>Entreprises industrielles, garages, artisans, bureaux d’études : l’atelier conçoit et fabrique les pièces dont votre activité a besoin, à partir de vos plans, d’une pièce existante ou d’une simple photo.</p>
-        <div class="hero-actions"><a class="btn btn-primary" href="/devis" data-cta="professionnels">Demander un devis</a></div>
-      </div>
-      <div>
-        <ul class="besoins">
-          {BESOINS.map((b) => <li><span><strong>{b.titre}</strong>{b.texte}</span></li>)}
-        </ul>
-        <p class="secteurs">Vos plans et fichiers peuvent être joints directement à la demande : STEP, STL, OBJ, 3MF, PDF ou photos.</p>
-      </div>
-    </div>
-  </section>
 
   <section class="cta-final" aria-labelledby="t-cta">
     <div class="wrap">
