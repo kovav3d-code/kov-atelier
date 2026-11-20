@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
-import { PRESTATIONS, DELAIS, FICHIERS, LIMITES } from '../config/devis';
+import { PRESTATIONS, DELAIS, LIVRAISONS, FICHIERS, LIMITES } from '../config/devis';
 import { SITE, APERCU, MONTRER_RESERVES } from '../config/site';
 const turnstileKey = SITE.turnstileSiteKey ?? import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
 const accept = FICHIERS.extensions.map((e) => `.${e}`).join(',');
@@ -55,6 +55,11 @@ const accept = FICHIERS.extensions.map((e) => `.${e}`).join(',');
               <label for="delai">Délai souhaité <span class="opt">(facultatif)</span></label>
               <select id="delai" name="delai"><option value="">Choisir</option>{DELAIS.map((d) => <option>{d}</option>)}</select>
               <p class="field-help">Le mode urgent ajoute 40 € au devis.</p>
+            </div>
+
+            <div class="field field-delai">
+              <label for="livraison">Vous souhaitez recevoir <span class="opt">(facultatif)</span></label>
+              <select id="livraison" name="livraison"><option value="">Choisir</option>{LIVRAISONS.map((l) => <option>{l}</option>)}</select>
             </div>
           </fieldset>
 

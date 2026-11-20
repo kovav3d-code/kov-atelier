@@ -7,7 +7,7 @@
  */
 import type { Env } from '../_lib/env';
 import { json, echapper } from '../_lib/env';
-import { PRESTATIONS, DELAIS, BUDGETS, FICHIERS, LIMITES, formatTaille } from '../../src/config/devis';
+import { PRESTATIONS, DELAIS, LIVRAISONS, BUDGETS, FICHIERS, LIMITES, formatTaille } from '../../src/config/devis';
 import { contenuValide, extension, extensionAutorisee, nomPropre } from '../_lib/fichiers';
 import { envoyerEmail, emailAtelier, emailClient, enBase64, type PieceJointe } from '../_lib/emails';
 
@@ -77,6 +77,10 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env, waitUnti
   }
   if (Object.keys(erreurs).length) return json({ ok: false, message: 'Certains champs sont à corriger.', erreurs }, 422);
 
+  // Pièce livrée ou fichier seul : ajouté en tête de la description (pas de colonne dédiée en base).
+  const livraison = LIVRAISONS.includes(v('livraison')) ? v('livraison') : null;
+  if (livraison) d.description = `Souhaite recevoir : ${livraison}\n\n${d.description}`;
+
   // ---- Stockage
   const maintenant = new Date();
   const alea = Array.from(crypto.getRandomValues(new Uint8Array(4)), (x) => 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'[x % 31]).join('');
@@ -128,7 +132,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env, waitUnti
     ligne('Prestation', prestation!.label),
     ligne('Besoin', d.description, 600),
     ligne('Dimensions', d.dimensions), ligne('Quantité', d.quantite), ligne('Matériau', d.materiau),
-    ligne('Délai', d.delai), ligne('Budget', d.budget),
+    ligne('Délai', d.delai), ligne('Budget', d.budget), ligne('Livraison', livraison),
     `<b>Fichiers</b> : ${stockes.length ? `${stockes.length} (joints à l’e-mail)` : 'aucun'}`,
     '',
     ...stl.map((m) => `<b>STL ${echapper(m.nom)}</b> : ${m.boite.map((x) => x.toFixed(0)).join(' × ')} mm, ${m.volumeCm3.toFixed(1)} cm³, ${m.triangles} triangles${m.ferme ? '' : ', maillage NON fermé'}`),

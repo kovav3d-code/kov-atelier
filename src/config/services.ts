@@ -10,15 +10,15 @@ export const SERVICES = [
     texte: 'Vous n’avez pas besoin de savoir dessiner en 3D. À partir de ce que vous avez sous la main, l’atelier construit un modèle numérique fidèle, que vous pouvez faire fabriquer ici ou ailleurs.',
     listes: [
       { titre: 'Vous pouvez partir de', items: ['un croquis à main levée ou un plan coté', 'des photos accompagnées de quelques mesures', 'une pièce existante', 'une simple description de votre besoin'] },
-      { titre: 'Vous recevez', items: ['un fichier prêt pour l’impression 3D (STL, 3MF)', 'pour les pièces techniques, un format d’échange comme le STEP, selon ce qui est convenu'] },
+      { titre: 'Vous recevez', items: ['au choix : le fichier seul, ou la pièce fabriquée et livrée chez vous', 'un fichier prêt pour l’impression 3D (STL, 3MF)', 'pour les pièces techniques, un format d’échange comme le STEP, selon ce qui est convenu'] },
     ],
     note: 'SolidWorks et Shapr3D pour les pièces mécaniques, Blender et ZBrush pour les formes libres.',
   },
   {
     id: 'impression-3d-sur-mesure', prix: '5 €', prixUnite: 'la pièce, en série', prestation: 'impression', icon: 'impression',
-    titre: 'Impression 3D sur mesure',
-    resume: 'La résine pour les détails fins, le filament pour les pièces robustes et économiques. Une pièce unique ou plusieurs exemplaires.',
-    texte: 'Vous avez déjà un fichier, ou l’atelier le crée pour vous. La technologie d’impression est choisie selon l’usage de la pièce, pas l’inverse.',
+    titre: 'Impression 3D et livraison',
+    resume: 'Votre pièce fabriquée dans la matière adaptée à son usage, puis livrée chez vous. Une pièce unique ou plusieurs exemplaires.',
+    texte: 'Vous avez déjà un fichier, ou l’atelier le crée pour vous. La technologie et la matière sont choisies selon l’usage de la pièce, et le fichier est vérifié avant fabrication.',
     listes: [
       { titre: 'Impression résine', items: ['détails très fins et surfaces lisses', 'figurines, maquettes, bustes', 'petites pièces précises'] },
       { titre: 'Impression filament', items: ['pièces plus grandes et plus robustes', 'supports, boîtiers, gabarits', 'prototypes fonctionnels à moindre coût'] },
@@ -41,7 +41,7 @@ export const SERVICES = [
     resume: 'Une pièce cassée, introuvable ou plus fabriquée ? Elle est remodélisée à partir de l’original ou de photos, puis refabriquée.',
     texte: 'Clip cassé, pièce d’un appareil ancien, élément de machine qui n’est plus produit : quand une pièce manque, elle peut souvent être reproduite en impression 3D, à l’identique ou améliorée.',
     listes: [
-      { titre: 'Comment ça se passe', items: ['les formes et les cotes sont relevées sur la pièce d’origine, ou d’après vos photos et mesures', 'la pièce est remodélisée, puis adaptée si besoin', 'elle est imprimée dans la technologie la plus adaptée à son usage'] },
+      { titre: 'Comment ça se passe', items: ['les formes et les cotes sont relevées sur la pièce d’origine, ou d’après vos photos et mesures', 'la pièce est remodélisée, puis adaptée si besoin', 'elle est fabriquée dans la matière la plus adaptée à son usage, puis livrée chez vous'] },
       { titre: 'Fichiers 3D', items: ['correction d’un fichier qui ne s’imprime pas', 'réparation d’un maillage abîmé', 'modification ou adaptation d’un modèle existant'] },
     ],
     note: 'La faisabilité dépend des contraintes de la pièce (efforts, chaleur, frottement) : elle est étudiée avant tout devis.',
@@ -58,8 +58,8 @@ export const SERVICES = [
   },
   {
     id: 'modelisation-artistique', prix: '99 €', prestation: 'artistique', icon: 'artistique',
-    titre: 'Modélisation artistique et organique',
-    resume: 'Sculpture numérique, bustes, objets décoratifs et créations personnalisées, du modèle à la pièce finie.',
+    titre: 'Bustes et sculptures sur mesure',
+    resume: 'Bustes, portraits et sculptures sculptés dans ZBrush, imprimés en résine et finis à l’atelier : une pièce unique, à offrir ou à exposer.',
     texte: 'Pour les formes que les logiciels de mécanique dessinent mal : visages, personnages, ornements, objets décoratifs. Le modèle est sculpté numériquement, puis imprimé, en résine lorsque les détails fins l’exigent.',
     listes: [
       { titre: 'Exemples', items: ['bustes et portraits en sculpture numérique', 'personnages et figurines originaux', 'objets décoratifs et cadeaux personnalisés', 'éléments organiques pour maquettes ou décors'] },

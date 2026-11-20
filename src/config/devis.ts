@@ -10,6 +10,7 @@ export const PRESTATIONS = [
 ] as const;
 
 export const DELAIS = ['Pas de délai particulier', 'Sous un mois', 'Sous deux semaines', 'Urgent (+40 €)'];
+export const LIVRAISONS = ['La pièce fabriquée et livrée', 'Le fichier 3D seul (j’ai une imprimante ou un prestataire)', 'Je ne sais pas encore'];
 export const BUDGETS = ['Je ne sais pas encore', 'Moins de 100 €', '100 à 300 €', '300 à 1 000 €', 'Plus de 1 000 €'];
 
 export const FICHIERS = {

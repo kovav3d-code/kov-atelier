@@ -36,8 +36,8 @@ const jsonLd = {
 
 const ATOUTS = [
   { icon: 'interlocuteur', titre: 'Un interlocuteur unique', texte: 'Vous échangez directement avec l’atelier qui conçoit et fabrique votre pièce, sans intermédiaire.' },
-  { icon: 'chaine', titre: 'De la conception à la fabrication', texte: 'Pas besoin de trouver un dessinateur puis un imprimeur : le modèle et la pièce sont réalisés au même endroit.' },
-  { icon: 'outils', titre: 'Technique et organique', texte: 'SolidWorks et Shapr3D pour les pièces mécaniques, Blender et ZBrush pour les formes libres et la sculpture.' },
+  { icon: 'chaine', titre: 'Du modèle à la pièce livrée', texte: 'Pas besoin de trouver un dessinateur puis un imprimeur : l’atelier conçoit la pièce, organise sa fabrication et vous la fait livrer. Le fichier seul est aussi possible.' },
+  { icon: 'outils', titre: 'Une pièce qui s’emboîte vraiment', texte: 'Les cotes sont relevées sur la pièce d’origine et le modèle vous est montré avant fabrication. Votre pièce est conçue par une personne qui répond du résultat, pas générée automatiquement.' },
   { icon: 'lieu', titre: 'À côté du Luxembourg, livraison partout', texte: 'Basé à Florange, à côté de la frontière luxembourgeoise, l’atelier travaille pour la Moselle et le Luxembourg, et expédie les pièces dans le monde entier.' },
 ] as const;
 
@@ -47,6 +47,7 @@ const BESOINS = [
   { titre: 'Prototype avant fabrication', texte: 'Valider une forme ou un assemblage avant d’investir.' },
   { titre: 'Boîtier ou carter sur mesure', texte: 'Adapté à vos composants et à l’encombrement disponible.' },
   { titre: 'Fichier 3D à reprendre', texte: 'Correction, modification ou adaptation d’un modèle existant.' },
+  { titre: 'Buste ou sculpture sur mesure', texte: 'Sculpté numériquement, imprimé en résine et fini à l’atelier.' },
 ];
 ---
 <Base
@@ -59,7 +60,7 @@ const BESOINS = [
     <div class="wrap hero-grid hero-seul">
       <div>
         <div class="title-block">
-          <h1>Votre pièce introuvable,<br /> conçue et fabriquée à l’atelier.</h1>
+          <h1>Votre pièce introuvable,<br /> conçue sur mesure et livrée chez vous.</h1>
           <div class="cote" aria-hidden="true"><i></i><span>sur mesure</span><i></i></div>
         </div>
         <p class="lead">Modélisation et impression 3D sur mesure à Florange, à côté du Luxembourg. Pièces cassées ou obsolètes, prototypes, pièces techniques et créations personnalisées, pour les professionnels comme pour les particuliers.</p>
@@ -69,7 +70,7 @@ const BESOINS = [
         </div>
         <p class="hero-note">Vous pouvez partir d’un croquis, d’un plan technique, d’une photo, d’un fichier 3D ou d’une simple idée.</p>
         <ul class="hero-faits">
-          <li>Conception et fabrication au même endroit</li>
+          <li>La pièce livrée chez vous, ou le fichier seul, au choix</li>
           <li>Réponse sous 30 minutes en journée</li>
           <li>Un seul interlocuteur, du premier échange à la pièce finie</li>
           <li>Florange, Luxembourg, expédition partout</li>
