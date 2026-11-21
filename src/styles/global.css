@@ -1013,19 +1013,34 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
 }
 .imp-resine .ir-details { fill: none; stroke: #D9FFFF; stroke-opacity: .55; stroke-width: 1; stroke-linecap: round; }
 
-/* ---- Fond du questionnaire de devis : tête qui réfléchit (gravure), engrenages animés
-   Positions en % de l'image d'origine (881 × 1109 px). Les engrenages sont coupés sous le bord du « chapeau » (y = 452). */
-.form-card > .tete-pensante { position: absolute; z-index: -1; left: 50%; top: 96px; bottom: 0; aspect-ratio: 881 / 1109; max-height: 760px; transform: translateX(-50%); pointer-events: none; }
-.tete-pensante img { position: absolute; display: block; height: auto; }
-.tp-base { inset: 0; width: 100%; }
-.tp-meca { position: absolute; inset: 0; clip-path: inset(0 0 59.24% 0); }
-.tp-e1 { left: calc(244 / 881 * 100%); top: calc(234 / 1109 * 100%); width: calc(164 / 881 * 100%); animation: tp-tourne 16s linear infinite; }
-.tp-e2 { left: calc(350 / 881 * 100%); top: calc(318 / 1109 * 100%); width: calc(204 / 881 * 100%); animation: tp-tourne 20s linear infinite reverse; }
-.tp-cadran { left: calc(610 / 881 * 100%); top: calc(279 / 1109 * 100%); width: calc(132 / 881 * 100%); animation: tp-tourne 48s linear infinite; }
-@keyframes tp-tourne { to { transform: rotate(360deg); } }
-@media (max-width: 720px) { .form-card > .tete-pensante { top: 120px; opacity: .8; } }
-@media (prefers-reduced-motion: reduce) { .tp-e1, .tp-e2, .tp-cadran { animation: none; } }
-.tp-e2 { border-radius: 50%; background: radial-gradient(circle closest-side, var(--surface) 97%, transparent 98%); }
+/* ---- Fond du questionnaire de devis : petite chaîne d'impression (imprimante → tapis → carton expédié).
+   Bien visible pendant les questions, très atténuée derrière le formulaire détaillé. */
+.form-card > .chaine { position: absolute; z-index: -1; left: 50%; bottom: clamp(18px, 3vw, 32px); width: min(88%, 540px); transform: translateX(-50%);
+  pointer-events: none; opacity: .14; transition: opacity .6s ease; }
+.form-card:has(#qualif:not([hidden])) > .chaine { opacity: .95; }
+.chaine-svg { display: block; width: 100%; height: auto; overflow: visible; }
+.chaine .ch-sol { stroke: var(--line-strong); stroke-width: 1.5; }
+.chaine .ch-metal { fill: #3A434C; stroke: #5B6570; stroke-width: 1.2; }
+.chaine .ch-portique { fill: #4A535C; stroke: #6B7580; stroke-width: 1; }
+.chaine .ch-chariot { fill: #2A3037; stroke: var(--metal); stroke-width: 1.2; }
+.chaine .ch-buse { fill: var(--metal); }
+.chaine .ch-goutte { fill: var(--bleu-clair); filter: drop-shadow(0 0 4px var(--bleu)); animation: ch-clignote .5s ease-in-out infinite alternate; }
+.chaine .ch-led { fill: var(--succes); animation: ch-clignote 1.6s ease-in-out infinite alternate; }
+.chaine .ch-tapis { fill: #1A1F25; stroke: #4A535C; stroke-width: 1.5; }
+.chaine .ch-tapis-stries { stroke: #4A535C; stroke-width: 2; stroke-dasharray: 8 12; }
+.chaine .ch-rouleau circle { fill: #2A3037; stroke: var(--metal); stroke-width: 1.2; }
+.chaine .ch-rouleau path { stroke: var(--metal); stroke-width: 1.2; }
+.chaine .ch-pied { stroke: #3A434C; stroke-width: 4; stroke-linecap: round; }
+.chaine .ch-objet { fill: url(#ch-objet); stroke: #DCE6FF; stroke-width: 1; stroke-linejoin: round; fill-rule: evenodd; }
+.chaine .ch-couche { stroke: var(--bleu-clair); stroke-width: 2; stroke-linecap: round; filter: drop-shadow(0 0 4px var(--bleu)); }
+.chaine .ch-carton-fond { fill: #3E3427; }
+.chaine .ch-carton-face { fill: var(--atelier-fonce); stroke: #7A6A52; stroke-width: 1.2; }
+.chaine .ch-carton-trait { stroke: #7A6A52; stroke-width: 1.2; stroke-dasharray: 3 4; }
+.chaine .ch-rabat { fill: #6E5D46; stroke: #8A7860; stroke-width: 1; }
+.chaine .ch-ruban { fill: var(--atelier); transition: opacity .2s ease; }
+@keyframes ch-clignote { from { opacity: .35; } to { opacity: 1; } }
+@media (max-width: 720px) { .form-card > .chaine { width: 96%; } }
+@media (prefers-reduced-motion: reduce) { .chaine .ch-goutte, .chaine .ch-led { animation: none; } }
 
 /* ---- Créneaux d'appel (demande de rappel) */
 .rdv { display: grid; gap: 12px; margin-top: 6px; }

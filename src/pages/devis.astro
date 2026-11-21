@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
-import TetePensante from '../components/TetePensante.astro';
+import ChaineImpression from '../components/ChaineImpression.astro';
 import { PRESTATIONS, DELAIS, LIVRAISONS, BUDGETS, PROFILS, BESOINS_QUALIF, CRENEAUX, FICHIERS, LIMITES } from '../config/devis';
 import { SITE, APERCU, MONTRER_RESERVES } from '../config/site';
 const turnstileKey = SITE.turnstileSiteKey ?? import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
@@ -32,7 +32,7 @@ const accept = FICHIERS.extensions.map((e) => `.${e}`).join(',');
 
       <div class="form-card form-card--resine">
         <span class="resine-eclat" aria-hidden="true"></span><span class="resine-eclat" aria-hidden="true"></span><span class="resine-eclat" aria-hidden="true"></span><span class="resine-eclat" aria-hidden="true"></span>
-        <TetePensante />
+        <ChaineImpression />
         <!-- Questionnaire de qualification : affiché par le script ; sans JavaScript, le formulaire reste directement accessible. -->
         <div class="qualif" id="qualif" hidden>
           <p class="qualif-etape" id="q-etape" aria-live="polite">Question 1 sur 4</p>

@@ -1,0 +1,173 @@
+---
+// Fond du formulaire de devis : une petite chaîne de production.
+// L'imprimante imprime un objet couche par couche, le tapis l'emmène, il tombe dans un carton ;
+// au troisième objet, le carton se ferme, part, et un carton vide arrive. En boucle.
+// SVG + un peu de JavaScript, aux couleurs du site. Image fixe si l'utilisateur limite les animations.
+---
+<div class="chaine" aria-hidden="true">
+  <svg class="chaine-svg" viewBox="0 0 600 270">
+    <defs>
+      <linearGradient id="ch-objet" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#A9B2BA" />
+        <stop offset="1" stop-color="#5B6570" />
+      </linearGradient>
+    </defs>
+
+    <!-- Sol -->
+    <line x1="10" y1="262" x2="590" y2="262" class="ch-sol" />
+
+    <!-- Carton : arrière -->
+    <g class="ch-carton" data-carton>
+      <path d="M462 206l10-14h80l10 14z" class="ch-carton-fond" />
+    </g>
+
+    <!-- Objets (réutilisés) -->
+    <g data-objets></g>
+
+    <!-- Carton : avant, rabats, ruban -->
+    <g class="ch-carton" data-carton-avant>
+      <rect x="462" y="206" width="100" height="56" rx="3" class="ch-carton-face" />
+      <path d="M474 222h76" class="ch-carton-trait" />
+      <rect x="462" y="202" width="50" height="5" rx="1.5" class="ch-rabat" data-rabat-g />
+      <rect x="512" y="202" width="50" height="5" rx="1.5" class="ch-rabat" data-rabat-d />
+      <rect x="505" y="200" width="14" height="9" rx="1" class="ch-ruban" data-ruban />
+    </g>
+
+    <!-- Tapis -->
+    <rect x="34" y="170" width="414" height="18" rx="9" class="ch-tapis" />
+    <line x1="44" y1="172" x2="438" y2="172" class="ch-tapis-stries" data-stries />
+    <g class="ch-rouleau" data-rouleau="0"><circle cx="46" cy="179" r="6" /><path d="M42 179h8M46 175v8" /></g>
+    <g class="ch-rouleau" data-rouleau="1"><circle cx="436" cy="179" r="6" /><path d="M432 179h8M436 175v8" /></g>
+    <path d="M60 188l-8 74M424 188l8 74" class="ch-pied" />
+
+    <!-- Imprimante -->
+    <g class="ch-imprimante">
+      <rect x="58" y="22" width="108" height="10" rx="3" class="ch-metal" />
+      <rect x="62" y="30" width="8" height="140" rx="2" class="ch-metal" />
+      <rect x="154" y="30" width="8" height="140" rx="2" class="ch-metal" />
+      <g data-portique>
+        <rect x="64" y="0" width="96" height="6" rx="3" class="ch-portique" />
+        <g data-chariot>
+          <rect x="-12" y="-6" width="24" height="16" rx="3" class="ch-chariot" />
+          <path d="M-5 10h10l-5 8z" class="ch-buse" />
+          <circle cx="0" cy="20" r="2.2" class="ch-goutte" />
+        </g>
+      </g>
+      <circle cx="74" cy="27" r="2" class="ch-led" />
+    </g>
+  </svg>
+</div>
+<script is:inline>
+  (function () {
+    var racine = document.querySelector('.chaine');
+    if (!racine || racine.dataset.pret) return;
+    racine.dataset.pret = '1';
+    var NS = 'http://www.w3.org/2000/svg';
+    var svg = racine.querySelector('svg');
+    var zoneObjets = svg.querySelector('[data-objets]');
+    var portique = svg.querySelector('[data-portique]');
+    var chariot = svg.querySelector('[data-chariot]');
+    var stries = svg.querySelector('[data-stries]');
+    var rouleaux = svg.querySelectorAll('[data-rouleau]');
+    var cartons = [svg.querySelector('[data-carton]'), svg.querySelector('[data-carton-avant]')];
+    var rabatG = svg.querySelector('[data-rabat-g]');
+    var rabatD = svg.querySelector('[data-rabat-d]');
+    var ruban = svg.querySelector('[data-ruban]');
+
+    // Objets « au hasard » : chacun dessiné au-dessus de son point de pose (0, 0), avec sa hauteur.
+    var FORMES = [
+      { h: 34, d: 'M-15 0v-24l15-9 15 9v24l-15 8z M-15-24l15 8 15-8 M0-16v24' },                        // cube
+      { h: 40, d: 'M-9 0h18c0-8 7-14 7-24 0-8-5-12-5-16h-22c0 4-5 8-5 16 0 10 7 16 7 24z' },           // vase
+      { h: 36, d: 'M-16 0l16-36 16 36z M0-36l-5 36' },                                                   // pyramide
+      { h: 38, d: 'M-6 0h12v-3h5c1-5-1-10-6-12 4-3 5-6 5-10 0-7-5-11-10-11s-10 4-10 11c0 4 1 7 5 10-5 2-7 7-6 12h5z' }, // buste
+      { h: 30, d: 'M-14 0v-24a14 5 0 0 1 28 0v24a14 5 0 0 1-28 0z M-14-24a14 5 0 0 0 28 0' },           // cylindre
+      { h: 32, d: 'M-16 0a16 16 0 0 1 32 0z M-8 0a8 8 0 0 1 16 0' },                                     // arche
+      { h: 36, d: 'M-4 0v-16l-10-4 2-6 10 3v-13h4v13l10-3 2 6-10 4v16z' },                               // support
+    ];
+    var POOL = 4, objets = [];
+    for (var i = 0; i < POOL; i++) {
+      var g = document.createElementNS(NS, 'g');
+      var cp = document.createElementNS(NS, 'clipPath'); cp.id = 'ch-clip-' + i;
+      var r = document.createElementNS(NS, 'rect'); r.setAttribute('x', '-30'); r.setAttribute('width', '60');
+      cp.appendChild(r); svg.querySelector('defs').appendChild(cp);
+      var corps = document.createElementNS(NS, 'path'); corps.setAttribute('class', 'ch-objet'); corps.setAttribute('clip-path', 'url(#ch-clip-' + i + ')');
+      var couche = document.createElementNS(NS, 'line'); couche.setAttribute('class', 'ch-couche'); couche.setAttribute('x1', '-17'); couche.setAttribute('x2', '17');
+      g.appendChild(corps); g.appendChild(couche); g.style.display = 'none';
+      zoneObjets.appendChild(g);
+      objets.push({ g: g, clip: r, corps: corps, couche: couche, k: -1 });
+    }
+    // Suite pseudo-aléatoire, sans répétition immédiate.
+    function forme(k) { var x = Math.sin(k * 12.9898 + 4.1) * 43758.5453; return FORMES[(Math.floor((x - Math.floor(x)) * FORMES.length) + k) % FORMES.length]; }
+
+    // Rythme (s) : impression 2, trajet 1,6, chute 0,5 ; un nouvel objet toutes les 2 s ; carton plein à 3 objets.
+    var IMP = 2, TRAJET = 1.6, CHUTE = 0.5, PAS = 2, X0 = 112, XF = 440, Y = 170;
+    var vitesse = (XF - X0) / TRAJET;
+    function ease(p) { return p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2; }
+    function clamp(v) { return Math.max(0, Math.min(1, v)); }
+
+    function dessiner(t) {
+      // Objets
+      var kMax = Math.floor(t / PAS), kMin = Math.max(0, Math.floor((t - IMP - TRAJET - CHUTE) / PAS));
+      objets.forEach(function (o) { o.g.style.display = 'none'; });
+      var buseX = X0, buseY = Y - 4;
+      for (var k = kMin; k <= kMax; k++) {
+        var u = t - k * PAS, o = objets[k % POOL], f = forme(k);
+        if (u < 0 || u > IMP + TRAJET + CHUTE) continue;
+        if (o.k !== k) { o.k = k; o.corps.setAttribute('d', f.d); }
+        o.g.style.display = '';
+        var x = X0, y = Y, rot = 0, h = f.h, croissance = 1;
+        if (u < IMP) {
+          croissance = clamp(u / IMP);
+          buseX = X0 + Math.sin(u * 15) * 15; buseY = Y - h * croissance - 2;
+        } else if (u < IMP + TRAJET) {
+          x = X0 + vitesse * (u - IMP);
+        } else {
+          var p = (u - IMP - TRAJET) / CHUTE;
+          x = XF + 72 * p; y = Y + 78 * p * p; rot = 50 * p;
+        }
+        o.clip.setAttribute('y', String(-h * croissance - 1));
+        o.clip.setAttribute('height', String(h * croissance + 12));
+        o.couche.setAttribute('y1', String(-h * croissance)); o.couche.setAttribute('y2', String(-h * croissance));
+        o.couche.style.opacity = u < IMP ? '1' : '0';
+        o.g.setAttribute('transform', 'translate(' + x + ' ' + y + ') rotate(' + rot + ')');
+      }
+      // Imprimante : le portique suit la hauteur de la couche, le chariot va et vient.
+      portique.setAttribute('transform', 'translate(0 ' + (buseY - 22) + ')');
+      chariot.setAttribute('transform', 'translate(' + buseX + ' 3)');
+
+      // Tapis : avance pendant les trajets.
+      var cycles = Math.floor(Math.max(0, t - IMP) / PAS), reste = Math.max(0, t - IMP) - cycles * PAS;
+      var parcours = vitesse * (cycles * TRAJET + Math.min(reste, TRAJET));
+      stries.style.strokeDashoffset = String(-parcours);
+      rouleaux.forEach(function (r, i) { var c = i ? 436 : 46; r.setAttribute('transform', 'rotate(' + (parcours * 9.5) % 360 + ' ' + c + ' 179)'); });
+
+      // Carton : se ferme et part après le 3e objet, puis un carton vide arrive.
+      var dureeCarton = 3 * PAS, debut = IMP + TRAJET + CHUTE + 2 * PAS; // fin de la chute du 3e objet
+      var v = t - debut, n = Math.floor(v / dureeCarton), w = v - n * dureeCarton;
+      var ferme = 0, dx = 0, dy = 0, op = 1;
+      if (v >= 0 && w < 1.4) {
+        ferme = clamp(w / 0.4);
+        if (w > 0.4) { var q = clamp((w - 0.4) / 0.5); dx = 150 * ease(q); op = 1 - q; }
+        if (w > 0.9) { var a = clamp((w - 0.9) / 0.5); ferme = 0; dx = 0; dy = 30 * (1 - ease(a)); op = a; }
+      }
+      cartons.forEach(function (c) { c.setAttribute('transform', 'translate(' + dx + ' ' + dy + ')'); c.style.opacity = String(op); });
+      rabatG.setAttribute('transform', 'rotate(' + (-150 * (1 - ferme)) + ' 462 204.5)');
+      rabatD.setAttribute('transform', 'rotate(' + (150 * (1 - ferme)) + ' 562 204.5)');
+      ruban.style.opacity = ferme >= 1 ? '1' : '0';
+    }
+
+    var reduit = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduit) { dessiner(IMP + 0.8); return; }
+    var visible = true, t0 = null, dernier = 0, temps = 0;
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (e) { visible = e[0].isIntersecting; if (visible) { t0 = null; requestAnimationFrame(boucle); } }).observe(racine);
+    function boucle(now) {
+      if (!visible) return;
+      if (t0 === null) { t0 = now; dernier = temps; }
+      temps = dernier + (now - t0) / 1000;
+      dessiner(temps);
+      requestAnimationFrame(boucle);
+    }
+    dessiner(0);
+    requestAnimationFrame(boucle);
+  })();
+</script>
