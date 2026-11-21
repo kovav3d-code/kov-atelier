@@ -892,3 +892,11 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
 @keyframes ir-goutte { 0% { opacity: 0; transform: translateY(0); } 15% { opacity: .9; } 100% { opacity: 0; transform: translateY(70px); } }
 @media (max-width: 720px) { .imp-resine { display: none; } }
 @media (prefers-reduced-motion: reduce) { .imp-resine.ir-fin .ir-gouttes circle { animation: none; } }
+
+/* ---- Titre de l'accueil : Instrument Serif (licence SIL OFL), « sur mesure » en italique kraft */
+@font-face { font-family: 'Instrument Serif'; src: url('/fonts/InstrumentSerif-Regular.woff') format('woff'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Instrument Serif'; src: url('/fonts/InstrumentSerif-Italic.woff') format('woff'); font-weight: 400; font-style: italic; font-display: swap; }
+.hero h1 { font-family: 'Instrument Serif', Georgia, 'Times New Roman', serif; font-weight: 400; font-size: clamp(2.9rem, 7vw, 5.6rem); line-height: .98; letter-spacing: -0.012em; }
+.hero h1 em { font-style: italic; color: var(--atelier); }
+.hero h1 .br-large { display: none; }
+@media (min-width: 720px) { .hero h1 .br-large { display: inline; } }
