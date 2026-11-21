@@ -1015,9 +1015,10 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
 
 /* ---- Fond du questionnaire de devis : petite chaîne d'impression (imprimante → tapis → carton expédié).
    Bien visible pendant les questions, très atténuée derrière le formulaire détaillé. */
-.form-card > .chaine { position: absolute; z-index: -1; left: 50%; bottom: clamp(18px, 3vw, 32px); width: min(88%, 540px); transform: translateX(-50%);
-  pointer-events: none; opacity: .14; transition: opacity .6s ease; }
-.form-card:has(#qualif:not([hidden])) > .chaine { opacity: .95; }
+/* Dans le questionnaire, juste sous les réponses : elle remonte à hauteur du bouton « Passer », à sa gauche. */
+.qualif > .chaine { position: relative; z-index: 0; width: min(100%, 540px); margin: -96px auto 0; pointer-events: none; }
+.qualif-nav { position: relative; z-index: 1; }
+.form-card:has(#qualif:not([hidden])) { min-height: 0; }
 .chaine-svg { display: block; width: 100%; height: auto; overflow: visible; }
 .chaine .ch-sol { stroke: var(--line-strong); stroke-width: 1.5; }
 .chaine .ch-metal { fill: #3A434C; stroke: #5B6570; stroke-width: 1.2; }
@@ -1039,7 +1040,7 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
 .chaine .ch-rabat { fill: #6E5D46; stroke: #8A7860; stroke-width: 1; }
 .chaine .ch-ruban { fill: var(--atelier); transition: opacity .2s ease; }
 @keyframes ch-clignote { from { opacity: .35; } to { opacity: 1; } }
-@media (max-width: 720px) { .form-card > .chaine { width: 96%; } }
+@media (max-width: 600px) { .qualif > .chaine { margin-top: 16px; } }
 @media (prefers-reduced-motion: reduce) { .chaine .ch-goutte, .chaine .ch-led { animation: none; } }
 
 /* ---- Créneaux d'appel (demande de rappel) */
