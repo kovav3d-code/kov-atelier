@@ -21,5 +21,5 @@ export const TARIFS = {
   /** Taux de remplissage supposé quand le volume vient des dimensions (pas de STL). */
   remplissageEstime: 0.3,
   /** Majorations selon le délai demandé : montant fixe (plus) et/ou coefficient (fois). */
-  delai: { 'Urgent (+40 €)': { plus: 40 }, 'Sous deux semaines': { fois: 1.1 } } as Record<string, { plus?: number; fois?: number }>,
+  delai: { 'Urgent': { plus: 40 }, 'Sous deux semaines': { fois: 1.1 } } as Record<string, { plus?: number; fois?: number }>,
 };

@@ -102,7 +102,6 @@ const accept = FICHIERS.extensions.map((e) => `.${e}`).join(',');
             <div class="field field-delai" data-ecrit>
               <label for="delai">Délai souhaité <span class="opt">(facultatif)</span></label>
               <select id="delai" name="delai"><option value="">Choisir</option>{DELAIS.map((d) => <option>{d}</option>)}</select>
-              <p class="field-help">Le mode urgent ajoute 40 € au devis.</p>
             </div>
 
             <div class="field field-delai" data-ecrit>
