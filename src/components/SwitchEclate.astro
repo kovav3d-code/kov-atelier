@@ -1,0 +1,46 @@
+---
+// En-tête de la page Réalisations : un interrupteur de clavier en vue éclatée, détouré, qui « respire ».
+// La touche flotte au-dessus du titre ; le boîtier et la base (ressort, contacts) attendent en dessous.
+// Entre les deux, les deux liens de la page : l'objectif photo (photos et vidéos) et le cube 3D (modèles 3D),
+// reliés par un fil lumineux. Les pièces s'écartent puis se rapprochent en boucle ; fixes si l'utilisateur
+// limite les animations.
+import { Image } from 'astro:assets';
+import touche from '../assets/realisations/switch-touche.png';
+import boitier from '../assets/realisations/switch-boitier.png';
+import base from '../assets/realisations/switch-base.png';
+const tailles = '(max-width: 600px) 70vw, 340px';
+---
+<div class="sw">
+  <div class="sw-piece sw-touche" aria-hidden="true">
+    <Image src={touche} alt="" widths={[300, 480, 700]} sizes={tailles} format="webp" loading="eager" />
+  </div>
+
+  <h1>Nos réalisations</h1>
+  <p class="lead">Les modèles 3D conçus à l’atelier, puis les pièces bien réelles qui en sortent.</p>
+
+  <nav class="sw-liens" aria-label="Sections de la page">
+    <a class="sw-lien" href="#en-vrai" aria-label="Photos et vidéos de l’atelier">
+      <span class="sw-halo" aria-hidden="true"></span>
+      <svg class="sw-icone sw-objectif" viewBox="0 0 48 48" aria-hidden="true">
+        <path d="M8 16.5h7.5l3-4.5h11l3 4.5H40a3 3 0 0 1 3 3V36a3 3 0 0 1-3 3H8a3 3 0 0 1-3-3V19.5a3 3 0 0 1 3-3z" />
+        <circle cx="24" cy="27.5" r="8.5" />
+        <g class="sw-diaphragme"><path d="M24 21.5l3.2 5.6M29.2 25.5l-3.2 5.6M27.2 32.6h-6.4M18.8 29.5l3.2-5.6M18.8 25.5l3.2 5.6M20.8 22.4h6.4" /></g>
+        <circle class="sw-flash" cx="36.5" cy="21.5" r="1.6" />
+      </svg>
+    </a>
+    <span class="sw-fil" aria-hidden="true"></span>
+    <a class="sw-lien" href="#modeles-3d" aria-label="Modèles 3D">
+      <span class="sw-halo" aria-hidden="true"></span>
+      <span class="sw-cube" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span>
+    </a>
+  </nav>
+
+  <div class="sw-bas" aria-hidden="true">
+    <div class="sw-piece sw-boitier">
+      <Image src={boitier} alt="" widths={[260, 400, 540]} sizes={tailles} format="webp" loading="eager" />
+    </div>
+    <div class="sw-piece sw-base">
+      <Image src={base} alt="" widths={[280, 440, 600]} sizes={tailles} format="webp" loading="eager" />
+    </div>
+  </div>
+</div>

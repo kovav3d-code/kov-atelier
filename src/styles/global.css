@@ -615,77 +615,67 @@ ul, ol { margin: 0; }
 }
 @media (prefers-reduced-motion: reduce) { .nav-imp-plateau, .nav-imp-led { transition: none; animation: none; } }
 
-/* ---------- Animation : anneau lumineux et carpes koï (boucle) ---------- */
-.koi { position: relative; container-type: inline-size; margin: 20px auto 0; width: min(78vw, 380px); aspect-ratio: 1043 / 1614; }
-/* Page Réalisations : sur écran large, la sculpture se place à côté du titre (moins de hauteur, pas de vide). */
-.page-head--koi .wrap { display: grid; gap: 8px; }
-@media (min-width: 760px) {
-  .page-head--koi { padding-bottom: 0; }
-  .page-head--koi .wrap { grid-template-columns: minmax(0, 1fr) minmax(300px, 400px); align-items: center; gap: clamp(24px, 5vw, 72px); }
-  .page-head--koi .koi { margin: -24px 0 0; width: 100%; }
-}
-.koi-flotte { position: absolute; inset: 0; overflow: hidden; animation: koi-flotte 7s ease-in-out infinite;
-  /* Bords fondus sur les quatre côtés : aucun contour rectangulaire, quel que soit le rendu des couleurs du navigateur. */
-  -webkit-mask: linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent), linear-gradient(180deg, transparent, #000 7%, #000 93%, transparent);
-  -webkit-mask-composite: source-in;
-  mask: linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent), linear-gradient(180deg, transparent, #000 7%, #000 93%, transparent);
-  mask-composite: intersect; }
-.koi-img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; }
-.koi-eau { position: absolute; inset: 0; filter: url(#koi-ondule);
-  -webkit-mask: radial-gradient(ellipse 34% 25% at 52% 35.4%, #000 55%, transparent 100%); mask: radial-gradient(ellipse 34% 25% at 52% 35.4%, #000 55%, transparent 100%); }
-.koi-anneau { position: absolute; left: 55%; top: 33%; width: 78%; aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%;
-  box-shadow: 0 0 34px 6px rgba(40, 100, 220, .55), inset 0 0 40px 4px rgba(143, 176, 245, .35); mix-blend-mode: screen; animation: koi-pulse 4.5s ease-in-out infinite; }
-.koi-reflet { position: absolute; inset: -20% -60%; background: linear-gradient(105deg, transparent 42%, rgba(247, 248, 246, .22) 50%, transparent 58%); mix-blend-mode: overlay; animation: koi-reflet 8s ease-in-out infinite; }
-.koi-poussiere i { position: absolute; bottom: -4%; left: var(--l); width: var(--s); height: var(--s); border-radius: 50%; background: var(--bleu-clair); box-shadow: 0 0 6px var(--bleu); opacity: 0; animation: koi-poussiere 9s linear infinite; animation-delay: var(--d); }
-.koi-defs { position: absolute; }
-@keyframes koi-flotte { 50% { transform: translateY(-6px); } }
-@keyframes koi-pulse { 0%, 100% { opacity: .45; } 50% { opacity: 1; } }
-@keyframes koi-reflet { 0% { transform: translateX(-40%); } 60%, 100% { transform: translateX(40%); } }
-@keyframes koi-poussiere { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: .8; } 100% { transform: translateY(-620px); opacity: 0; } }
-/* Liens intégrés à la sculpture : de la lumière, pas des boutons. Le calque est fondu en « screen » sur la sculpture :
-   seule la lueur s'ajoute, comme si la géode et l'ornement s'éclairaient de l'intérieur, au rythme de l'anneau. */
-.koi-liens { position: absolute; inset: 0; animation: koi-flotte 7s ease-in-out infinite; pointer-events: none; mix-blend-mode: screen; }
-.koi-lien { --t: 16cqw; position: absolute; width: var(--t); aspect-ratio: 1; transform: translate(-50%, -50%);
-  display: grid; place-items: center; pointer-events: auto; border-radius: 50%; color: #DCE6FF;
-  background: radial-gradient(circle, rgba(143, 176, 245, .5) 0%, rgba(40, 100, 220, .32) 32%, rgba(40, 100, 220, .1) 55%, transparent 70%);
-  -webkit-tap-highlight-color: transparent; animation: koi-souffle 4.5s ease-in-out infinite;
-  transition: transform .4s cubic-bezier(.3, 1.4, .5, 1), filter .4s ease; }
-.koi-lien--geode { left: 63%; top: 81.2%; }
-.koi-lien--console { --t: 18cqw; left: 47.9%; top: 91.7%; animation-delay: -2.2s; }
-.koi-lien:hover, .koi-lien:focus-visible { transform: translate(-50%, -50%) scale(1.12); filter: brightness(1.5) saturate(1.2); }
-.koi-lien:focus-visible { outline: 2px solid rgba(220, 230, 255, .8); outline-offset: 2px; }
-.koi-lien:active { transform: translate(-50%, -50%) scale(.96); }
-@keyframes koi-souffle { 0%, 100% { opacity: .78; } 50% { opacity: 1; } }
-/* Ondes de lumière douces (sans contour net) qui se diffusent dans la sculpture. */
-.koi-halo, .koi-halo::after { position: absolute; inset: 8%; border-radius: 50%; pointer-events: none;
-  background: radial-gradient(circle, transparent 52%, rgba(143, 176, 245, .55) 64%, transparent 76%); filter: blur(1.5px); animation: koi-onde 3.6s ease-out infinite; }
-.koi-halo::after { content: ""; inset: 0; animation-delay: 1.8s; }
-.koi-lien--console .koi-halo, .koi-lien--console .koi-halo::after { animation-delay: .9s; }
-.koi-lien--console .koi-halo::after { animation-delay: 2.7s; }
-@keyframes koi-onde { 0% { transform: scale(.7); opacity: 0; } 25% { opacity: 1; } 100% { transform: scale(1.9); opacity: 0; } }
-/* Objectif photo */
-.koi-icone { width: 46%; height: auto; overflow: visible; filter: drop-shadow(0 0 3px rgba(220, 230, 255, .9)) drop-shadow(0 0 10px rgba(40, 100, 220, .9)); }
-.koi-objectif * { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.koi-objectif .koi-diaphragme { stroke-width: 1.6; transform-box: fill-box; transform-origin: center; animation: koi-diaphragme 5s ease-in-out infinite; }
-.koi-objectif .koi-flash { fill: var(--blanc); stroke: none; animation: koi-flash 5s ease-in-out infinite; }
-@keyframes koi-diaphragme { 0%, 100% { transform: rotate(0) scale(1); } 45% { transform: rotate(60deg) scale(.55); } 55% { transform: rotate(60deg) scale(.55); } }
-@keyframes koi-flash { 0%, 46%, 60%, 100% { opacity: .35; } 50% { opacity: 1; filter: drop-shadow(0 0 6px #fff); } }
-/* Cube 3D en fil de fer */
-.koi-cube { --c: calc(var(--t) * .36); position: relative; width: var(--c); height: var(--c); transform-style: preserve-3d; animation: koi-cube 9s linear infinite; }
-.koi-cube i { position: absolute; inset: 0; border: 2px solid #EEF3FF; background: rgba(143, 176, 245, .08); box-shadow: 0 0 10px rgba(40, 100, 220, .95), inset 0 0 8px rgba(143, 176, 245, .5); }
-.koi-cube .f1 { transform: translateZ(calc(var(--c) / 2)); }
-.koi-cube .f2 { transform: rotateY(180deg) translateZ(calc(var(--c) / 2)); }
-.koi-cube .f3 { transform: rotateY(90deg) translateZ(calc(var(--c) / 2)); }
-.koi-cube .f4 { transform: rotateY(-90deg) translateZ(calc(var(--c) / 2)); }
-.koi-cube .f5 { transform: rotateX(90deg) translateZ(calc(var(--c) / 2)); }
-.koi-cube .f6 { transform: rotateX(-90deg) translateZ(calc(var(--c) / 2)); }
-@keyframes koi-cube { from { transform: rotateX(-30deg) rotateY(0); } to { transform: rotateX(-30deg) rotateY(360deg); } }
+/* ---------- Page Réalisations : interrupteur de clavier en vue éclatée (en-tête) ----------
+   Dimensions en pixels de l'image d'origine × --u, pour garder l'alignement exact des trois pièces.
+   touche 601 × 463 (centre x 570) · boîtier 456 × 428 (centre x 557) · base 503 × 423 (centre x 570). */
+.page-head--switch { text-align: center; overflow: hidden; padding-top: clamp(24px, 4vw, 48px); }
+.page-head--switch .lead { margin-inline: auto; max-width: 34rem; }
+.sw { --u: clamp(.36px, .09vw + .1px, .5px); display: grid; justify-items: center; }
+.sw-piece { position: relative; isolation: isolate; pointer-events: none; }
+.sw-piece img { display: block; width: 100%; height: auto; filter: drop-shadow(0 18px 24px rgba(0, 0, 0, .45)); }
+.sw-touche { width: calc(601 * var(--u)); margin-bottom: 6px; animation: sw-touche 6s ease-in-out infinite; }
+.sw-bas { display: grid; justify-items: center; margin-top: 14px; }
+.sw-boitier { width: calc(456 * var(--u)); translate: calc(-13 * var(--u)) 0; animation: sw-boitier 6s ease-in-out infinite; z-index: 1; }
+.sw-base { width: calc(503 * var(--u)); margin-top: calc(-52 * var(--u) + 18px); animation: sw-base 6s ease-in-out infinite; }
+/* Halo bleu derrière les pièces : elles se détachent du fond sombre sans cadre. */
+.sw-touche::before, .sw-bas::before { content: ""; position: absolute; inset: 10% 5%; z-index: -1; border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(40, 100, 220, .22), transparent); filter: blur(10px); }
+.sw-bas { position: relative; }
+@keyframes sw-touche { 0%, 100% { transform: translateY(6px); } 50% { transform: translateY(-14px); } }
+@keyframes sw-boitier { 0%, 100% { transform: translateY(-6px); } 50% { transform: translateY(4px); } }
+@keyframes sw-base { 0%, 100% { transform: translateY(-4px); } 50% { transform: translateY(18px); } }
+
+/* Les deux liens : de la lumière bleue, reliés par un fil qui circule. */
+.sw-liens { display: flex; align-items: center; gap: 0; margin-top: clamp(22px, 3vw, 32px); }
+.sw-fil { width: clamp(70px, 16vw, 150px); height: 2px; margin: 0 6px;
+  background: repeating-linear-gradient(90deg, var(--bleu-clair) 0 8px, transparent 8px 16px); background-size: 32px 2px;
+  opacity: .7; filter: drop-shadow(0 0 4px var(--bleu)); animation: sw-fil 1.2s linear infinite; }
+@keyframes sw-fil { to { background-position: 32px 0; } }
+.sw-lien { --t: clamp(64px, 14vw, 84px); position: relative; width: var(--t); aspect-ratio: 1; display: grid; place-items: center; border-radius: 50%;
+  color: #DCE6FF; -webkit-tap-highlight-color: transparent;
+  background: radial-gradient(circle, rgba(143, 176, 245, .42) 0%, rgba(40, 100, 220, .28) 38%, rgba(40, 100, 220, .08) 60%, transparent 72%);
+  animation: sw-souffle 4.5s ease-in-out infinite; transition: transform .4s cubic-bezier(.3, 1.4, .5, 1), filter .4s ease; }
+.sw-lien:last-child { animation-delay: -2.2s; }
+.sw-lien:hover, .sw-lien:focus-visible { transform: scale(1.12); filter: brightness(1.5) saturate(1.2); }
+.sw-lien:focus-visible { outline: 2px solid rgba(220, 230, 255, .8); outline-offset: 2px; }
+.sw-lien:active { transform: scale(.95); }
+@keyframes sw-souffle { 0%, 100% { opacity: .8; } 50% { opacity: 1; } }
+.sw-halo, .sw-halo::after { position: absolute; inset: 8%; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle, transparent 52%, rgba(143, 176, 245, .5) 64%, transparent 76%); filter: blur(1.5px); animation: sw-onde 3.6s ease-out infinite; }
+.sw-halo::after { content: ""; inset: 0; animation-delay: 1.8s; }
+.sw-lien:last-child .sw-halo, .sw-lien:last-child .sw-halo::after { animation-delay: .9s; }
+.sw-lien:last-child .sw-halo::after { animation-delay: 2.7s; }
+@keyframes sw-onde { 0% { transform: scale(.7); opacity: 0; } 25% { opacity: 1; } 100% { transform: scale(1.9); opacity: 0; } }
+.sw-icone { width: 50%; height: auto; overflow: visible; filter: drop-shadow(0 0 3px rgba(220, 230, 255, .9)) drop-shadow(0 0 10px rgba(40, 100, 220, .9)); }
+.sw-objectif * { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.sw-objectif .sw-diaphragme { stroke-width: 1.6; transform-box: fill-box; transform-origin: center; animation: sw-diaphragme 5s ease-in-out infinite; }
+.sw-objectif .sw-flash { fill: var(--blanc); stroke: none; animation: sw-flash 5s ease-in-out infinite; }
+@keyframes sw-diaphragme { 0%, 100% { transform: rotate(0) scale(1); } 45%, 55% { transform: rotate(60deg) scale(.55); } }
+@keyframes sw-flash { 0%, 46%, 60%, 100% { opacity: .35; } 50% { opacity: 1; } }
+.sw-cube { --c: calc(var(--t) * .34); position: relative; width: var(--c); height: var(--c); transform-style: preserve-3d; animation: sw-cube 9s linear infinite; }
+.sw-cube i { position: absolute; inset: 0; border: 2px solid #EEF3FF; background: rgba(143, 176, 245, .08); box-shadow: 0 0 10px rgba(40, 100, 220, .95), inset 0 0 8px rgba(143, 176, 245, .5); }
+.sw-cube i:nth-child(1) { transform: translateZ(calc(var(--c) / 2)); }
+.sw-cube i:nth-child(2) { transform: rotateY(180deg) translateZ(calc(var(--c) / 2)); }
+.sw-cube i:nth-child(3) { transform: rotateY(90deg) translateZ(calc(var(--c) / 2)); }
+.sw-cube i:nth-child(4) { transform: rotateY(-90deg) translateZ(calc(var(--c) / 2)); }
+.sw-cube i:nth-child(5) { transform: rotateX(90deg) translateZ(calc(var(--c) / 2)); }
+.sw-cube i:nth-child(6) { transform: rotateX(-90deg) translateZ(calc(var(--c) / 2)); }
+@keyframes sw-cube { from { transform: rotateX(-30deg) rotateY(0); } to { transform: rotateX(-30deg) rotateY(360deg); } }
 @media (prefers-reduced-motion: reduce) {
-  .koi-flotte, .koi-liens, .koi-anneau, .koi-reflet, .koi-poussiere i, .koi-halo, .koi-halo::after, .koi-objectif *, .koi-cube, .koi-lien { animation: none; }
-  .koi-halo { display: none; }
-  .koi-cube { transform: rotateX(-24deg) rotateY(35deg); }
-  .koi-lien { transition: none; }
-  .koi-eau { filter: none; }
+  .sw-touche, .sw-boitier, .sw-base, .sw-fil, .sw-lien, .sw-halo, .sw-halo::after, .sw-objectif *, .sw-cube { animation: none; }
+  .sw-halo { display: none; }
+  .sw-cube { transform: rotateX(-30deg) rotateY(35deg); }
+  .sw-lien { transition: none; }
 }
 
 /* ---- Questionnaire de qualification (page Devis) */
