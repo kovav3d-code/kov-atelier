@@ -984,3 +984,4 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
   .passer-wrap .qualif-passer { max-width: none; padding: 10px 16px; text-align: center; justify-content: center; }
   .spatule { left: -20px; width: 58px; }
 }
+.imp-resine .ir-details { fill: none; stroke: #D9FFFF; stroke-opacity: .55; stroke-width: 1; stroke-linecap: round; }
