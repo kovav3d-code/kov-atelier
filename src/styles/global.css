@@ -780,7 +780,7 @@ body:has(.hero-video) .site-header { transition: background-color .3s ease, bord
       url("/medias/sous-main-regle.svg") var(--gutter) 4px / auto 30px no-repeat,
       linear-gradient(45deg, transparent calc(50% - .7px), rgba(244, 235, 221, .16) 50%, transparent calc(50% + .7px)),
       url("/medias/sous-main-grille.svg") var(--gutter) 0 / 200px 200px,
-      radial-gradient(120% 90% at 30% 0%, #6B5A44 0%, #5C4D3A 55%, #4C4030 100%);
+      linear-gradient(rgba(217, 195, 160, .07), rgba(217, 195, 160, .07)), var(--bg);
     box-shadow: inset 0 0 0 1px rgba(244, 235, 221, .08), 0 18px 40px rgba(0, 0, 0, .35);
   }
   .main-nav[data-open] a { border-bottom-color: rgba(244, 235, 221, .14); }
@@ -794,7 +794,7 @@ body:has(.hero-video) .site-header { transition: background-color .3s ease, bord
     background:
       url("/medias/sous-main-regle-bas.svg") 12px 100% / auto 22px no-repeat,
       url("/medias/sous-main-grille.svg") 12px 12px / 200px 200px,
-      linear-gradient(180deg, #665640 0%, #574936 100%);
+      linear-gradient(rgba(217, 195, 160, .07), rgba(217, 195, 160, .07)), var(--bg);
     border-bottom-color: rgba(244, 235, 221, .16);
   }
   .site-header .main-nav a { color: #F4EBDD; }
@@ -860,7 +860,7 @@ body:has(.hero-video) .site-header { transition: background-color .3s ease, bord
   background:
     url("/medias/sous-main-regle-bas.svg") var(--gutter) 100% / auto 22px no-repeat,
     url("/medias/sous-main-grille.svg") var(--gutter) 0 / 200px 200px,
-    linear-gradient(180deg, #665640 0%, #574936 100%);
+    linear-gradient(rgba(217, 195, 160, .07), rgba(217, 195, 160, .07)), var(--bg);
   border-bottom: 1px solid rgba(244, 235, 221, .16);
 }
 /* Bande de bas de page plus discrète partout, et absente sur la page Devis */
@@ -901,10 +901,10 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
 .hero h1 .br-large { display: none; }
 @media (min-width: 720px) { .hero h1 .br-large { display: inline; } }
 /* L'imprimante résine passe en fond du questionnaire, derrière les questions */
-.form-card { position: relative; isolation: isolate; overflow: hidden; min-height: 480px; }
+.form-card { position: relative; isolation: isolate; overflow: hidden; min-height: 600px; }
 .form-card > .imp-resine {
-  position: absolute; z-index: -1; top: 16px; bottom: 16px; left: 50%; max-height: 560px; width: auto; max-width: none; margin: 0;
-  transform: translateX(-50%); opacity: .3; pointer-events: none;
+  position: absolute; z-index: -1; right: 5%; bottom: 16px; height: min(340px, calc(100% - 270px)); width: auto; max-width: none; margin: 0;
+  opacity: .32; pointer-events: none;
 }
 .form-card > .imp-resine svg { height: 100%; width: auto; }
 .qualif-btn { background: rgba(32, 37, 43, .72); }
