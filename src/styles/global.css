@@ -633,36 +633,37 @@ ul, ol { margin: 0; }
 @keyframes koi-pulse { 0%, 100% { opacity: .45; } 50% { opacity: 1; } }
 @keyframes koi-reflet { 0% { transform: translateX(-40%); } 60%, 100% { transform: translateX(40%); } }
 @keyframes koi-poussiere { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: .8; } 100% { transform: translateY(-960px); opacity: 0; } }
-/* Liens intégrés à la sculpture : médaillons lumineux sans texte, posés sur la géode et sur l'ornement de la console */
-.koi-liens { position: absolute; inset: 0; animation: koi-flotte 7s ease-in-out infinite; pointer-events: none; }
-.koi-lien { --t: clamp(56px, 15vw, 96px); position: absolute; width: var(--t); aspect-ratio: 1; transform: translate(-50%, -50%);
-  display: grid; place-items: center; pointer-events: auto; border-radius: 50%; color: var(--blanc);
-  background: radial-gradient(circle at 35% 30%, rgba(143, 176, 245, .38), rgba(40, 100, 220, .32) 45%, rgba(18, 23, 28, .78) 100%);
-  border: 2px solid var(--bleu-clair); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
-  box-shadow: 0 0 0 5px rgba(18, 23, 28, .55), 0 0 26px 4px rgba(40, 100, 220, .75), inset 0 0 18px rgba(143, 176, 245, .35);
-  -webkit-tap-highlight-color: transparent; transition: transform .3s cubic-bezier(.3, 1.4, .5, 1), box-shadow .3s ease; }
+/* Liens intégrés à la sculpture : de la lumière, pas des boutons. Le calque est fondu en « screen » sur la sculpture :
+   seule la lueur s'ajoute, comme si la géode et l'ornement s'éclairaient de l'intérieur, au rythme de l'anneau. */
+.koi-liens { position: absolute; inset: 0; animation: koi-flotte 7s ease-in-out infinite; pointer-events: none; mix-blend-mode: screen; }
+.koi-lien { --t: clamp(60px, 16vw, 104px); position: absolute; width: var(--t); aspect-ratio: 1; transform: translate(-50%, -50%);
+  display: grid; place-items: center; pointer-events: auto; border-radius: 50%; color: #DCE6FF;
+  background: radial-gradient(circle, rgba(143, 176, 245, .5) 0%, rgba(40, 100, 220, .32) 32%, rgba(40, 100, 220, .1) 55%, transparent 70%);
+  -webkit-tap-highlight-color: transparent; animation: koi-souffle 4.5s ease-in-out infinite;
+  transition: transform .4s cubic-bezier(.3, 1.4, .5, 1), filter .4s ease; }
 .koi-lien--geode { left: 51.6%; top: 7.4%; }
-.koi-lien--console { --t: clamp(50px, 12.5vw, 80px); left: 51.4%; top: 65.2%; }
-.koi-lien:hover, .koi-lien:focus-visible { transform: translate(-50%, -50%) scale(1.1);
-  box-shadow: 0 0 0 5px rgba(18, 23, 28, .55), 0 0 42px 10px rgba(40, 100, 220, .95), inset 0 0 22px rgba(143, 176, 245, .55); }
-.koi-lien:focus-visible { outline: 3px solid var(--blanc); outline-offset: 6px; }
-.koi-lien:active { transform: translate(-50%, -50%) scale(.95); }
-/* Onde lumineuse qui s'échappe du médaillon : il appelle le clic sans un mot. */
-.koi-halo, .koi-halo::after { position: absolute; inset: -2px; border-radius: 50%; border: 2px solid var(--bleu-clair); animation: koi-onde 2.8s ease-out infinite; pointer-events: none; }
-.koi-halo::after { content: ""; inset: -2px; animation-delay: 1.4s; }
-.koi-lien--console .koi-halo, .koi-lien--console .koi-halo::after { animation-delay: .7s; }
-.koi-lien--console .koi-halo::after { animation-delay: 2.1s; }
-@keyframes koi-onde { 0% { transform: scale(1); opacity: .8; } 100% { transform: scale(1.75); opacity: 0; } }
+.koi-lien--console { --t: clamp(54px, 13.5vw, 88px); left: 51.4%; top: 65.2%; animation-delay: -2.2s; }
+.koi-lien:hover, .koi-lien:focus-visible { transform: translate(-50%, -50%) scale(1.12); filter: brightness(1.5) saturate(1.2); }
+.koi-lien:focus-visible { outline: 2px solid rgba(220, 230, 255, .8); outline-offset: 2px; }
+.koi-lien:active { transform: translate(-50%, -50%) scale(.96); }
+@keyframes koi-souffle { 0%, 100% { opacity: .78; } 50% { opacity: 1; } }
+/* Ondes de lumière douces (sans contour net) qui se diffusent dans la sculpture. */
+.koi-halo, .koi-halo::after { position: absolute; inset: 8%; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle, transparent 52%, rgba(143, 176, 245, .55) 64%, transparent 76%); filter: blur(1.5px); animation: koi-onde 3.6s ease-out infinite; }
+.koi-halo::after { content: ""; inset: 0; animation-delay: 1.8s; }
+.koi-lien--console .koi-halo, .koi-lien--console .koi-halo::after { animation-delay: .9s; }
+.koi-lien--console .koi-halo::after { animation-delay: 2.7s; }
+@keyframes koi-onde { 0% { transform: scale(.7); opacity: 0; } 25% { opacity: 1; } 100% { transform: scale(1.9); opacity: 0; } }
 /* Objectif photo */
-.koi-icone { width: 62%; height: auto; overflow: visible; filter: drop-shadow(0 0 6px rgba(143, 176, 245, .8)); }
-.koi-objectif * { fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.koi-icone { width: 50%; height: auto; overflow: visible; filter: drop-shadow(0 0 3px rgba(220, 230, 255, .9)) drop-shadow(0 0 10px rgba(40, 100, 220, .9)); }
+.koi-objectif * { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .koi-objectif .koi-diaphragme { stroke-width: 1.6; transform-box: fill-box; transform-origin: center; animation: koi-diaphragme 5s ease-in-out infinite; }
 .koi-objectif .koi-flash { fill: var(--blanc); stroke: none; animation: koi-flash 5s ease-in-out infinite; }
 @keyframes koi-diaphragme { 0%, 100% { transform: rotate(0) scale(1); } 45% { transform: rotate(60deg) scale(.55); } 55% { transform: rotate(60deg) scale(.55); } }
 @keyframes koi-flash { 0%, 46%, 60%, 100% { opacity: .35; } 50% { opacity: 1; filter: drop-shadow(0 0 6px #fff); } }
 /* Cube 3D en fil de fer */
-.koi-cube { --c: calc(var(--t) * .42); position: relative; width: var(--c); height: var(--c); transform-style: preserve-3d; animation: koi-cube 9s linear infinite; }
-.koi-cube i { position: absolute; inset: 0; border: 2px solid var(--blanc); background: rgba(143, 176, 245, .14); box-shadow: 0 0 8px rgba(143, 176, 245, .9), inset 0 0 6px rgba(143, 176, 245, .6); }
+.koi-cube { --c: calc(var(--t) * .34); position: relative; width: var(--c); height: var(--c); transform-style: preserve-3d; animation: koi-cube 9s linear infinite; }
+.koi-cube i { position: absolute; inset: 0; border: 1.5px solid #DCE6FF; background: rgba(143, 176, 245, .08); box-shadow: 0 0 10px rgba(40, 100, 220, .95), inset 0 0 8px rgba(143, 176, 245, .5); }
 .koi-cube .f1 { transform: translateZ(calc(var(--c) / 2)); }
 .koi-cube .f2 { transform: rotateY(180deg) translateZ(calc(var(--c) / 2)); }
 .koi-cube .f3 { transform: rotateY(90deg) translateZ(calc(var(--c) / 2)); }
@@ -671,7 +672,7 @@ ul, ol { margin: 0; }
 .koi-cube .f6 { transform: rotateX(-90deg) translateZ(calc(var(--c) / 2)); }
 @keyframes koi-cube { from { transform: rotateX(-24deg) rotateY(0); } to { transform: rotateX(-24deg) rotateY(360deg); } }
 @media (prefers-reduced-motion: reduce) {
-  .koi-flotte, .koi-liens, .koi-anneau, .koi-lampe, .koi-reflet, .koi-poussiere i, .koi-halo, .koi-halo::after, .koi-objectif *, .koi-cube { animation: none; }
+  .koi-flotte, .koi-liens, .koi-anneau, .koi-lampe, .koi-reflet, .koi-poussiere i, .koi-halo, .koi-halo::after, .koi-objectif *, .koi-cube, .koi-lien { animation: none; }
   .koi-halo { display: none; }
   .koi-cube { transform: rotateX(-24deg) rotateY(35deg); }
   .koi-lien { transition: none; }
