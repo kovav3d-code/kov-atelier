@@ -868,3 +868,27 @@ body:has(.hero-video) .site-header { transition: background-color .3s ease, bord
 .site-footer { padding-top: 84px; }
 body:has(#form-devis) .site-footer::before { display: none; }
 body:has(#form-devis) .site-footer { padding-top: 56px; }
+
+/* ---- Page Devis : imprimante résine animée (la pièce sort du bac au fur et à mesure que le plateau remonte) */
+.imp-resine { margin: 36px 0 0; max-width: 300px; }
+.imp-resine svg { display: block; width: 100%; height: auto; overflow: visible; }
+.imp-resine figcaption { margin-top: 10px; font-family: 'Geist Mono', ui-monospace, monospace; font-size: .72rem; text-transform: uppercase; letter-spacing: .1em; color: var(--atelier); }
+.imp-resine .ir-noir { fill: #15181C; stroke: #2E343B; stroke-width: 1; }
+.imp-resine .ir-noir2 { fill: #1C2025; stroke: #333A42; stroke-width: 1; }
+.imp-resine .ir-rail { fill: #3A424B; }
+.imp-resine .ir-plateau { fill: #2B3138; stroke: #49525C; stroke-width: 1; }
+.imp-resine .ir-supports { stroke: #9FF7F7; stroke-opacity: .55; stroke-width: 1; fill: none; }
+.imp-resine .ir-bac { fill: rgba(18, 21, 24, .3); stroke: #2E343B; stroke-width: 1.2; }
+.imp-resine .ir-surface { stroke: #9FF7F7; stroke-opacity: .7; stroke-width: 1; }
+.imp-resine .ir-uv { transition: opacity .06s linear; mix-blend-mode: screen; }
+.imp-resine .ir-plaque { fill: #3A424B; }
+.imp-resine .ir-ecran { fill: #0E1A24; stroke: #2E343B; }
+.imp-resine .ir-ecran-zone { fill: #3FD3D8; fill-opacity: .25; }
+.imp-resine .ir-pct { font: 600 8px 'Geist Mono', ui-monospace, monospace; fill: #7BEFF0; }
+.imp-resine .ir-lignes { stroke: #7BEFF0; stroke-opacity: .35; stroke-width: 2; stroke-linecap: round; }
+.imp-resine .ir-gouttes circle { fill: #7BEFF0; opacity: 0; }
+.imp-resine.ir-fin .ir-gouttes circle { animation: ir-goutte 1.6s ease-in infinite; }
+.imp-resine.ir-fin .ir-gouttes circle:nth-child(2) { animation-delay: .7s; }
+@keyframes ir-goutte { 0% { opacity: 0; transform: translateY(0); } 15% { opacity: .9; } 100% { opacity: 0; transform: translateY(70px); } }
+@media (max-width: 720px) { .imp-resine { display: none; } }
+@media (prefers-reduced-motion: reduce) { .imp-resine.ir-fin .ir-gouttes circle { animation: none; } }

@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
+import ImprimanteResine from '../components/ImprimanteResine.astro';
 import { PRESTATIONS, DELAIS, LIVRAISONS, BUDGETS, PROFILS, BESOINS_QUALIF, CRENEAUX, FICHIERS, LIMITES } from '../config/devis';
 import { SITE, APERCU, MONTRER_RESERVES } from '../config/site';
 const turnstileKey = SITE.turnstileSiteKey ?? import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
@@ -25,6 +26,7 @@ const accept = FICHIERS.extensions.map((e) => `.${e}`).join(',');
           </ol>
         </div>
         <p class="aside-note">Pas encore de fichier ? Une description ou une photo suffit pour démarrer.</p>
+        <ImprimanteResine />
       </aside>
 
       <div class="form-card">

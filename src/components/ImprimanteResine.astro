@@ -1,0 +1,135 @@
+---
+// Animation de la page Devis : une imprimante résine (inspirée d'une machine de l'atelier, sans marque).
+// Départ : le plateau est plongé dans le bac de résine. Il remonte couche après couche et la réplique factice
+// imprimée (un AK-47 décoratif) se découvre, accrochée tête en bas au plateau par ses supports.
+// Arrivée : plateau en haut, pièce entièrement sortie, quelques gouttes de résine. Puis la boucle recommence.
+// Image fixe (pièce terminée) si l'utilisateur limite les animations.
+---
+<figure class="imp-resine" aria-hidden="true" data-imp-resine>
+  <svg viewBox="0 0 300 440">
+    <defs>
+      <linearGradient id="ir-resine" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#3FD3D8" stop-opacity=".55" />
+        <stop offset="1" stop-color="#138C93" stop-opacity=".8" />
+      </linearGradient>
+      <linearGradient id="ir-piece" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#7BEFF0" stop-opacity=".55" />
+        <stop offset=".5" stop-color="#3FD3D8" stop-opacity=".35" />
+        <stop offset="1" stop-color="#9FF7F7" stop-opacity=".6" />
+      </linearGradient>
+      <pattern id="ir-couches" width="6" height="2.4" patternUnits="userSpaceOnUse" patternTransform="rotate(90)">
+        <rect width="6" height="1" fill="#D9FFFF" fill-opacity=".22" />
+      </pattern>
+      <radialGradient id="ir-uv" cx=".5" cy="1" r=".8">
+        <stop offset="0" stop-color="#6EF3F5" stop-opacity=".75" />
+        <stop offset="1" stop-color="#6EF3F5" stop-opacity="0" />
+      </radialGradient>
+      <!-- Ce qui est déjà imprimé : du plateau jusqu'au fond du bac -->
+      <clipPath id="ir-imprime"><rect class="ir-clip" x="40" y="350" width="220" height="2" /></clipPath>
+      <!-- Silhouette décorative, dessinée à plat (crosse à gauche), longueur 200 -->
+      <path id="ir-ak" d="M0 13 L48 17 L112 17 L112 11 L116 11 L116 15 L150 15 L150 18 L183 18 L183 10 L187 10 L187 18 L200 18 L200 22 L140 22 L140 28 L112 28 L104 28 Q102 44 110 60 L98 64 Q88 48 86 28 L70 28 Q68 32 64 32 Q60 30 60 28 L66 28 L61 48 L52 48 L56 30 L48 30 L0 42 Z" />
+    </defs>
+
+    <!-- Colonne de l'axe Z -->
+    <rect x="152" y="22" width="26" height="282" rx="3" class="ir-noir" />
+    <rect x="158" y="30" width="3" height="266" class="ir-rail" />
+    <rect x="169" y="30" width="3" height="266" class="ir-rail" />
+
+    <!-- Plateau et chariot : montent pendant l'impression -->
+    <g class="ir-mobile">
+      <rect x="140" y="-58" width="52" height="54" rx="4" class="ir-noir" />
+      <rect x="192" y="-50" width="30" height="20" rx="3" class="ir-noir2" />
+      <rect x="66" y="-6" width="168" height="7" rx="1.5" class="ir-plateau" />
+      <!-- Supports puis pièce, accrochés sous le plateau -->
+      <g clip-path="url(#ir-imprime)" class="ir-piece-g">
+        <g class="ir-attache">
+          <path d="M132 1v10M140 1v12M148 1v10M156 1v13M164 1v10" class="ir-supports" />
+          <g transform="translate(182 12) rotate(90)">
+            <use href="#ir-ak" fill="url(#ir-piece)" stroke="#BFFBFB" stroke-opacity=".85" stroke-width="1.1" />
+            <use href="#ir-ak" fill="url(#ir-couches)" />
+          </g>
+        </g>
+      </g>
+      <g class="ir-gouttes"><circle cx="148" cy="218" r="2" /><circle cx="160" cy="214" r="1.6" /></g>
+    </g>
+
+    <!-- Bac de résine (devant la pièce : on la voit à travers) -->
+    <path d="M56 300h188l-6 52H62z" class="ir-bac" />
+    <rect x="62" y="312" width="176" height="40" fill="url(#ir-resine)" />
+    <rect x="62" y="330" width="176" height="22" fill="url(#ir-uv)" class="ir-uv" />
+    <path d="M62 312h176" class="ir-surface" />
+    <rect x="236" y="296" width="12" height="10" rx="5" class="ir-noir2" />
+
+    <!-- Socle et écran -->
+    <path d="M40 352h220l-8 78H48z" class="ir-noir" />
+    <rect x="92" y="364" width="116" height="8" rx="1" class="ir-plaque" />
+    <rect x="104" y="380" width="92" height="40" rx="3" class="ir-ecran" />
+    <rect x="112" y="388" width="20" height="24" rx="2" class="ir-ecran-zone" />
+    <text x="122" y="404" class="ir-pct" text-anchor="middle">0%</text>
+    <path d="M140 392h46M140 400h36M140 408h42" class="ir-lignes" />
+  </svg>
+  <figcaption>Votre pièce, couche après couche.</figcaption>
+</figure>
+
+<script is:inline>
+  (function () {
+    var fig = document.querySelector('[data-imp-resine]');
+    if (!fig) return;
+    var svg = fig.querySelector('svg');
+    var mobile = svg.querySelector('.ir-mobile');
+    var clip = svg.querySelector('.ir-clip');
+    var uv = svg.querySelector('.ir-uv');
+    var pct = svg.querySelector('.ir-pct');
+    var piece = svg.querySelector('.ir-piece-g');
+    var gouttes = svg.querySelector('.ir-gouttes');
+    var BAS = 350, HAUT = 88, FOND = 352;        // position du dessous du plateau (départ, arrivée), fond du bac
+    var IMPRESSION = 8000, PAUSE = 3600, RETOUR = 1300;
+    var COUCHE = 260;                              // durée d'une couche (clignement UV, petit décollement)
+
+    function poser(y, imprime, uvOn, opacite) {
+      mobile.setAttribute('transform', 'translate(0 ' + y.toFixed(2) + ')');
+      // Partie imprimée : du plateau (repère local 0) jusqu'au fond du bac, limitée à ce qui est déjà fait.
+      var h = Math.max(0, Math.min(imprime, FOND - y));
+      clip.setAttribute('y', '0');
+      clip.setAttribute('height', h.toFixed(2));
+      uv.style.opacity = uvOn ? '1' : '0';
+      piece.style.opacity = opacite;
+    }
+
+    var reduit = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduit) { poser(HAUT, 400, false, 1); pct.textContent = '100%'; fig.classList.add('ir-fin'); return; }
+
+    var debut = 0, actif = false;
+    function boucle(t) {
+      if (!actif) return;
+      if (!debut) debut = t;
+      var e = (t - debut) % (IMPRESSION + PAUSE + RETOUR);
+      if (e < IMPRESSION) {
+        var p = e / IMPRESSION;
+        var dans = e % COUCHE;
+        var decolle = dans > COUCHE * 0.7 ? Math.sin(((dans - COUCHE * 0.7) / (COUCHE * 0.3)) * Math.PI) * 2.2 : 0;
+        var y = BAS - (BAS - HAUT) * p - decolle;
+        poser(y, (BAS - HAUT) * p + 4, dans < COUCHE * 0.6, 1);
+        pct.textContent = Math.floor(p * 100) + '%';
+        fig.classList.remove('ir-fin');
+      } else if (e < IMPRESSION + PAUSE) {
+        poser(HAUT, 400, false, 1);
+        pct.textContent = '100%';
+        fig.classList.add('ir-fin');
+      } else {
+        var r = (e - IMPRESSION - PAUSE) / RETOUR;
+        var lisse = r * r * (3 - 2 * r);
+        poser(HAUT + (BAS - HAUT) * lisse, 400, false, String(1 - Math.min(1, r * 2)));
+        pct.textContent = '0%';
+        fig.classList.remove('ir-fin');
+      }
+      requestAnimationFrame(boucle);
+    }
+    poser(BAS, 0, false, 1);
+    new IntersectionObserver(function (es) {
+      var vu = es[0].isIntersecting;
+      if (vu && !actif) { actif = true; debut = 0; requestAnimationFrame(boucle); }
+      if (!vu) actif = false;
+    }, { threshold: 0.3 }).observe(fig);
+  })();
+</script>
