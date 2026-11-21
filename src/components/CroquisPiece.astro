@@ -1,0 +1,158 @@
+---
+// « Du croquis à la pièce » : un croquis au crayon se dessine au fil du défilement, puis laisse place au modèle 3D.
+// La vidéo (sketch-to-3d, image clé à chaque image) est parcourue selon la position de défilement : rien ne tourne en boucle,
+// et revenir en arrière défait le dessin. Avec « réduire les animations », la pièce finie s'affiche directement.
+// Seule une vidéo est publiée, jamais le fichier 3D.
+const ETAPES = [
+  { de: 0, titre: 'Le volume', texte: 'Cercles et boîte de construction : les proportions avant le détail.' },
+  { de: 0.29, titre: 'Les contours', texte: 'Les arêtes principales, posées au trait léger.' },
+  { de: 0.48, titre: 'Le trait au propre', texte: 'Le trait est repassé et l’ombre hachurée : la forme est fixée.' },
+  { de: 0.63, titre: 'La matière', texte: 'La couleur de la future pièce.' },
+  { de: 0.8, titre: 'La pièce', texte: 'Le modèle 3D, prêt à passer à l’impression.' },
+] as const;
+---
+<section class="croquis" aria-labelledby="t-croquis" data-croquis>
+  <div class="croquis-piste" data-croquis-piste>
+    <div class="croquis-scene">
+      <div class="wrap croquis-grille">
+        <div class="croquis-texte">
+          <h2 id="t-croquis">Du croquis à la pièce</h2>
+          <p>Un croquis sur un coin de feuille suffit pour démarrer. Faites défiler la page pour suivre le chemin qu’il prend à l’atelier.</p>
+          <ol class="croquis-regle" data-croquis-regle>
+            {ETAPES.map((e, i) => (
+              <li data-de={e.de} class={i === 0 ? 'actif' : undefined}>
+                <span class="croquis-graduation" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                <span class="croquis-etape"><strong>{e.titre}</strong><span>{e.texte}</span></span>
+              </li>
+            ))}
+            <li class="croquis-curseur" aria-hidden="true" data-croquis-curseur></li>
+          </ol>
+        </div>
+        <figure class="croquis-feuille">
+          <div class="croquis-cadre">
+            <video
+              muted playsinline preload="none" disablepictureinpicture
+              poster="/videos/croquis/croquis-colonne-debut.jpg"
+              data-src-grand="/videos/croquis/croquis-colonne-1080.mp4"
+              data-src-petit="/videos/croquis/croquis-colonne-720.mp4"
+              aria-hidden="true"
+            ></video>
+            <img class="croquis-fin" src="/videos/croquis/croquis-colonne-fin.jpg" width="1080" height="1080" loading="lazy" alt="Colonne de tireuse à bière en deux parties, modèle 3D de couleur cuivre" />
+          </div>
+          <figcaption>Colonne de tireuse à bière, en deux parties</figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const section = document.querySelector<HTMLElement>('[data-croquis]');
+  const reduit = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (section && !reduit) {
+    const piste = section.querySelector<HTMLElement>('[data-croquis-piste]')!;
+    const video = section.querySelector<HTMLVideoElement>('video')!;
+    const etapes = [...section.querySelectorAll<HTMLLIElement>('[data-croquis-regle] li[data-de]')];
+    const curseur = section.querySelector<HTMLElement>('[data-croquis-curseur]')!;
+    const seuils = etapes.map((li) => Number(li.dataset.de));
+    let charge = false;
+    let cible = 0;
+    let rendu = -1;
+
+    // Le dessin ne s'anime que si la vidéo peut être parcourue ; sinon l'image finie reste affichée.
+    section.classList.add('croquis--anime');
+
+    const charger = () => {
+      if (charge) return;
+      charge = true;
+      video.src = matchMedia('(max-width: 700px)').matches ? video.dataset.srcPetit! : video.dataset.srcGrand!;
+      video.preload = 'auto';
+      video.load();
+    };
+    new IntersectionObserver((es, io) => {
+      if (es.some((e) => e.isIntersecting)) { charger(); io.disconnect(); }
+    }, { rootMargin: '100% 0px' }).observe(section);
+
+    // Avancement : 0 quand la piste arrive en haut de l'écran, 1 quand sa fin y arrive.
+    const avancement = () => {
+      const r = piste.getBoundingClientRect();
+      return Math.min(1, Math.max(0, -r.top / Math.max(1, r.height - innerHeight)));
+    };
+
+    const afficher = (p: number) => {
+      let n = 0;
+      seuils.forEach((s, i) => { if (p >= s) n = i; });
+      etapes.forEach((li, i) => li.classList.toggle('actif', i === n));
+      curseur.style.setProperty('--p', p.toFixed(4));
+    };
+
+    const boucle = () => {
+      cible = avancement();
+      if (Math.abs(cible - rendu) > 0.0005) {
+        afficher(cible);
+        if (video.readyState >= 1 && !video.seeking && video.duration) {
+          video.currentTime = cible * (video.duration - 0.04);
+          rendu = cible;
+        }
+      }
+      requestAnimationFrame(boucle);
+    };
+    let actif = false;
+    new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !actif) { actif = true; requestAnimationFrame(boucle); }
+    }).observe(piste);
+    video.addEventListener('seeked', () => { if (Math.abs(cible - rendu) > 0.0005) rendu = -1; });
+    afficher(0);
+  }
+</script>
+
+<style>
+  .croquis { --papier: #F3F0E8; background: var(--surface-2); }
+  .croquis-scene { padding: clamp(64px, 9vw, 120px) 0; }
+  .croquis-grille { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(32px, 6vw, 88px); align-items: center; }
+  .croquis-texte h2 { font-size: clamp(1.9rem, 3.6vw, 2.9rem); }
+  .croquis-texte > p { margin-top: 16px; color: var(--text-2); font-size: 1.1rem; max-width: 30em; }
+
+  /* La règle : graduations kraft (repères techniques), le curseur glisse avec le dessin. */
+  .croquis-regle { position: relative; list-style: none; padding: 0 0 0 28px; margin-top: clamp(28px, 4vw, 44px); display: grid; gap: 18px;
+    background: repeating-linear-gradient(to bottom, var(--atelier) 0 1px, transparent 1px 8px) 0 0 / 6px 100% no-repeat,
+                linear-gradient(var(--atelier), var(--atelier)) 0 0 / 1px 100% no-repeat; }
+  .croquis-regle li[data-de] { display: grid; grid-template-columns: 2.4em 1fr; gap: 10px; align-items: baseline; }
+  .croquis-graduation { font-family: 'Geist Mono', ui-monospace, monospace; font-size: .82rem; color: var(--atelier); font-variant-numeric: tabular-nums; }
+  .croquis-etape { display: grid; gap: 2px; }
+  .croquis-etape strong { font-weight: 650; color: var(--text); }
+  .croquis-etape span { color: var(--text-2); font-size: .95rem; }
+  .croquis-curseur { display: none; }
+
+  .croquis-feuille { margin: 0; max-width: 580px; }
+  .croquis-cadre { position: relative; aspect-ratio: 1; background: var(--papier); border-radius: var(--r-sm); overflow: hidden; box-shadow: 0 1px 0 rgba(255, 255, 255, .06) inset, 0 24px 48px rgba(0, 0, 0, .35); }
+  .croquis-cadre video, .croquis-cadre img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .croquis-cadre video { display: none; }
+  .croquis-feuille figcaption { margin-top: 12px; font-size: .9rem; color: var(--text-2); }
+
+  /* Version animée : la scène reste à l'écran pendant que la piste défile. */
+  .croquis--anime .croquis-piste { height: 320vh; }
+  .croquis--anime .croquis-scene { position: sticky; top: 0; min-height: 100vh; display: flex; align-items: center; padding: 88px 0 32px; }
+  .croquis--anime .croquis-scene > .wrap { width: 100%; }
+  .croquis--anime .croquis-cadre video { display: block; }
+  .croquis--anime .croquis-cadre img { display: none; }
+  .croquis--anime .croquis-feuille { max-width: min(100%, calc(100vh - 200px), 580px); justify-self: start; width: 100%; }
+  .croquis--anime .croquis-regle li[data-de] { transition: opacity .35s cubic-bezier(.2, .7, .2, 1); opacity: .38; }
+  .croquis--anime .croquis-regle li.actif { opacity: 1; }
+  .croquis--anime .croquis-curseur { display: block; position: absolute; left: -4px; top: 0; bottom: 0; width: 0; pointer-events: none; }
+  .croquis--anime .croquis-curseur::before { content: ""; position: absolute; left: 0; top: calc(var(--p, 0) * 100%); translate: 0 -50%;
+    border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 9px solid var(--atelier); }
+
+  @media (max-width: 860px) {
+    .croquis-grille { grid-template-columns: 1fr; gap: 20px; }
+    .croquis--anime .croquis-scene { padding: 72px 0 20px; }
+    .croquis--anime .croquis-texte > p { display: none; }
+    .croquis--anime .croquis-texte h2 { font-size: 1.6rem; }
+    .croquis--anime .croquis-feuille { max-width: min(100%, 50vh); }
+    .croquis--anime .croquis-feuille figcaption { display: none; }
+    /* Sur téléphone, seule l'étape en cours est lisible sous la feuille. */
+    .croquis--anime .croquis-regle { margin-top: 12px; min-height: 4.6em; }
+    .croquis--anime .croquis-regle li[data-de] { grid-area: 1 / 1; opacity: 0; }
+    .croquis--anime .croquis-regle li.actif { opacity: 1; }
+  }
+</style>

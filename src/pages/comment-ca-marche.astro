@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Steps from '../components/Steps.astro';
 import CtaFinal from '../components/CtaFinal.astro';
+import CroquisPiece from '../components/CroquisPiece.astro';
 import { FICHIERS } from '../config/devis';
 import { SITE } from '../config/site';
 
@@ -50,6 +51,8 @@ const jsonLd = {
     <p class="lead">Que vous partiez d’une idée, d’une photo ou d’un fichier prêt à imprimer, le déroulement reste simple.</p>
   </div></section>
   <section class="wrap section-etapes"><Steps /></section>
+
+  <CroquisPiece />
 
   <section class="section section--alt" aria-labelledby="t-faq">
     <div class="wrap faq-grid">
