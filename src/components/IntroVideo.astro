@@ -1,54 +1,66 @@
 ---
 // Vidéo d'introduction jouée en fond du hero, derrière le texte (visible dès le départ).
-// Une fois par session ; ignorée si l'utilisateur limite les animations ou économise ses données.
-// N'apparaît que si les deux vidéos existent dans public/videos (vérifié au build).
+// À la fin, le buste « cristallise » : une image fixe où ses contours deviennent du filament PLA
+// translucide et lumineux. Cette image reste ensuite en fond du hero.
+// Si l'utilisateur limite les animations ou économise ses données : l'image fixe s'affiche directement.
+// N'apparaît que si les vidéos et les images existent dans public (vérifié au build).
 import fs from 'node:fs';
 import path from 'node:path';
 
 const PORTRAIT = '/videos/intro-portrait.mp4';
 const PAYSAGE = '/videos/intro-paysage.mp4';
+const CRISTAL_PORTRAIT = '/medias/intro-cristal-portrait.jpg';
+const CRISTAL_PAYSAGE = '/medias/intro-cristal-paysage.jpg';
 const existe = (p: string) => fs.existsSync(path.join(process.cwd(), 'public', p));
-const actif = existe(PORTRAIT) && existe(PAYSAGE);
+const actif = [PORTRAIT, PAYSAGE, CRISTAL_PORTRAIT, CRISTAL_PAYSAGE].every(existe);
 ---
 {actif && (
   <div class="hero-video" aria-hidden="true" data-portrait={PORTRAIT} data-paysage={PAYSAGE}>
     <video muted playsinline preload="none"></video>
+    <picture>
+      <source media="(max-width: 719px), (orientation: portrait)" srcset={CRISTAL_PORTRAIT} />
+      <img class="hero-cristal" src={CRISTAL_PAYSAGE} alt="" decoding="async" />
+    </picture>
   </div>
   <script is:inline>
     (function () {
       var bloc = document.currentScript && document.currentScript.previousElementSibling;
       if (!bloc || !bloc.classList.contains('hero-video')) return;
       var hero = bloc.closest('.hero');
-      var deja = false;
-      try { deja = sessionStorage.getItem('kov-intro') === '1'; } catch (e) {}
+      if (!hero) return;
+      var video = bloc.querySelector('video');
       var reduit = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       var eco = navigator.connection && navigator.connection.saveData;
-      if (!hero || deja || reduit || eco) { bloc.remove(); return; }
 
-      var video = bloc.querySelector('video');
+      // Sans animation : le buste cristallisé directement.
+      if (reduit || eco) { video.remove(); hero.classList.add('cristal-fixe'); return; }
+
       var portrait = window.matchMedia('(max-width: 719px), (orientation: portrait)').matches;
       video.src = portrait ? bloc.dataset.portrait : bloc.dataset.paysage;
       video.preload = 'auto';
 
       var fini = false;
-      function terminer() {
+      function cristalliser() {
         if (fini) return;
         fini = true;
-        try { sessionStorage.setItem('kov-intro', '1'); } catch (e) {}
-        hero.classList.add('video-fin');
-        hero.classList.remove('video-lecture');
-        setTimeout(function () { bloc.remove(); hero.classList.remove('video-fin'); }, 1800);
+        hero.classList.add('cristallise');
+        setTimeout(function () {
+          hero.classList.add('cristal-fixe');
+          hero.classList.remove('video-lecture', 'cristallise');
+          video.remove();
+        }, 1700);
       }
       video.addEventListener('playing', function () { if (!fini) hero.classList.add('video-lecture'); }, { once: true });
+      // La fin de la vidéo d'origine s'assombrit : on cristallise juste avant.
       video.addEventListener('timeupdate', function () {
-        if (video.duration && video.duration - video.currentTime < 0.9) terminer();
+        if (video.duration && video.duration - video.currentTime < 1.0) cristalliser();
       });
-      video.addEventListener('ended', terminer);
-      video.addEventListener('error', terminer);
+      video.addEventListener('ended', cristalliser);
+      video.addEventListener('error', cristalliser);
       var p = video.play();
-      if (p && p.catch) p.catch(terminer);
-      setTimeout(function () { if (!hero.classList.contains('video-lecture')) terminer(); }, 3000);
-      setTimeout(terminer, 9000);
+      if (p && p.catch) p.catch(cristalliser);
+      setTimeout(function () { if (!hero.classList.contains('video-lecture')) cristalliser(); }, 3000);
+      setTimeout(cristalliser, 9000);
     })();
   </script>
 )}
