@@ -985,3 +985,17 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
   .spatule { left: -20px; width: 58px; }
 }
 .imp-resine .ir-details { fill: none; stroke: #D9FFFF; stroke-opacity: .55; stroke-width: 1; stroke-linecap: round; }
+
+/* ---- Fond du questionnaire de devis : tête qui réfléchit (gravure), engrenages animés
+   Positions en % de l'image d'origine (881 × 1109 px). Les engrenages sont coupés sous le bord du « chapeau » (y = 452). */
+.form-card > .tete-pensante { position: absolute; z-index: -1; left: 50%; top: 96px; bottom: 0; aspect-ratio: 881 / 1109; max-height: 760px; transform: translateX(-50%); pointer-events: none; }
+.tete-pensante img { position: absolute; display: block; height: auto; }
+.tp-base { inset: 0; width: 100%; }
+.tp-meca { position: absolute; inset: 0; clip-path: inset(0 0 59.24% 0); }
+.tp-e1 { left: calc(244 / 881 * 100%); top: calc(234 / 1109 * 100%); width: calc(164 / 881 * 100%); animation: tp-tourne 16s linear infinite; }
+.tp-e2 { left: calc(350 / 881 * 100%); top: calc(318 / 1109 * 100%); width: calc(204 / 881 * 100%); animation: tp-tourne 20s linear infinite reverse; }
+.tp-cadran { left: calc(610 / 881 * 100%); top: calc(279 / 1109 * 100%); width: calc(132 / 881 * 100%); animation: tp-tourne 48s linear infinite; }
+@keyframes tp-tourne { to { transform: rotate(360deg); } }
+@media (max-width: 720px) { .form-card > .tete-pensante { top: 120px; opacity: .8; } }
+@media (prefers-reduced-motion: reduce) { .tp-e1, .tp-e2, .tp-cadran { animation: none; } }
+.tp-e2 { border-radius: 50%; background: radial-gradient(circle closest-side, var(--surface) 97%, transparent 98%); }
