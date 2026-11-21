@@ -20,7 +20,7 @@ const turnstileKey = SITE.turnstileSiteKey ?? import.meta.env.PUBLIC_TURNSTILE_S
         ? <div class="contact-ligne"><Icon name="email" /><p><strong>E-mail</strong><a href={`mailto:${SITE.email}`}>{SITE.email}</a></p></div>
         : MONTRER_RESERVES && <div class="contact-ligne"><Icon name="email" /><p><span class="todo">E-mail professionnel à confirmer</span></p></div>}
       {SITE.googleBusinessUrl
-        ? <p><a class="link" href={SITE.googleBusinessUrl} target="_blank" rel="noopener">Voir la fiche Google de l’atelier</a></p>
+        ? <p><a class="link" href={SITE.googleBusinessUrl} target="_blank" rel="noopener">Voir la fiche Google de l’atelier<span class="sr-only"> (nouvel onglet)</span></a></p>
         : MONTRER_RESERVES && <p><span class="todo">Lien de la fiche Google Business Profile à fournir</span></p>}
       <div class="contact-devis">
         <strong>Vous avez un projet ?</strong>

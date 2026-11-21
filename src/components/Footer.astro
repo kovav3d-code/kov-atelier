@@ -24,7 +24,7 @@ const annee = new Date().getFullYear();
           <li>{SITE.nom}, {SITE.ville} ({SITE.departement})</li>
           {SITE.telephone && <li><a href={`tel:${SITE.telephone.replace(/\s/g, '')}`}>{SITE.telephone}</a></li>}
           {SITE.email && <li><a href={`mailto:${SITE.email}`}>{SITE.email}</a></li>}
-          {SITE.googleBusinessUrl && <li><a href={SITE.googleBusinessUrl} rel="noopener" target="_blank">Fiche Google</a></li>}
+          {SITE.googleBusinessUrl && <li><a href={SITE.googleBusinessUrl} rel="noopener" target="_blank">Fiche Google<span class="sr-only"> (nouvel onglet)</span></a></li>}
           {MONTRER_RESERVES && !SITE.telephone && <li><span class="placeholder">Téléphone à confirmer</span></li>}
           {MONTRER_RESERVES && !SITE.email && <li><span class="placeholder">E-mail à confirmer</span></li>}
         </ul>

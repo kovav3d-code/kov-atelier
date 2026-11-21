@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import { SITE } from '../config/site';
 // ⚠️ PROJET À VALIDER : informations administratives à fournir avant la mise en ligne.
 ---
 <Base title="Mentions légales | Kov Atelier" description="Mentions légales du site Kov Atelier : éditeur, hébergeur et propriété intellectuelle.">
@@ -9,10 +10,12 @@ import Base from '../layouts/Base.astro';
     <p>Kov Atelier, <span class="todo">[nom et prénom de l’exploitant ou dénomination sociale]</span>, <span class="todo">[forme juridique : entreprise individuelle, micro-entreprise, société…]</span>.</p>
     <p>Adresse : <span class="todo">[adresse professionnelle ou de domiciliation : ne pas publier d’adresse personnelle si une domiciliation est possible]</span>, Florange (Moselle).</p>
     <p>SIRET : <span class="todo">[numéro]</span>. TVA intracommunautaire : <span class="todo">[numéro ou mention « TVA non applicable, art. 293 B du CGI »]</span>.</p>
-    <p>Contact : kovav3d@gmail.com, <span class="todo">[téléphone]</span>. Directeur de la publication : <span class="todo">[nom]</span>.</p>
+    <p>Contact : {SITE.email && <a href={`mailto:${SITE.email}`}>{SITE.email}</a>}{SITE.telephone && <>, <a href={`tel:${SITE.telephone.replace(/\s/g, '')}`}>{SITE.telephone}</a></>}. Directeur de la publication : <span class="todo">[nom]</span>.</p>
     <h2>Hébergement</h2>
-    <p>Cloudflare, Inc. <span class="todo">[adresse postale de l’hébergeur à vérifier sur le site de Cloudflare au moment de la publication]</span>.</p>
+    <p>Cloudflare, Inc., 101 Townsend Street, San Francisco, CA 94107, États-Unis. Site : <a href="https://www.cloudflare.com" rel="noopener">cloudflare.com</a>.</p>
     <h2>Propriété intellectuelle</h2>
     <p>Les textes, photographies et modèles présentés sur ce site sont la propriété de Kov Atelier ou de leurs titulaires respectifs. Toute reproduction sans autorisation est interdite.</p>
+    <h2>Données personnelles</h2>
+    <p>Le traitement des informations transmises par les formulaires est décrit dans la <a href="/politique-de-confidentialite">politique de confidentialité</a>.</p>
   </section>
 </Base>
