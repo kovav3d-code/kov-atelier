@@ -67,7 +67,17 @@ const accept = FICHIERS.extensions.map((e) => `.${e}`).join(',');
 
           <div class="qualif-nav">
             <button type="button" class="qualif-lien" id="q-retour" hidden>Retour</button>
-            <button type="button" class="qualif-passer" id="q-passer">Passer et décrire directement ma commande <span aria-hidden="true">→</span></button>
+            <span class="passer-wrap" id="q-passer-wrap">
+              <!-- Spatule de décollement : au clic, elle racle le bouton de gauche à droite et efface le texte -->
+              <svg class="spatule" viewBox="0 0 96 34" aria-hidden="true">
+                <rect x="1" y="11" width="46" height="12" rx="6" class="spatule-manche" />
+                <path d="M8 15h30M8 19h30" class="spatule-rainures" />
+                <rect x="46" y="9.5" width="8" height="15" rx="1.5" class="spatule-virole" />
+                <path d="M54 11.5 L94 4 L94 30 L54 22.5 Z" class="spatule-lame" />
+                <path d="M93 6v22" class="spatule-fil" />
+              </svg>
+              <button type="button" class="qualif-passer" id="q-passer"><span class="passer-texte">Passer et décrire directement ma commande <span class="passer-fleche" aria-hidden="true">→</span></span></button>
+            </span>
           </div>
         </div>
 

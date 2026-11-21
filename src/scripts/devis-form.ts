@@ -267,7 +267,23 @@ function initialiserQualif(form: HTMLFormElement, bouton: HTMLButtonElement) {
   });
 
   retour.addEventListener('click', () => { courant = Math.max(0, Math.min(courant, ORDRE.length) - 1); montrer(ORDRE[courant]); });
-  el('q-passer').addEventListener('click', () => { suivre('qualif_passe'); ouvrir('ecrit', false); });
+  // « Passer » : la spatule racle le bouton et efface le texte, puis le formulaire s'ouvre.
+  let raclage = false;
+  el('q-passer').addEventListener('click', () => {
+    if (raclage) return;
+    suivre('qualif_passe');
+    const wrap = el('q-passer-wrap');
+    const bouton = el('q-passer');
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches || !wrap) { ouvrir('ecrit', false); return; }
+    raclage = true;
+    wrap.style.setProperty('--course', `${bouton.offsetWidth + 6}px`);
+    wrap.classList.add('raclage');
+    setTimeout(() => {
+      ouvrir('ecrit', false);
+      wrap.classList.remove('raclage');
+      raclage = false;
+    }, 820);
+  });
   el('q-modifier').addEventListener('click', () => {
     form.hidden = true;
     el('q-resume').hidden = true;

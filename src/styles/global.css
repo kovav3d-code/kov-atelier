@@ -761,9 +761,9 @@ body:has(.hero-video) .site-header { transition: background-color .3s ease, bord
   color: var(--text); font: inherit; font-size: .98rem; font-weight: 600; cursor: pointer;
   transition: transform .18s cubic-bezier(.2, .7, .2, 1), background-color .18s ease, box-shadow .18s ease;
 }
-.qualif-passer span { color: var(--bleu-clair); transition: transform .2s cubic-bezier(.2, .7, .2, 1); }
+.qualif-passer .passer-fleche { display: inline-block; color: var(--bleu-clair); transition: transform .2s cubic-bezier(.2, .7, .2, 1); }
 .qualif-passer:hover { transform: translateY(-1px); background: rgba(143, 176, 245, .16); box-shadow: 0 4px 14px rgba(143, 176, 245, .18); }
-.qualif-passer:hover span { transform: translateX(4px); }
+.qualif-passer:hover .passer-fleche { transform: translateX(4px); }
 .qualif-passer:active { transform: scale(.97); transition-duration: .08s; }
 .qualif-passer:focus-visible { outline: 3px solid var(--bleu-clair); outline-offset: 3px; }
 @media (max-width: 600px) { .qualif-passer { width: 100%; justify-content: center; margin-left: 0; } }
@@ -909,3 +909,32 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
 .form-card > .imp-resine svg { height: 100%; width: auto; }
 .qualif-btn { background: rgba(32, 37, 43, .72); }
 @media (max-width: 720px) { .form-card > .imp-resine { opacity: .2; } }
+
+/* ---- Spatule de décollement à gauche du bouton « Passer » : au clic, elle avance et racle le texte */
+.passer-wrap { position: relative; display: inline-flex; align-items: center; margin-left: auto; padding-left: 92px; }
+.qualif-nav #q-passer { margin-left: 0; }
+.spatule { position: absolute; left: 0; top: 50%; width: 84px; height: auto; transform: translateY(-50%); z-index: 2; overflow: visible; transition: transform .2s ease; }
+.spatule-manche { fill: var(--atelier); }
+.spatule-rainures { stroke: rgba(32, 37, 43, .35); stroke-width: 1; }
+.spatule-virole { fill: #8A939C; }
+.spatule-lame { fill: #C9D0D6; stroke: #E7ECEF; stroke-width: .8; }
+.spatule-fil { stroke: #FFFFFF; stroke-width: 1.2; stroke-opacity: .8; }
+.passer-wrap:hover .spatule { transform: translate(4px, -50%) rotate(-3deg); }
+.passer-texte { display: inline-flex; align-items: center; gap: 10px; }
+.passer-wrap.raclage .spatule { animation: spatule-racle .78s cubic-bezier(.45, 0, .25, 1) forwards; }
+.passer-wrap.raclage .passer-texte { animation: texte-efface .78s cubic-bezier(.45, 0, .25, 1) forwards; }
+@keyframes spatule-racle {
+  0% { transform: translate(0, -50%) rotate(0); }
+  12% { transform: translate(-6px, -50%) rotate(-4deg); }
+  100% { transform: translate(var(--course, 360px), -50%) rotate(2deg); }
+}
+@keyframes texte-efface {
+  0%, 14% { clip-path: inset(0 0 0 0); }
+  100% { clip-path: inset(0 0 0 100%); }
+}
+@media (max-width: 600px) {
+  .passer-wrap { width: 100%; padding-left: 0; }
+  .passer-wrap .qualif-passer { width: 100%; padding: 10px 16px 10px 72px; font-size: .9rem; line-height: 1.25; text-align: left; }
+  .spatule { left: 8px; width: 58px; }
+}
+@media (prefers-reduced-motion: reduce) { .spatule { transition: none; } .passer-wrap:hover .spatule { transform: translateY(-50%); } }
