@@ -678,3 +678,8 @@ ul, ol { margin: 0; }
 .mode-rappel [data-rappel] { display: revert; }
 .mode-rappel [data-ecrit] { display: none; }
 @media (prefers-reduced-motion: reduce) { .qualif-btn { transition: none; } .qualif-btn:hover { transform: none; } }
+
+/* Accueil : le buste (vidéo puis image cristallisée) remonte sous l'en-tête, transparent tant qu'on n'a pas défilé */
+.hero:has(.hero-video) { margin-top: -73px; padding-top: calc(clamp(40px, 7vw, 96px) + 73px); }
+body:has(.hero-video) .site-header:not(.defile) { background: transparent; border-bottom-color: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; }
+body:has(.hero-video) .site-header { transition: background-color .3s ease, border-color .3s ease, box-shadow .3s ease; }
