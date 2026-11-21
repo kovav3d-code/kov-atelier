@@ -784,3 +784,17 @@ body:has(.hero-video) .site-header { transition: background-color .3s ease, bord
   .main-nav[data-open] a { border-bottom-color: rgba(207, 230, 216, .14); }
   .main-nav[data-open] a::before { background: repeating-linear-gradient(to top, transparent 0 3px, rgba(207, 230, 216, .05) 3px 4px), rgba(32, 37, 43, .55); }
 }
+
+/* ---- Ordinateur : pas de menu déroulant, les liens sont dans la barre du haut.
+   La barre devient donc elle-même une bande de sous-main (sauf en haut de l'accueil, où elle reste transparente sur le buste). */
+@media (min-width: 961px) {
+  .site-header {
+    background:
+      url("/medias/sous-main-regle-bas.svg") 12px 100% / auto 22px no-repeat,
+      url("/medias/sous-main-grille.svg") 12px 12px / 200px 200px,
+      linear-gradient(180deg, #1F4135 0%, #18342B 100%);
+    border-bottom-color: rgba(207, 230, 216, .16);
+  }
+  .site-header .main-nav a { color: #D5E4DA; }
+  .site-header .main-nav a:hover, .site-header .main-nav a[aria-current="page"] { color: #fff; }
+}
