@@ -2,12 +2,71 @@
 import Base from '../layouts/Base.astro';
 import Steps from '../components/Steps.astro';
 import CtaFinal from '../components/CtaFinal.astro';
+import { FICHIERS } from '../config/devis';
+import { SITE } from '../config/site';
+
+// Questions fréquentes : uniquement des informations déjà confirmées ailleurs sur le site.
+// Elles alimentent aussi les données structurées FAQPage (réponses affichées dans Google).
+const formats = FICHIERS.extensions.filter((e) => e !== 'stp' && e !== 'jpeg').map((e) => e.toUpperCase()).join(', ');
+const FAQ = [
+  {
+    q: 'Je n’ai ni plan ni fichier 3D. Est-ce possible ?',
+    r: 'Oui. Un croquis, quelques photos avec des mesures, la pièce d’origine ou une simple description suffisent pour démarrer. L’atelier construit le modèle 3D à partir de ce que vous avez.',
+  },
+  {
+    q: 'Quels fichiers puis-je envoyer ?',
+    r: `Les formats acceptés dans la demande de devis sont : ${formats}. Jusqu’à ${FICHIERS.maxNombre} fichiers, ${FICHIERS.maxParFichier / 1024 / 1024} Mo maximum chacun.`,
+  },
+  {
+    q: 'Puis-je recevoir seulement le fichier 3D ?',
+    r: 'Oui. Vous choisissez : le fichier seul (STL, 3MF, ou STEP pour les pièces techniques selon ce qui est convenu), ou la pièce fabriquée et livrée chez vous.',
+  },
+  {
+    q: 'Résine ou filament : quelle différence ?',
+    r: 'La résine donne des détails très fins et des surfaces lisses : figurines, bustes, maquettes, petites pièces précises. Le filament convient aux pièces plus grandes et plus robustes : supports, boîtiers, gabarits, prototypes fonctionnels. L’atelier choisit selon l’usage de la pièce.',
+  },
+  {
+    q: 'Une pièce cassée peut-elle toujours être reproduite ?',
+    r: 'Souvent, mais pas toujours : la faisabilité dépend des contraintes que la pièce subit (efforts, chaleur, frottement). Elle est étudiée avant tout devis, et la pièce peut être reproduite à l’identique ou améliorée.',
+  },
+  {
+    q: 'Y a-t-il un montant minimum ?',
+    r: 'La commande minimum est de 30 € hors livraison. Pour une très petite pièce, il est souvent plus intéressant d’en commander plusieurs ou de regrouper vos besoins.',
+  },
+  {
+    q: 'Livrez-vous hors de Moselle ?',
+    r: `Oui. L’atelier est à ${SITE.ville}, à côté du Luxembourg, et expédie les pièces partout en France, au Luxembourg et dans le monde entier.`,
+  },
+];
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQ.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.r } })),
+};
 ---
-<Base title="Comment se déroule un projet d’impression 3D | Kov Atelier" description="De la description de votre besoin à la livraison de la pièce : les quatre étapes d’un projet de modélisation ou d’impression 3D avec Kov Atelier.">
+<Base title="Comment se déroule un projet d’impression 3D | Kov Atelier" description="De la description de votre besoin à la livraison de la pièce : les quatre étapes d’un projet d’impression 3D avec Kov Atelier, et les réponses aux questions fréquentes." jsonLd={jsonLd}>
   <section class="page-head"><div class="wrap">
     <h1>Comment ça marche</h1>
     <p class="lead">Que vous partiez d’une idée, d’une photo ou d’un fichier prêt à imprimer, le déroulement reste simple.</p>
   </div></section>
-  <section class="wrap" style="padding-bottom:clamp(64px,8vw,112px)"><Steps /></section>
+  <section class="wrap section-etapes"><Steps /></section>
+
+  <section class="section section--alt" aria-labelledby="t-faq">
+    <div class="wrap faq-grid">
+      <div class="section-head">
+        <h2 id="t-faq">Questions fréquentes</h2>
+        <p>Une autre question ? <a class="link" href="/contact">Écrivez à l’atelier</a>.</p>
+      </div>
+      <div class="faq">
+        {FAQ.map((f, i) => (
+          <details open={i === 0}>
+            <summary>{f.q}</summary>
+            <p>{f.r}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
   <CtaFinal titre="Prêt à décrire votre projet ?" source="methode-final" />
 </Base>

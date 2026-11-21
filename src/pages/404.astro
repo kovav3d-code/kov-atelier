@@ -1,0 +1,19 @@
+---
+// Page introuvable : servie automatiquement par Cloudflare Pages pour toute adresse inexistante.
+import Base from '../layouts/Base.astro';
+import { NAV } from '../config/site';
+---
+<Base title="Page introuvable | Kov Atelier" description="Cette page n’existe pas ou a été déplacée." noindex>
+  <section class="page-head page-404"><div class="wrap">
+    <p class="code-404" aria-hidden="true">404</p>
+    <h1>Cette pièce n’est pas sortie de l’imprimante.</h1>
+    <p class="lead">La page demandée n’existe pas, ou elle a été déplacée. Voici où reprendre :</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="/">Retour à l’accueil</a>
+      <a class="btn btn-ghost" href="/devis" data-cta="404">Demander un devis</a>
+    </div>
+    <nav aria-label="Pages du site"><ul class="liens-404">
+      {NAV.map((l) => <li><a class="link" href={l.href}>{l.label}</a></li>)}
+    </ul></nav>
+  </div></section>
+</Base>

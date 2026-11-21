@@ -1005,3 +1005,27 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
 .aside-appel { margin-top: 14px; color: var(--text-2); }
 .aside-appel-lien { padding: 0; min-height: 44px; background: none; border: 0; font: inherit; font-weight: 600; color: var(--bleu-clair); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
 @media (prefers-reduced-motion: reduce) { .rdv-jour, .rdv-heure { transition: none; } .rdv-jour:hover, .rdv-heure:hover { transform: none; } }
+
+/* ---------- Comment ça marche : étapes et questions fréquentes ---------- */
+.section-etapes { padding-bottom: clamp(64px, 8vw, 112px); }
+.faq-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.7fr); gap: clamp(28px, 5vw, 72px); align-items: start; }
+.faq-grid .section-head { margin-bottom: 0; position: sticky; top: 104px; }
+.faq { display: grid; gap: 10px; }
+.faq details { border: 1px solid var(--line); border-radius: var(--r-md); background: var(--bg); transition: border-color .2s ease; }
+.faq details[open] { border-color: var(--line-strong); }
+.faq summary { display: flex; justify-content: space-between; align-items: center; gap: 16px; min-height: 60px; padding: 14px 20px; cursor: pointer; font-weight: 620; list-style: none; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; flex: none; font-size: 1.4rem; font-weight: 400; line-height: 1; color: var(--bleu-clair); transition: transform .2s ease; }
+.faq details[open] summary::after { transform: rotate(45deg); }
+.faq summary:hover { color: var(--bleu-clair); }
+.faq details p { padding: 0 20px 20px; color: var(--text-2); max-width: 60ch; }
+@media (max-width: 860px) { .faq-grid { grid-template-columns: 1fr; } .faq-grid .section-head { position: static; } }
+@media (prefers-reduced-motion: reduce) { .faq details, .faq summary::after { transition: none; } }
+
+/* ---------- Page introuvable ---------- */
+.page-404 { padding-bottom: clamp(80px, 10vw, 140px); }
+.code-404 { font-size: clamp(4.5rem, 14vw, 9rem); font-weight: 800; line-height: 1; letter-spacing: -0.05em; color: transparent; -webkit-text-stroke: 1.5px var(--line-strong); margin-bottom: 12px;
+  background: repeating-linear-gradient(0deg, var(--line-strong) 0 2px, transparent 2px 7px); -webkit-background-clip: text; background-clip: text; }
+.page-404 h1 { max-width: 18ch; }
+.page-404 .hero-actions { margin-top: 28px; }
+.liens-404 { list-style: none; padding: 0; margin: 36px 0 0; display: flex; flex-wrap: wrap; gap: 12px 28px; }
