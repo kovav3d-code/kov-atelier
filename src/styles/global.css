@@ -939,27 +939,26 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
 }
 @media (prefers-reduced-motion: reduce) { .spatule { transition: none; } .passer-wrap:hover .spatule { transform: translateY(-50%); } }
 
-/* ---- Bouteille de résine renversée sur le cadre du questionnaire : la résine longe le bord haut puis coule à droite */
-.devis { overflow-x: clip; }
-.resine-deco { position: absolute; inset: 0; pointer-events: none; z-index: 3; }
-.resine-flaque { position: absolute; left: 60px; width: calc(100% - 48px); top: -15px; height: 34px; overflow: visible; transform-origin: left center; animation: resine-coule-h 1.6s cubic-bezier(.3, .6, .2, 1) .3s both; }
-.resine-coulure { position: absolute; right: -15px; top: 6px; width: 28px; height: 300px; transform-origin: top center; animation: resine-coule-v 1.8s cubic-bezier(.3, .6, .2, 1) 1.6s both; }
-.resine-bouteille { position: absolute; left: -30px; top: -46px; width: 150px; height: auto; overflow: visible; }
-.rr-corps { fill: #1A1E22; stroke: #3A424B; stroke-width: 1; }
-.rr-etiquette { fill: var(--atelier); }
-.rr-texte { font: 700 8px 'Geist Mono', ui-monospace, monospace; fill: #20252B; letter-spacing: .08em; }
-.rr-petit { font-size: 5.5px; font-weight: 400; }
-.rr-goulot { fill: #2A3037; stroke: #49525C; stroke-width: 1; }
-.rr-bouchon { fill: #2A3037; stroke: #49525C; stroke-width: 1; }
-.resine-goutte { position: absolute; right: -6px; top: 300px; width: 7px; height: 9px; border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; background: #3FD3D8; opacity: 0; animation: resine-goutte 2.6s ease-in 3.4s infinite; }
-.resine-goutte + .resine-goutte { right: -2px; animation-delay: 4.7s; }
-@keyframes resine-coule-h { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
-@keyframes resine-coule-v { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
-@keyframes resine-goutte { 0% { opacity: 0; transform: translateY(0) scale(.6); } 12% { opacity: .9; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(160px) scale(.8); } }
-@media (max-width: 720px) {
-  .resine-bouteille { left: -14px; top: -40px; width: 104px; }
-  .resine-flaque { left: 52px; width: calc(100% - 46px); }
-  .resine-coulure { right: -8px; width: 20px; height: 220px; }
-  .resine-goutte { right: -2px; top: 220px; }
+/* ---- Cadre du questionnaire : fine couche de résine turquoise, nette et scintillante
+   Un liseré de 2 px dont le reflet glisse lentement autour du cadre, et quelques éclats qui brillent tour à tour. */
+.form-card--resine { border-color: transparent; box-shadow: 0 0 0 1px rgba(63, 211, 216, .18), 0 0 18px rgba(63, 211, 216, .12); }
+.form-card--resine::after {
+  content: ""; position: absolute; inset: -1px; z-index: 2; border-radius: inherit; padding: 2px; pointer-events: none;
+  background: linear-gradient(115deg, #127B82 0%, #3FD3D8 22%, #7BEFF0 34%, #F2FFFF 40%, #7BEFF0 46%, #3FD3D8 58%, #127B82 78%, #3FD3D8 100%);
+  background-size: 260% 260%;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); mask-composite: exclude;
+  animation: resine-reflet 6s linear infinite;
 }
-@media (prefers-reduced-motion: reduce) { .resine-flaque, .resine-coulure { animation: none; } .resine-goutte { display: none; } }
+@keyframes resine-reflet { from { background-position: 100% 50%; } to { background-position: -160% 50%; } }
+.resine-eclat { position: absolute; z-index: 3; width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px; pointer-events: none; opacity: 0;
+  background: radial-gradient(circle, #FFFFFF 0 1.2px, rgba(123, 239, 240, .9) 1.6px, transparent 4.5px);
+  animation: resine-scintille 3.6s ease-in-out infinite; }
+.resine-eclat::before, .resine-eclat::after { content: ""; position: absolute; left: 50%; top: 50%; width: 13px; height: 1px; margin: -.5px 0 0 -6.5px; background: linear-gradient(90deg, transparent, #F2FFFF, transparent); }
+.resine-eclat::after { transform: rotate(90deg); }
+.resine-eclat:nth-child(1) { left: 18%; top: 0; }
+.resine-eclat:nth-child(2) { left: 100%; top: 34%; animation-delay: .9s; }
+.resine-eclat:nth-child(3) { left: 64%; top: 100%; animation-delay: 1.8s; }
+.resine-eclat:nth-child(4) { left: 0; top: 72%; animation-delay: 2.7s; }
+@keyframes resine-scintille { 0%, 70%, 100% { opacity: 0; transform: scale(.4) rotate(0); } 80% { opacity: 1; transform: scale(1) rotate(45deg); } 90% { opacity: .5; transform: scale(.7) rotate(70deg); } }
+@media (prefers-reduced-motion: reduce) { .form-card--resine::after { animation: none; background-position: 40% 50%; } .resine-eclat { display: none; } }
