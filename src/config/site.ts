@@ -13,7 +13,7 @@ export const SITE = {
   logiciels: ['SolidWorks', 'Shapr3D', 'Blender', 'ZBrush'],
 
   // ⚠️ À CONFIRMER avant publication
-  telephone: null as string | null,         // ex. '+33 6 00 00 00 00'
+  telephone: '+33 6 46 54 58 03' as string | null,
   email: 'kovav3d@gmail.com' as string | null,
   googleBusinessUrl: 'https://maps.app.goo.gl/A63xX4MVkZPvfJw37' as string | null, // fiche Google Business Profile
 
