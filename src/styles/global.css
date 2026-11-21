@@ -683,3 +683,71 @@ ul, ol { margin: 0; }
 .hero:has(.hero-video) { margin-top: -73px; padding-top: calc(clamp(40px, 7vw, 96px) + 73px); }
 body:has(.hero-video) .site-header:not(.defile) { background: transparent; border-bottom-color: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; }
 body:has(.hero-video) .site-header { transition: background-color .3s ease, border-color .3s ease, box-shadow .3s ease; }
+
+/* ---- Boutons en forme de pilule : animation « couche par couche »
+   Survol : léger soulèvement et contour bleu. Appui : petite compression.
+   Sélection : le remplissage monte en 6 couches nettes, comme une impression, puis une coche se trace.
+   Désélection : le remplissage redescend d'un coup. Rien ne bouge si l'utilisateur limite les animations. */
+.chip span, .filter, .sommaire a, .real-nav a {
+  position: relative; isolation: isolate; overflow: hidden;
+  transition: transform .18s cubic-bezier(.2, .7, .2, 1), border-color .18s ease, color .2s ease, box-shadow .18s ease, padding .22s cubic-bezier(.2, .7, .2, 1);
+}
+.chip span:hover, .filter:hover, .sommaire a:hover, .real-nav a:hover { transform: translateY(-1px); border-color: var(--bleu-clair); box-shadow: 0 4px 14px rgba(143, 176, 245, .14); }
+.chip span:active, .filter:active, .sommaire a:active, .real-nav a:active { transform: scale(.97); transition-duration: .08s; }
+
+/* Remplissage en couches (sous le texte) */
+.chip span::before, .filter::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit;
+  background: repeating-linear-gradient(to top, transparent 0 3px, rgba(32, 37, 43, .1) 3px 4px), var(--ink);
+  transform: scaleY(0); transform-origin: bottom;
+  transition: transform .16s ease-in;
+}
+.chip input:checked + span, .filter[aria-pressed="true"] { background: var(--surface); border-color: var(--ink); color: var(--bg); }
+.chip input:checked + span::before, .filter[aria-pressed="true"]::before { transform: scaleY(1); transition: transform .32s steps(6, end); }
+
+/* Coche tracée après le remplissage (prestations du devis) */
+.chip span::after {
+  content: ""; position: absolute; left: 1em; top: 50%; width: .62em; height: .32em;
+  border-left: 2px solid currentColor; border-bottom: 2px solid currentColor;
+  transform: translateY(-65%) rotate(-45deg) scale(0); transform-origin: center;
+  transition: transform .12s ease-in;
+}
+.chip input:checked + span { padding-left: 2.15em; }
+.chip input:checked + span::after { transform: translateY(-65%) rotate(-45deg) scale(1); transition: transform .22s cubic-bezier(.3, 1.6, .5, 1) .26s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .chip span, .filter, .sommaire a, .real-nav a, .chip span::before, .filter::before, .chip span::after { transition: none !important; }
+  .chip span:hover, .filter:hover, .sommaire a:hover, .real-nav a:hover, .chip span:active, .filter:active, .sommaire a:active, .real-nav a:active { transform: none; }
+}
+
+/* ---- Menu mobile : même esprit « couche par couche »
+   À l'ouverture, le panneau se déplie et les liens arrivent l'un après l'autre, comme des couches.
+   Survol ou appui : un fond monte en 4 couches et une barre bleue apparaît à gauche ; la page en cours garde sa barre. */
+@media (max-width: 960px) {
+  .site-header:has(.main-nav[data-open]) { background: var(--bg) !important; border-bottom-color: var(--line) !important; }
+  .main-nav[data-open] { animation: menu-ouvre .26s cubic-bezier(.2, .7, .2, 1) both; }
+  .main-nav[data-open] li { animation: menu-couche .34s cubic-bezier(.2, .7, .2, 1) both; }
+  .main-nav[data-open] li:nth-child(2) { animation-delay: .05s; }
+  .main-nav[data-open] li:nth-child(3) { animation-delay: .1s; }
+  .main-nav[data-open] li:nth-child(4) { animation-delay: .15s; }
+  .main-nav[data-open] li:nth-child(5) { animation-delay: .2s; }
+  .main-nav a { position: relative; isolation: isolate; overflow: hidden; padding-left: 0; transition: padding-left .2s cubic-bezier(.2, .7, .2, 1), color .2s ease; }
+  .main-nav a::before {
+    content: ""; position: absolute; inset: 0 calc(-1 * var(--gutter)); z-index: -1;
+    background: repeating-linear-gradient(to top, transparent 0 3px, rgba(247, 248, 246, .035) 3px 4px), var(--surface);
+    transform: scaleY(0); transform-origin: bottom; transition: transform .14s ease-in;
+  }
+  .main-nav a::after {
+    content: ""; position: absolute; left: 0; top: 50%; width: 3px; height: 1.3em; border-radius: 2px;
+    background: var(--bleu-clair); transform: translateY(-50%) scaleY(0); transition: transform .2s cubic-bezier(.3, 1.4, .5, 1);
+  }
+  .main-nav a:hover, .main-nav a:active, .main-nav a[aria-current="page"] { padding-left: 16px; }
+  .main-nav a:hover::before, .main-nav a:active::before { transform: scaleY(1); transition: transform .24s steps(4, end); }
+  .main-nav a:hover::after, .main-nav a:active::after, .main-nav a[aria-current="page"]::after { transform: translateY(-50%) scaleY(1); }
+}
+@keyframes menu-ouvre { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes menu-couche { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .main-nav[data-open], .main-nav[data-open] li { animation: none !important; }
+  .main-nav a, .main-nav a::before, .main-nav a::after { transition: none !important; }
+}
