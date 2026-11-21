@@ -1111,3 +1111,55 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
   .groupe-piste { scroll-padding-inline: var(--gutter); }
   .groupe-item { scroll-snap-align: start; }
 }
+
+/* =====================================================================
+   Passe « unslop » (méthode de Damir Sokolovsky, @heydamir, CC BY 4.0) : retouche validée par l'atelier.
+   Une seule chose vivante par page, plus de halos ni de reflets en boucle, pas de capitales espacées,
+   pilules réservées aux choix, coins de 8 px pour les boutons et liens.
+   ===================================================================== */
+
+/* -- Mouvement : boucles décoratives arrêtées */
+.hero-faits li::before { animation: none !important; }
+.nav-imp-led { animation: none; }
+.nav-imp-barre { box-shadow: none; }
+.form-card--resine::after { animation: none; background: linear-gradient(115deg, #127B82, #3FD3D8 50%, #127B82); }
+.form-card--resine { box-shadow: none; }
+.resine-eclat { display: none; }
+.chaine .ch-goutte { animation: none; filter: none; }
+.chaine .ch-led { animation: none; }
+.chaine .ch-couche { filter: none; }
+/* Réalisations : la vue éclatée reste posée, les liens ne respirent plus ; seule l'icône réagit au survol */
+.sw-touche, .sw-boitier, .sw-base { animation: none; }
+.sw-touche { transform: translateY(-4px); }
+.sw-base { transform: translateY(8px); }
+.sw-touche::before, .sw-bas::before { display: none; }
+.sw-piece img { filter: drop-shadow(0 14px 18px rgba(0, 0, 0, .4)); }
+.sw-fil { animation: none; filter: none; opacity: .45; background: repeating-linear-gradient(90deg, var(--text-2) 0 6px, transparent 6px 12px); background-size: auto; }
+.sw-lien { animation: none; background: var(--surface); border: 1px solid var(--line-strong); color: var(--text); transition: border-color .2s ease, transform .15s ease; }
+.sw-lien:hover, .sw-lien:focus-visible { transform: none; filter: none; border-color: var(--bleu-clair); }
+.sw-lien:active { transform: scale(.97); }
+.sw-halo, .sw-halo::after { display: none; }
+.sw-icone { filter: none; }
+.sw-objectif .sw-diaphragme, .sw-objectif .sw-flash, .sw-cube { animation: none; }
+.sw-objectif .sw-flash { opacity: .5; }
+.sw-cube { transform: rotateX(-30deg) rotateY(35deg); transition: transform .6s cubic-bezier(.2, .7, .2, 1); }
+.sw-lien:hover .sw-cube { transform: rotateX(-30deg) rotateY(125deg); }
+.sw-cube i { box-shadow: none; border-color: var(--text); background: rgba(247, 248, 246, .04); }
+.sw-lien:hover .sw-diaphragme { transform: rotate(60deg) scale(.55); transition: transform .4s ease; }
+
+/* -- Typo : phrases normales, plus de capitales espacées, menu en Manrope */
+.qualif-etape, .cote span, .modele-badge, .nav-note { text-transform: none; letter-spacing: .01em; }
+.qualif-etape { font-size: .85rem; }
+.cote span { font-size: .8rem; }
+@media (max-width: 960px) {
+  .nav-label { font-family: 'Manrope', system-ui, sans-serif; font-weight: 600; text-transform: none; letter-spacing: -.01em; font-size: clamp(1.25rem, 5vw, 1.5rem); line-height: 1.1; }
+}
+
+/* -- Accueil : réassurance en une ligne discrète, sans pastilles */
+.hero-faits { gap: 6px 0; font-size: .9rem; color: var(--text-3, var(--text-2)); }
+.hero-faits li::before { content: none; }
+.hero-faits li + li::before { content: "·"; width: auto; height: auto; border-radius: 0; background: none; margin: 0 10px; color: var(--text-2); }
+
+/* -- Formes : pilules pour les choix seulement, 8 px pour les boutons et liens */
+.btn { border-radius: 8px; }
+.qualif-passer, .real-nav a, .sommaire a, .bustes-son { border-radius: 8px; }
