@@ -921,8 +921,8 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
 .spatule-fil { stroke: #FFFFFF; stroke-width: 1.2; stroke-opacity: .8; }
 .passer-wrap:hover .spatule { transform: translate(4px, -50%) rotate(-3deg); }
 .passer-texte { display: inline-flex; align-items: center; gap: 10px; }
-.passer-wrap.raclage .spatule { animation: spatule-racle .78s cubic-bezier(.45, 0, .25, 1) forwards; }
-.passer-wrap.raclage .passer-texte { animation: texte-efface .78s cubic-bezier(.45, 0, .25, 1) forwards; }
+.passer-wrap.raclage .spatule { animation: spatule-racle .88s cubic-bezier(.45, 0, .25, 1) forwards; }
+.passer-wrap.raclage .passer-texte { animation: texte-efface .88s cubic-bezier(.45, 0, .25, 1) forwards; }
 @keyframes spatule-racle {
   0% { transform: translate(0, -50%) rotate(0); }
   12% { transform: translate(-6px, -50%) rotate(-4deg); }
@@ -962,3 +962,25 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
 .resine-eclat:nth-child(4) { left: 0; top: 72%; animation-delay: 2.7s; }
 @keyframes resine-scintille { 0%, 70%, 100% { opacity: 0; transform: scale(.4) rotate(0); } 80% { opacity: 1; transform: scale(1) rotate(45deg); } 90% { opacity: .5; transform: scale(.7) rotate(70deg); } }
 @media (prefers-reduced-motion: reduce) { .form-card--resine::after { animation: none; background-position: 40% 50%; } .resine-eclat { display: none; } }
+
+/* ---- Bouton « Passer » plus compact, calé à droite (ne masque plus la colonne de l'imprimante en fond)
+   La spatule est invisible tant qu'on n'a pas cliqué : elle apparaît au clic, puis racle le texte. */
+.passer-wrap { padding-left: 0; }
+.passer-wrap .qualif-passer { max-width: 250px; min-height: 0; padding: 9px 18px; font-size: .88rem; line-height: 1.25; text-align: left; }
+.spatule { left: -92px; opacity: 0; }
+.passer-wrap:hover .spatule { transform: translateY(-50%); }
+@keyframes spatule-racle {
+  0% { opacity: 0; transform: translate(-10px, -50%) rotate(-4deg); }
+  14% { opacity: 1; transform: translate(0, -50%) rotate(-4deg); }
+  22% { opacity: 1; transform: translate(-6px, -50%) rotate(-4deg); }
+  92% { opacity: 1; transform: translate(var(--course, 360px), -50%) rotate(2deg); }
+  100% { opacity: 0; transform: translate(var(--course, 360px), -50%) rotate(2deg); }
+}
+@keyframes texte-efface {
+  0%, 24% { clip-path: inset(0 0 0 0); }
+  92%, 100% { clip-path: inset(0 0 0 100%); }
+}
+@media (max-width: 600px) {
+  .passer-wrap .qualif-passer { max-width: none; padding: 10px 16px; text-align: center; justify-content: center; }
+  .spatule { left: -20px; width: 58px; }
+}

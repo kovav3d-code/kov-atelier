@@ -276,13 +276,13 @@ function initialiserQualif(form: HTMLFormElement, bouton: HTMLButtonElement) {
     const bouton = el('q-passer');
     if (matchMedia('(prefers-reduced-motion: reduce)').matches || !wrap) { ouvrir('ecrit', false); return; }
     raclage = true;
-    wrap.style.setProperty('--course', `${bouton.offsetWidth + 6}px`);
+    wrap.style.setProperty('--course', `${bouton.offsetWidth + (innerWidth <= 600 ? 30 : 96)}px`);
     wrap.classList.add('raclage');
     setTimeout(() => {
       ouvrir('ecrit', false);
       wrap.classList.remove('raclage');
       raclage = false;
-    }, 820);
+    }, 900);
   });
   el('q-modifier').addEventListener('click', () => {
     form.hidden = true;
