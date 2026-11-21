@@ -901,10 +901,10 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
 .hero h1 .br-large { display: none; }
 @media (min-width: 720px) { .hero h1 .br-large { display: inline; } }
 /* L'imprimante résine passe en fond du questionnaire, derrière les questions */
-.form-card { position: relative; isolation: isolate; overflow: hidden; min-height: 600px; }
+.form-card { position: relative; isolation: isolate; overflow: visible; min-height: 640px; }
 .form-card > .imp-resine {
-  position: absolute; z-index: -1; right: 5%; bottom: 16px; height: min(340px, calc(100% - 270px)); width: auto; max-width: none; margin: 0;
-  opacity: .32; pointer-events: none;
+  position: absolute; z-index: -1; left: 50%; top: 112px; bottom: 18px; max-height: 560px; width: auto; max-width: none; margin: 0;
+  transform: translateX(-50%); opacity: .3; pointer-events: none;
 }
 .form-card > .imp-resine svg { height: 100%; width: auto; }
 .qualif-btn { background: rgba(32, 37, 43, .72); }
@@ -938,3 +938,28 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
   .spatule { left: 8px; width: 58px; }
 }
 @media (prefers-reduced-motion: reduce) { .spatule { transition: none; } .passer-wrap:hover .spatule { transform: translateY(-50%); } }
+
+/* ---- Bouteille de résine renversée sur le cadre du questionnaire : la résine longe le bord haut puis coule à droite */
+.devis { overflow-x: clip; }
+.resine-deco { position: absolute; inset: 0; pointer-events: none; z-index: 3; }
+.resine-flaque { position: absolute; left: 60px; width: calc(100% - 48px); top: -15px; height: 34px; overflow: visible; transform-origin: left center; animation: resine-coule-h 1.6s cubic-bezier(.3, .6, .2, 1) .3s both; }
+.resine-coulure { position: absolute; right: -15px; top: 6px; width: 28px; height: 300px; transform-origin: top center; animation: resine-coule-v 1.8s cubic-bezier(.3, .6, .2, 1) 1.6s both; }
+.resine-bouteille { position: absolute; left: -30px; top: -46px; width: 150px; height: auto; overflow: visible; }
+.rr-corps { fill: #1A1E22; stroke: #3A424B; stroke-width: 1; }
+.rr-etiquette { fill: var(--atelier); }
+.rr-texte { font: 700 8px 'Geist Mono', ui-monospace, monospace; fill: #20252B; letter-spacing: .08em; }
+.rr-petit { font-size: 5.5px; font-weight: 400; }
+.rr-goulot { fill: #2A3037; stroke: #49525C; stroke-width: 1; }
+.rr-bouchon { fill: #2A3037; stroke: #49525C; stroke-width: 1; }
+.resine-goutte { position: absolute; right: -6px; top: 300px; width: 7px; height: 9px; border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; background: #3FD3D8; opacity: 0; animation: resine-goutte 2.6s ease-in 3.4s infinite; }
+.resine-goutte + .resine-goutte { right: -2px; animation-delay: 4.7s; }
+@keyframes resine-coule-h { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes resine-coule-v { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes resine-goutte { 0% { opacity: 0; transform: translateY(0) scale(.6); } 12% { opacity: .9; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(160px) scale(.8); } }
+@media (max-width: 720px) {
+  .resine-bouteille { left: -14px; top: -40px; width: 104px; }
+  .resine-flaque { left: 52px; width: calc(100% - 46px); }
+  .resine-coulure { right: -8px; width: 20px; height: 220px; }
+  .resine-goutte { right: -2px; top: 220px; }
+}
+@media (prefers-reduced-motion: reduce) { .resine-flaque, .resine-coulure { animation: none; } .resine-goutte { display: none; } }

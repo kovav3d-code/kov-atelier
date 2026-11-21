@@ -1,0 +1,40 @@
+---
+// Décor du questionnaire (page Devis) : une bouteille de résine renversée sur le coin haut gauche du cadre.
+// La résine coule le long du bord supérieur puis descend sur le côté droit, avec quelques gouttes.
+// Purement décoratif ; figé (sans gouttes) si l'utilisateur limite les animations.
+---
+<div class="resine-deco" aria-hidden="true">
+  <svg class="resine-flaque" viewBox="0 0 1000 60" preserveAspectRatio="none">
+    <defs>
+      <linearGradient id="rr-resine" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#7BEFF0" stop-opacity=".9" />
+        <stop offset=".55" stop-color="#2FB8BF" stop-opacity=".82" />
+        <stop offset="1" stop-color="#127B82" stop-opacity=".9" />
+      </linearGradient>
+    </defs>
+    <path d="M0 16 C40 6 90 10 130 18 C190 28 230 12 300 14 C380 16 420 30 500 26 C580 22 640 12 720 18 C800 24 860 14 930 20 C960 23 985 26 1000 34 L1000 46 C970 40 940 42 900 40 C820 36 760 46 690 42 C610 38 560 44 480 42 C400 40 340 34 270 38 C190 42 140 36 90 40 C50 43 20 40 0 44 Z" fill="url(#rr-resine)" />
+    <path d="M20 18 C80 12 140 20 200 22 M330 18 C400 20 460 28 520 26 M640 18 C700 16 760 24 820 22" stroke="#E9FFFF" stroke-opacity=".6" stroke-width="2.2" fill="none" stroke-linecap="round" />
+  </svg>
+  <svg class="resine-coulure" viewBox="0 0 40 400" preserveAspectRatio="none">
+    <path d="M6 0 H36 C36 40 34 70 30 110 C27 150 31 190 28 230 C25 270 22 300 21 330 C20 352 24 368 20 384 C17 394 11 394 10 384 C7 368 12 350 12 330 C12 300 9 270 10 230 C11 190 7 150 8 110 C9 70 6 40 6 0 Z" fill="url(#rr-resine)" />
+    <path d="M30 20 C30 80 26 140 25 200" stroke="#E9FFFF" stroke-opacity=".55" stroke-width="2" fill="none" stroke-linecap="round" />
+  </svg>
+  <span class="resine-goutte"></span><span class="resine-goutte"></span>
+
+  <svg class="resine-bouteille" viewBox="0 0 150 90">
+    <!-- Flaque qui sort du goulot -->
+    <path d="M96 52 C108 50 122 56 136 54 C146 53 150 60 150 66 L150 74 C138 72 120 74 104 70 C94 68 90 58 96 52 Z" fill="url(#rr-resine)" />
+    <!-- Bouteille couchée, goulot vers la droite -->
+    <g transform="rotate(-8 60 46)">
+      <rect x="8" y="22" width="72" height="44" rx="10" class="rr-corps" />
+      <rect x="20" y="30" width="46" height="28" rx="3" class="rr-etiquette" />
+      <text x="43" y="42" text-anchor="middle" class="rr-texte">RÉSINE</text>
+      <text x="43" y="52" text-anchor="middle" class="rr-texte rr-petit">UV · 1 KG</text>
+      <path d="M80 34h8c4 0 6 3 6 6v8c0 3-2 6-6 6h-8z" class="rr-corps" />
+      <rect x="94" y="38" width="6" height="12" rx="1.5" class="rr-goulot" />
+      <path d="M16 28h56" stroke="#FFFFFF" stroke-opacity=".12" stroke-width="3" stroke-linecap="round" />
+    </g>
+    <!-- Bouchon tombé -->
+    <rect x="112" y="18" width="14" height="11" rx="2" transform="rotate(24 119 23)" class="rr-bouchon" />
+  </svg>
+</div>
