@@ -2,15 +2,17 @@
 // Animation en boucle : sculpture murale de deux carpes koï autour d'un anneau lumineux,
 // aux couleurs du site (anthracite, métal, bleu). CSS + filtre SVG, sans bibliothèque.
 // L'eau ondule autour des koï, l'anneau et les suspensions pulsent, un reflet balaie le métal.
+// Les deux liens de la page sont intégrés à la sculpture : la géode mène aux photos et vidéos,
+// l'ornement de la console aux modèles 3D.
 // Image fixe si l'utilisateur limite les animations.
 import { Image } from 'astro:assets';
 import koi from '../assets/realisations/koi-anneau.jpg';
 const particules = Array.from({ length: 14 }, (_, i) => ({ l: 10 + ((i * 11) % 80), d: ((i * 1.7) % 9).toFixed(1), s: 2 + (i % 3) }));
 ---
-<figure class="koi" aria-hidden="true">
-  <div class="koi-flotte">
-    <Image src={koi} alt="" widths={[360, 720]} sizes="(max-width: 400px) 90vw, 360px" class="koi-img" loading="eager" />
-    <div class="koi-eau"><Image src={koi} alt="" widths={[360, 720]} sizes="(max-width: 400px) 90vw, 360px" class="koi-img" loading="eager" /></div>
+<figure class="koi">
+  <div class="koi-flotte" aria-hidden="true">
+    <Image src={koi} alt="" widths={[400, 640, 1000]} sizes="(max-width: 680px) 92vw, 640px" class="koi-img" loading="eager" />
+    <div class="koi-eau"><Image src={koi} alt="" widths={[400, 640, 1000]} sizes="(max-width: 680px) 92vw, 640px" class="koi-img" loading="eager" /></div>
     <span class="koi-anneau"></span>
     <span class="koi-lampe" style="left:47.7%;top:95.5%"></span>
     <span class="koi-lampe" style="left:61.9%;top:84.7%;animation-delay:1.3s"></span>
@@ -20,7 +22,19 @@ const particules = Array.from({ length: 14 }, (_, i) => ({ l: 10 + ((i * 11) % 8
       {particules.map((p) => <i style={`--l:${p.l}%;--d:${p.d}s;--s:${p.s}px`}></i>)}
     </span>
   </div>
-  <svg width="0" height="0" class="koi-defs">
+  <nav class="koi-liens" aria-label="Sections de la page">
+    <a class="koi-lien koi-lien--geode" href="#en-vrai">
+      <span class="koi-cible" aria-hidden="true"></span>
+      <span class="koi-fil" aria-hidden="true"></span>
+      <span class="koi-etiquette">Photos et vidéos<br />de l’atelier</span>
+    </a>
+    <a class="koi-lien koi-lien--console" href="#modeles-3d">
+      <span class="koi-cible" aria-hidden="true"></span>
+      <span class="koi-fil" aria-hidden="true"></span>
+      <span class="koi-etiquette">Modèles 3D</span>
+    </a>
+  </nav>
+  <svg width="0" height="0" class="koi-defs" aria-hidden="true">
     <filter id="koi-ondule">
       <feTurbulence type="fractalNoise" baseFrequency="0.010 0.028" numOctaves="2" seed="4">
         <animate attributeName="baseFrequency" dur="10s" values="0.010 0.028;0.014 0.034;0.010 0.028" repeatCount="indefinite" />

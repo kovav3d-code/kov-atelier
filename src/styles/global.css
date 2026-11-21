@@ -616,7 +616,7 @@ ul, ol { margin: 0; }
 @media (prefers-reduced-motion: reduce) { .nav-imp-plateau, .nav-imp-led { transition: none; animation: none; } }
 
 /* ---------- Animation : anneau lumineux et carpes koï (boucle) ---------- */
-.koi { position: relative; margin: 28px 0 0; width: min(100%, 360px); aspect-ratio: 1043 / 1544; }
+.koi { position: relative; margin: 28px auto 0; width: min(100%, 640px); aspect-ratio: 1043 / 1544; }
 .koi-flotte { position: absolute; inset: 0; overflow: hidden; animation: koi-flotte 7s ease-in-out infinite;
   -webkit-mask: radial-gradient(ellipse 72% 70% at 50% 48%, #000 72%, transparent 100%); mask: radial-gradient(ellipse 72% 70% at 50% 48%, #000 72%, transparent 100%); }
 .koi-img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; }
@@ -632,9 +632,46 @@ ul, ol { margin: 0; }
 @keyframes koi-flotte { 50% { transform: translateY(-6px); } }
 @keyframes koi-pulse { 0%, 100% { opacity: .45; } 50% { opacity: 1; } }
 @keyframes koi-reflet { 0% { transform: translateX(-40%); } 60%, 100% { transform: translateX(40%); } }
-@keyframes koi-poussiere { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: .8; } 100% { transform: translateY(-560px); opacity: 0; } }
+@keyframes koi-poussiere { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: .8; } 100% { transform: translateY(-960px); opacity: 0; } }
+/* Liens intégrés à la sculpture */
+.koi-liens { position: absolute; inset: 0; animation: koi-flotte 7s ease-in-out infinite; pointer-events: none; }
+.koi-lien { position: absolute; pointer-events: auto; color: var(--blanc); text-decoration: none; -webkit-tap-highlight-color: transparent; }
+.koi-cible { position: absolute; left: 0; top: 0; transform: translate(-50%, -50%); border-radius: 50%; }
+.koi-cible::before, .koi-cible::after { content: ""; position: absolute; inset: 0; border-radius: 50%; border: 1.5px solid var(--bleu-clair); }
+.koi-cible::before { box-shadow: 0 0 18px rgba(40, 100, 220, .6), inset 0 0 14px rgba(143, 176, 245, .35); opacity: .75; transition: opacity .25s ease, box-shadow .25s ease; }
+.koi-cible::after { animation: koi-ping 2.6s ease-out infinite; }
+.koi-etiquette { position: absolute; display: block; padding: .5em 1em; border: 1px solid rgba(143, 176, 245, .45); border-radius: 999px;
+  background: rgba(18, 23, 28, .72); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  font-size: clamp(.74rem, 2.4vw, .95rem); font-weight: 600; line-height: 1.25; letter-spacing: .01em; white-space: nowrap;
+  box-shadow: 0 0 0 rgba(40, 100, 220, 0); transition: border-color .25s ease, box-shadow .25s ease, color .25s ease, transform .25s ease; }
+.koi-fil { position: absolute; height: 1px; background: linear-gradient(90deg, var(--bleu-clair), rgba(143, 176, 245, .2)); transform-origin: 0 50%; }
+.koi-lien:hover .koi-etiquette, .koi-lien:focus-visible .koi-etiquette { border-color: var(--bleu-clair); color: var(--bleu-clair); box-shadow: 0 0 22px rgba(40, 100, 220, .45); }
+.koi-lien:hover .koi-cible::before, .koi-lien:focus-visible .koi-cible::before { opacity: 1; box-shadow: 0 0 30px rgba(40, 100, 220, .9), inset 0 0 22px rgba(143, 176, 245, .6); }
+.koi-lien:focus-visible { outline: none; }
+.koi-lien:focus-visible .koi-etiquette { outline: 2px solid var(--bleu-clair); outline-offset: 3px; }
+.koi-lien:active .koi-etiquette { transform: scale(.97); }
+/* Géode, en haut : la cible entoure la sphère, l'étiquette part sur la droite */
+.koi-lien--geode { left: 51.6%; top: 7.4%; }
+.koi-lien--geode .koi-cible { width: clamp(64px, 19vw, 122px); aspect-ratio: 1; }
+.koi-lien--geode .koi-fil { left: clamp(34px, 10vw, 64px); top: 0; width: clamp(18px, 7vw, 54px); }
+.koi-lien--geode .koi-etiquette { left: calc(clamp(34px, 10vw, 64px) + clamp(18px, 7vw, 54px)); top: 0; transform: translateY(-50%); }
+.koi-lien--geode:active .koi-etiquette { transform: translateY(-50%) scale(.97); }
+/* Ornement de la console : petite cible, étiquette juste dessous, entre les suspensions */
+.koi-lien--console { left: 51.4%; top: 65.2%; }
+.koi-lien--console .koi-cible { width: clamp(30px, 8vw, 50px); aspect-ratio: 1; }
+.koi-lien--console .koi-fil { left: 0; top: clamp(15px, 4vw, 25px); width: clamp(16px, 5vw, 34px); transform: rotate(90deg); }
+.koi-lien--console .koi-etiquette { left: 0; top: calc(clamp(15px, 4vw, 25px) + clamp(16px, 5vw, 34px)); transform: translateX(-50%); }
+.koi-lien--console:active .koi-etiquette { transform: translateX(-50%) scale(.97); }
+@media (max-width: 480px) {
+  /* Petit écran : l'étiquette de la géode passe à gauche, où il y a plus de place */
+  .koi-lien--geode .koi-fil { left: auto; right: clamp(34px, 10vw, 64px); width: 10px; }
+  .koi-lien--geode .koi-etiquette { left: auto; right: calc(clamp(34px, 10vw, 64px) + 10px); text-align: right; padding: .45em .8em; }
+  .koi-lien--geode .koi-fil { background: linear-gradient(270deg, var(--bleu-clair), rgba(143, 176, 245, .2)); }
+}
+@keyframes koi-ping { 0% { transform: scale(1); opacity: .7; } 100% { transform: scale(1.6); opacity: 0; } }
 @media (prefers-reduced-motion: reduce) {
-  .koi-flotte, .koi-anneau, .koi-lampe, .koi-reflet, .koi-poussiere i { animation: none; }
+  .koi-flotte, .koi-liens, .koi-anneau, .koi-lampe, .koi-reflet, .koi-poussiere i, .koi-cible::after { animation: none; }
+  .koi-etiquette, .koi-cible::before { transition: none; }
   .koi-eau { filter: none; }
 }
 
