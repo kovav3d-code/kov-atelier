@@ -29,6 +29,7 @@ const accept = FICHIERS.extensions.map((e) => `.${e}`).join(',');
       </aside>
 
       <div class="form-card">
+        <ImprimanteResine />
         <!-- Questionnaire de qualification : affiché par le script ; sans JavaScript, le formulaire reste directement accessible. -->
         <div class="qualif" id="qualif" hidden>
           <p class="qualif-etape" id="q-etape" aria-live="polite">Question 1 sur 4</p>
@@ -176,7 +177,6 @@ const accept = FICHIERS.extensions.map((e) => `.${e}`).join(',');
           <a class="btn btn-ghost" href="/">Retour à l’accueil</a>
         </div>
       </div>
-      <ImprimanteResine />
     </div>
   </section>
   {turnstileKey && <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>}

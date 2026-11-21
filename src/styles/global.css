@@ -878,6 +878,7 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
 .imp-resine .ir-rail { fill: #3A424B; }
 .imp-resine .ir-plateau { fill: #2B3138; stroke: #49525C; stroke-width: 1; }
 .imp-resine .ir-supports { stroke: #9FF7F7; stroke-opacity: .55; stroke-width: 1; fill: none; }
+.imp-resine .ir-supports-arbre { stroke-width: .8; stroke-opacity: .45; }
 .imp-resine .ir-bac { fill: rgba(18, 21, 24, .3); stroke: #2E343B; stroke-width: 1.2; }
 .imp-resine .ir-surface { stroke: #9FF7F7; stroke-opacity: .7; stroke-width: 1; }
 .imp-resine .ir-uv { transition: opacity .06s linear; mix-blend-mode: screen; }
@@ -890,7 +891,6 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
 .imp-resine.ir-fin .ir-gouttes circle { animation: ir-goutte 1.6s ease-in infinite; }
 .imp-resine.ir-fin .ir-gouttes circle:nth-child(2) { animation-delay: .7s; }
 @keyframes ir-goutte { 0% { opacity: 0; transform: translateY(0); } 15% { opacity: .9; } 100% { opacity: 0; transform: translateY(70px); } }
-@media (max-width: 720px) { .imp-resine { display: none; } }
 @media (prefers-reduced-motion: reduce) { .imp-resine.ir-fin .ir-gouttes circle { animation: none; } }
 
 /* ---- Titre de l'accueil : Instrument Serif (licence SIL OFL), « sur mesure » en italique kraft */
@@ -900,13 +900,12 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
 .hero h1 em { font-style: italic; color: var(--atelier); }
 .hero h1 .br-large { display: none; }
 @media (min-width: 720px) { .hero h1 .br-large { display: inline; } }
-/* Placement de l'imprimante résine : sous l'introduction sur ordinateur, à côté du formulaire sur tablette */
-.devis-grid { grid-template-areas: "aside carte" "imp carte"; }
-.devis-aside { grid-area: aside; }
-.devis-grid > .form-card { grid-area: carte; }
-.devis-grid > .imp-resine { grid-area: imp; margin: 0; align-self: start; }
-@media (max-width: 960px) {
-  .devis-grid { grid-template-columns: minmax(0, 1fr) 230px; grid-template-areas: "aside aside" "carte imp"; }
-  .devis-grid > .imp-resine { align-self: start; position: sticky; top: 100px; }
+/* L'imprimante résine passe en fond du questionnaire, derrière les questions */
+.form-card { position: relative; isolation: isolate; overflow: hidden; min-height: 480px; }
+.form-card > .imp-resine {
+  position: absolute; z-index: -1; top: 16px; bottom: 16px; left: 50%; max-height: 560px; width: auto; max-width: none; margin: 0;
+  transform: translateX(-50%); opacity: .3; pointer-events: none;
 }
-@media (max-width: 720px) { .devis-grid { grid-template-columns: 1fr; grid-template-areas: "aside" "carte"; } }
+.form-card > .imp-resine svg { height: 100%; width: auto; }
+.qualif-btn { background: rgba(32, 37, 43, .72); }
+@media (max-width: 720px) { .form-card > .imp-resine { opacity: .2; } }

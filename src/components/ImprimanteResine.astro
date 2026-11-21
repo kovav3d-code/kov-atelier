@@ -1,5 +1,5 @@
 ---
-// Animation de la page Devis : une imprimante résine (inspirée d'une machine de l'atelier, sans marque).
+// Animation de fond du questionnaire (page Devis) : une imprimante résine (inspirée d'une machine de l'atelier, sans marque).
 // Départ : le plateau est plongé dans le bac de résine. Il remonte couche après couche et la réplique factice
 // imprimée (un AK-47 décoratif) se découvre, accrochée tête en bas au plateau par ses supports.
 // Arrivée : plateau en haut, pièce entièrement sortie, quelques gouttes de résine. Puis la boucle recommence.
@@ -43,7 +43,10 @@
       <!-- Supports puis pièce, accrochés sous le plateau -->
       <g clip-path="url(#ir-imprime)" class="ir-piece-g">
         <g class="ir-attache">
-          <path d="M132 1v10M140 1v12M148 1v10M156 1v13M164 1v10" class="ir-supports" />
+          <path d="M144 1v11M152 1v11M160 1v11M167 1v11" class="ir-supports" />
+          <!-- Supports arborescents vers le côté de la pièce (crosse, poignée, chargeur) -->
+          <path d="M136 1l8 31M128 1l23 56M118 1l16 67M108 1l24 106M100 1l20 115M122 1l28 81" class="ir-supports ir-supports-arbre" />
+          <path d="M144 32l-1.5-4M151 57l-2-3.5M134 68l-1-4M132 107l-1.5-4M120 116l-.5-4M150 82l-2-3.5" class="ir-supports" />
           <g transform="translate(182 12) rotate(90)">
             <use href="#ir-ak" fill="url(#ir-piece)" stroke="#BFFBFB" stroke-opacity=".85" stroke-width="1.1" />
             <use href="#ir-ak" fill="url(#ir-couches)" />
@@ -68,7 +71,6 @@
     <text x="122" y="404" class="ir-pct" text-anchor="middle">0%</text>
     <path d="M140 392h46M140 400h36M140 408h42" class="ir-lignes" />
   </svg>
-  <figcaption>Votre pièce, couche après couche.</figcaption>
 </figure>
 
 <script is:inline>
