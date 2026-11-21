@@ -51,14 +51,26 @@ const ETIQUETTES: Record<string, { note: string; outil: 'pied' | 'buste' | 'engr
   </div>
 </header>
 <script>
+  const entete = document.querySelector('.site-header');
   const btn = document.querySelector<HTMLButtonElement>('.menu-toggle');
   const nav = document.getElementById('menu');
+
+  // Ombre sous l'en-tête dès qu'on fait défiler, sur toutes les pages.
+  const majEntete = () => entete?.classList.toggle('defile', scrollY > 8);
+  addEventListener('scroll', majEntete, { passive: true }); majEntete();
+
+  // Menu mobile : s'ouvre au bouton, se ferme sur un lien, la touche Échap ou un clic en dehors.
+  const fermer = (rendreFocus = false) => {
+    if (btn?.getAttribute('aria-expanded') !== 'true') return;
+    btn.setAttribute('aria-expanded', 'false'); nav?.removeAttribute('data-open');
+    if (rendreFocus) btn.focus();
+  };
   btn?.addEventListener('click', () => {
     const open = btn.getAttribute('aria-expanded') === 'true';
     btn.setAttribute('aria-expanded', String(!open));
     nav?.toggleAttribute('data-open', !open);
   });
-  nav?.addEventListener('click', (e) => {
-    if ((e.target as HTMLElement).closest('a')) { btn?.setAttribute('aria-expanded', 'false'); nav.removeAttribute('data-open'); }
-  });
+  nav?.addEventListener('click', (e) => { if ((e.target as HTMLElement).closest('a')) fermer(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') fermer(true); });
+  document.addEventListener('click', (e) => { if (!entete?.contains(e.target as Node)) fermer(); });
 </script>

@@ -162,9 +162,6 @@ const BESOINS = [
 <script>
   // Apparition au défilement : chaque bloc arrive en douceur, les éléments d'une même liste en cascade.
   const reduit = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const entete = document.querySelector('.site-header');
-  const majEntete = () => entete?.classList.toggle('defile', scrollY > 8);
-  addEventListener('scroll', majEntete, { passive: true }); majEntete();
   if (!reduit && 'IntersectionObserver' in window) {
     const groupes = [
       '#professionnels .section-head', '#professionnels .besoins li', '#professionnels .secteurs',
