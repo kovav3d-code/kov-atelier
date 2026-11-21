@@ -1093,7 +1093,7 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
 
 /* ---- Réalisations, mobile : « En vrai » regroupé par projet
    Sans JavaScript : chaque groupe est une bande qu'on fait glisser du doigt.
-   Avec : le groupe reste affiché pendant qu'on descend et ses photos défilent de côté, au rythme du défilement. */
+   Avec : les photos de chaque groupe défilent seules, indépendamment du défilement de la page. */
 .atelier-groupes { display: none; }
 @media (max-width: 719px) {
   #en-vrai .atelier-mur { display: none; }
@@ -1108,8 +1108,6 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
   .groupe-item figure { margin: 0; }
   .groupe-item img, .groupe-item video { display: block; width: 100%; height: min(58svh, 460px); object-fit: cover; border-radius: 12px; background: var(--surface); }
   .groupe-item figcaption { margin-top: 8px; color: var(--text-2); font-size: .9rem; }
-  /* Mode piloté par le défilement */
-  .groupes-pilotes .groupe[data-groupe] { height: calc(var(--n) * 62svh + 24svh); padding: 0; }
-  .groupes-pilotes .groupe[data-groupe] .groupe-collant { position: sticky; top: 72px; padding: 16px 0 24px; overflow: hidden; }
-  .groupes-pilotes .groupe[data-groupe] .groupe-piste { overflow: visible; scroll-snap-type: none; will-change: transform; }
+  .groupe-piste { scroll-padding-inline: var(--gutter); }
+  .groupe-item { scroll-snap-align: start; }
 }
