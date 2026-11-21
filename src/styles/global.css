@@ -3,8 +3,8 @@
    bleu technique réservé aux actions. Un seul motif signature : la cote de dessin technique. */
 
 :root {
-  --atelier: #A6C47C;          /* vert « sous-main d'atelier » : repères, cotes, numéros (contraste AA sur anthracite) */
-  --atelier-fonce: #2B3824;
+  --atelier: #D9C3A0;          /* kraft sable « sous-main d'atelier » : repères, cotes, numéros (contraste AA sur anthracite) */
+  --atelier-fonce: #5C4D3A;
   --graphite: #12171C;
   --anthracite: #20252B;
   --metal: #89939C;
@@ -769,7 +769,7 @@ body:has(.hero-video) .site-header { transition: background-color .3s ease, bord
 @media (max-width: 600px) { .qualif-passer { width: 100%; justify-content: center; margin-left: 0; } }
 @media (prefers-reduced-motion: reduce) { .qualif-passer, .qualif-passer span { transition: none; } .qualif-passer:hover, .qualif-passer:hover span { transform: none; } }
 
-/* ---- Menu mobile ouvert : fond « sous-main d'atelier » (tapis de découpe vert atelier, couleur reprise ailleurs sur le site via --atelier, carreaux au centimètre, règle graduée, diagonale à 45°)
+/* ---- Menu mobile ouvert : fond « sous-main d'atelier » (tapis de découpe kraft sable, couleur reprise ailleurs sur le site via --atelier, carreaux au centimètre, règle graduée, diagonale à 45°)
    Le tapis couvre l'en-tête et le menu d'un seul tenant. */
 @media (max-width: 960px) {
   .site-header:has(.main-nav[data-open]) { background: transparent !important; -webkit-backdrop-filter: none; backdrop-filter: none; }
@@ -778,13 +778,13 @@ body:has(.hero-video) .site-header { transition: background-color .3s ease, bord
     top: 0; padding-top: 80px; z-index: 0;
     background:
       url("/medias/sous-main-regle.svg") var(--gutter) 4px / auto 30px no-repeat,
-      linear-gradient(45deg, transparent calc(50% - .7px), rgba(220, 232, 200, .16) 50%, transparent calc(50% + .7px)),
+      linear-gradient(45deg, transparent calc(50% - .7px), rgba(244, 235, 221, .16) 50%, transparent calc(50% + .7px)),
       url("/medias/sous-main-grille.svg") var(--gutter) 0 / 200px 200px,
-      radial-gradient(120% 90% at 30% 0%, #34442B 0%, #2B3824 55%, #222C1D 100%);
-    box-shadow: inset 0 0 0 1px rgba(220, 232, 200, .08), 0 18px 40px rgba(0, 0, 0, .35);
+      radial-gradient(120% 90% at 30% 0%, #6B5A44 0%, #5C4D3A 55%, #4C4030 100%);
+    box-shadow: inset 0 0 0 1px rgba(244, 235, 221, .08), 0 18px 40px rgba(0, 0, 0, .35);
   }
-  .main-nav[data-open] a { border-bottom-color: rgba(220, 232, 200, .14); }
-  .main-nav[data-open] a::before { background: repeating-linear-gradient(to top, transparent 0 3px, rgba(220, 232, 200, .05) 3px 4px), rgba(32, 37, 43, .55); }
+  .main-nav[data-open] a { border-bottom-color: rgba(244, 235, 221, .14); }
+  .main-nav[data-open] a::before { background: repeating-linear-gradient(to top, transparent 0 3px, rgba(244, 235, 221, .05) 3px 4px), rgba(32, 37, 43, .55); }
 }
 
 /* ---- Ordinateur : pas de menu déroulant, les liens sont dans la barre du haut.
@@ -794,10 +794,10 @@ body:has(.hero-video) .site-header { transition: background-color .3s ease, bord
     background:
       url("/medias/sous-main-regle-bas.svg") 12px 100% / auto 22px no-repeat,
       url("/medias/sous-main-grille.svg") 12px 12px / 200px 200px,
-      linear-gradient(180deg, #314029 0%, #283422 100%);
-    border-bottom-color: rgba(220, 232, 200, .16);
+      linear-gradient(180deg, #665640 0%, #574936 100%);
+    border-bottom-color: rgba(244, 235, 221, .16);
   }
-  .site-header .main-nav a { color: #E4EDD6; }
+  .site-header .main-nav a { color: #F4EBDD; }
   .site-header .main-nav a:hover, .site-header .main-nav a[aria-current="page"] { color: #fff; }
 }
 
@@ -817,13 +817,13 @@ body:has(.hero-video) .site-header { transition: background-color .3s ease, bord
     border-bottom: 0; color: #F7F8F6;
   }
   .main-nav[data-open] a::after { left: 0; height: 40px; }
-  .nav-num { display: block; text-align: center; font-family: 'Geist Mono', ui-monospace, monospace; font-size: .78rem; letter-spacing: .04em; color: rgba(220, 232, 200, .6); }
+  .nav-num { display: block; text-align: center; font-family: 'Geist Mono', ui-monospace, monospace; font-size: .78rem; letter-spacing: .04em; color: rgba(244, 235, 221, .6); }
   .nav-texte { display: flex; flex-direction: column; gap: 6px; padding-left: 14px; }
   .nav-label { white-space: nowrap; font-family: 'Big Shoulders', 'Manrope', sans-serif; font-weight: 700; font-size: clamp(1.45rem, 6.2vw, 1.95rem); line-height: .9; text-transform: uppercase; letter-spacing: .035em; }
-  .nav-note { display: block; font-family: 'Geist Mono', ui-monospace, monospace; font-size: .7rem; text-transform: uppercase; letter-spacing: .1em; color: rgba(220, 232, 200, .62); }
+  .nav-note { display: block; font-family: 'Geist Mono', ui-monospace, monospace; font-size: .7rem; text-transform: uppercase; letter-spacing: .1em; color: rgba(244, 235, 221, .62); }
   .main-nav a[aria-current="page"] { color: #F7F8F6; }
   .main-nav a[aria-current="page"] .nav-num, .main-nav a[aria-current="page"] .nav-label { color: var(--bleu-clair); }
-  .nav-outil { display: block; width: 32px; height: 32px; justify-self: center; fill: none; stroke: rgba(220, 232, 200, .75); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; overflow: visible; }
+  .nav-outil { display: block; width: 32px; height: 32px; justify-self: center; fill: none; stroke: rgba(244, 235, 221, .75); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; overflow: visible; }
   .nav-outil .mobile, .nav-outil .tourne, .nav-outil .crayon { transition: transform .35s cubic-bezier(.2, .7, .2, 1); transform-box: fill-box; transform-origin: center; }
   .nav-outil .imprime { clip-path: inset(0 0 0 0); }
   .nav-outil .trace { stroke-dasharray: 30; stroke-dashoffset: 30; transition: stroke-dashoffset .4s ease; }
@@ -840,7 +840,7 @@ body:has(.hero-video) .site-header { transition: background-color .3s ease, bord
   .main-nav a:hover .imprime { animation: none; }
 }
 
-/* ---- Vert atelier : la couleur du sous-main reprise sur les repères techniques du site
+/* ---- Kraft sable : la couleur du sous-main reprise sur les repères techniques du site
    (le bleu reste réservé à ce qui se clique : boutons, liens, sélection) */
 .cote { border-inline-color: var(--atelier); }
 .cote i { background: var(--atelier); }
@@ -860,6 +860,11 @@ body:has(.hero-video) .site-header { transition: background-color .3s ease, bord
   background:
     url("/medias/sous-main-regle-bas.svg") var(--gutter) 100% / auto 22px no-repeat,
     url("/medias/sous-main-grille.svg") var(--gutter) 0 / 200px 200px,
-    linear-gradient(180deg, #314029 0%, #283422 100%);
-  border-bottom: 1px solid rgba(220, 232, 200, .16);
+    linear-gradient(180deg, #665640 0%, #574936 100%);
+  border-bottom: 1px solid rgba(244, 235, 221, .16);
 }
+/* Bande de bas de page plus discrète partout, et absente sur la page Devis */
+.site-footer::before { height: 28px; opacity: .55; }
+.site-footer { padding-top: 84px; }
+body:has(#form-devis) .site-footer::before { display: none; }
+body:has(#form-devis) .site-footer { padding-top: 56px; }
