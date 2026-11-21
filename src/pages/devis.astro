@@ -26,7 +26,6 @@ const accept = FICHIERS.extensions.map((e) => `.${e}`).join(',');
           </ol>
         </div>
         <p class="aside-note">Pas encore de fichier ? Une description ou une photo suffit pour démarrer.</p>
-        <ImprimanteResine />
       </aside>
 
       <div class="form-card">
@@ -177,6 +176,7 @@ const accept = FICHIERS.extensions.map((e) => `.${e}`).join(',');
           <a class="btn btn-ghost" href="/">Retour à l’accueil</a>
         </div>
       </div>
+      <ImprimanteResine />
     </div>
   </section>
   {turnstileKey && <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>}

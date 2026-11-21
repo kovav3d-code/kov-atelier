@@ -900,3 +900,13 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
 .hero h1 em { font-style: italic; color: var(--atelier); }
 .hero h1 .br-large { display: none; }
 @media (min-width: 720px) { .hero h1 .br-large { display: inline; } }
+/* Placement de l'imprimante résine : sous l'introduction sur ordinateur, à côté du formulaire sur tablette */
+.devis-grid { grid-template-areas: "aside carte" "imp carte"; }
+.devis-aside { grid-area: aside; }
+.devis-grid > .form-card { grid-area: carte; }
+.devis-grid > .imp-resine { grid-area: imp; margin: 0; align-self: start; }
+@media (max-width: 960px) {
+  .devis-grid { grid-template-columns: minmax(0, 1fr) 230px; grid-template-areas: "aside aside" "carte imp"; }
+  .devis-grid > .imp-resine { align-self: start; position: sticky; top: 100px; }
+}
+@media (max-width: 720px) { .devis-grid { grid-template-columns: 1fr; grid-template-areas: "aside" "carte"; } }
