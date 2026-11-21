@@ -751,3 +751,18 @@ body:has(.hero-video) .site-header { transition: background-color .3s ease, bord
   .main-nav[data-open], .main-nav[data-open] li { animation: none !important; }
   .main-nav a, .main-nav a::before, .main-nav a::after { transition: none !important; }
 }
+
+/* Questionnaire : sortie « décrire directement », bien visible mais secondaire face aux réponses */
+.qualif-passer {
+  display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 22px; margin-left: auto;
+  border: 1.5px solid var(--bleu-clair); border-radius: 999px; background: rgba(143, 176, 245, .08);
+  color: var(--text); font: inherit; font-size: .98rem; font-weight: 600; cursor: pointer;
+  transition: transform .18s cubic-bezier(.2, .7, .2, 1), background-color .18s ease, box-shadow .18s ease;
+}
+.qualif-passer span { color: var(--bleu-clair); transition: transform .2s cubic-bezier(.2, .7, .2, 1); }
+.qualif-passer:hover { transform: translateY(-1px); background: rgba(143, 176, 245, .16); box-shadow: 0 4px 14px rgba(143, 176, 245, .18); }
+.qualif-passer:hover span { transform: translateX(4px); }
+.qualif-passer:active { transform: scale(.97); transition-duration: .08s; }
+.qualif-passer:focus-visible { outline: 3px solid var(--bleu-clair); outline-offset: 3px; }
+@media (max-width: 600px) { .qualif-passer { width: 100%; justify-content: center; margin-left: 0; } }
+@media (prefers-reduced-motion: reduce) { .qualif-passer, .qualif-passer span { transition: none; } .qualif-passer:hover, .qualif-passer:hover span { transform: none; } }
