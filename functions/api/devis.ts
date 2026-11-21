@@ -7,7 +7,7 @@
  */
 import type { Env } from '../_lib/env';
 import { json, echapper } from '../_lib/env';
-import { PRESTATIONS, DELAIS, LIVRAISONS, BUDGETS, PROFILS, CRENEAUX, estPrioritaire, FICHIERS, LIMITES, formatTaille } from '../../src/config/devis';
+import { PRESTATIONS, DELAIS, LIVRAISONS, BUDGETS, PROFILS, CRENEAUX, estPrioritaire, rdvLibelle, maintenantParis, FICHIERS, LIMITES, formatTaille } from '../../src/config/devis';
 import { contenuValide, extension, extensionAutorisee, nomPropre } from '../_lib/fichiers';
 import { envoyerEmail, emailAtelier, emailClient, enBase64, type PieceJointe } from '../_lib/emails';
 
@@ -83,9 +83,10 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env, waitUnti
   const livraison = LIVRAISONS.includes(v('livraison')) ? v('livraison') : null;
   const profil = PROFILS.includes(v('profil')) ? v('profil') : null;
   const creneau = CRENEAUX.includes(v('creneau')) ? v('creneau') : null;
+  const rdv = rappel ? rdvLibelle(v('rdv'), maintenantParis()) : null;
   const prioritaire = estPrioritaire(profil, d.budget, choisies.map((p) => p.value));
   const entete = [
-    rappel ? `Demande de rappel${creneau ? ` (${creneau.toLowerCase()})` : ''}.` : null,
+    rdv ? `Rendez-vous téléphonique demandé : ${rdv} (heure de Paris).` : rappel ? `Demande de rappel${creneau ? ` (${creneau.toLowerCase()})` : ''}.` : null,
     profil ? `Profil : ${profil}` : null,
     livraison ? `Souhaite recevoir : ${livraison}` : null,
   ].filter(Boolean).join('\n');
@@ -128,14 +129,14 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env, waitUnti
     } catch (e) { console.error('Pièces jointes non préparées', reference, e); pieces = []; }
   }
   const mA = emailAtelier({ ...d, prestationLibelle: prestation!.label }, reference, liens, pieces.length > 0);
-  mA.subject = `${rappel ? '[À rappeler] ' : ''}${prioritaire ? '[Prioritaire] ' : ''}${mA.subject}`;
+  mA.subject = `${rdv ? `[RDV ${rdv}] ` : rappel ? '[À rappeler] ' : ''}${prioritaire ? '[Prioritaire] ' : ''}${mA.subject}`;
   const mC = emailClient(reference, prestation!.label, stockes.length);
   // Suggestion de prix indicative (Telegram uniquement) : volume mesuré dans les STL du client.
   const stl: MesureStl[] = [];
   for (const f of fichiers) if (extension(f.name) === 'stl') { try { const m = mesurerStl(f.name, await f.arrayBuffer()); if (m) stl.push(m); } catch { /* fichier illisible : ignoré */ } }
   const sugg = suggererPrix({ prestations: choisies.map((p) => p.value), materiau: d.materiau, dimensions: d.dimensions, quantite: d.quantite, delai: d.delai, stl });
   const telegram = message(env, [
-    `${rappel ? '<b>À RAPPELER</b> · ' : ''}${prioritaire ? '<b>PRIORITAIRE</b> · ' : ''}<b>Nouvelle demande de devis</b> · ${reference}`,
+    `${rdv ? '<b>RDV TÉLÉPHONE</b> · ' : rappel ? '<b>À RAPPELER</b> · ' : ''}${prioritaire ? '<b>PRIORITAIRE</b> · ' : ''}<b>Nouvelle demande de devis</b> · ${reference}`,
     '',
     ligne('Client', `${d.nom}${d.entreprise ? ` (${d.entreprise})` : ''}`),
     telephoneCliquable(d.telephone) ?? '<b>Téléphone</b> : non indiqué',
@@ -143,7 +144,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env, waitUnti
     ligne('Prestation', prestation!.label),
     ligne('Besoin', d.description, 600),
     ligne('Dimensions', d.dimensions), ligne('Quantité', d.quantite), ligne('Matériau', d.materiau),
-    ligne('Profil', profil), ligne('Délai', d.delai), ligne('Budget', d.budget), ligne('Livraison', livraison), ligne('Rappel', rappel ? (creneau ?? 'oui, créneau libre') : null),
+    ligne('Profil', profil), ligne('Délai', d.delai), ligne('Budget', d.budget), ligne('Livraison', livraison), ligne('Rappel', rappel ? (rdv ?? creneau ?? 'oui, créneau libre') : null),
     `<b>Fichiers</b> : ${stockes.length ? `${stockes.length} (joints à l’e-mail)` : 'aucun'}`,
     '',
     ...stl.map((m) => `<b>STL ${echapper(m.nom)}</b> : ${m.boite.map((x) => x.toFixed(0)).join(' × ')} mm, ${m.volumeCm3.toFixed(1)} cm³, ${m.triangles} triangles${m.ferme ? '' : ', maillage NON fermé'}`),

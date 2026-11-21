@@ -5,6 +5,7 @@ import TetePensante from '../components/TetePensante.astro';
 import { PRESTATIONS, DELAIS, LIVRAISONS, BUDGETS, PROFILS, BESOINS_QUALIF, CRENEAUX, FICHIERS, LIMITES } from '../config/devis';
 import { SITE, APERCU, MONTRER_RESERVES } from '../config/site';
 const turnstileKey = SITE.turnstileSiteKey ?? import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
+const telLien = SITE.telephone ? SITE.telephone.replace(/[^+0-9]/g, '') : null;
 const accept = FICHIERS.extensions.map((e) => `.${e}`).join(',');
 ---
 <Base
@@ -26,6 +27,7 @@ const accept = FICHIERS.extensions.map((e) => `.${e}`).join(',');
           </ol>
         </div>
         <p class="aside-note">Pas encore de fichier ? Une description ou une photo suffit pour démarrer.</p>
+        <p class="aside-appel">Vous préférez en parler ? <button type="button" class="aside-appel-lien" data-mode="rappel">Choisir un créneau d’appel</button>{telLien && <> ou <a href={`tel:${telLien}`}>appeler directement</a></>}.</p>
       </aside>
 
       <div class="form-card form-card--resine">
@@ -56,7 +58,8 @@ const accept = FICHIERS.extensions.map((e) => `.${e}`).join(',');
             <p>Pour un projet comme le vôtre, un échange de 15 minutes permet de bien cadrer le besoin et de vous faire un devis juste.</p>
             <div class="qualif-actions">
               {SITE.calUrl && <a class="btn btn-primary" href={SITE.calUrl} target="_blank" rel="noopener" data-mode="appel">Réserver un appel de 15 minutes</a>}
-              <button type="button" class={SITE.calUrl ? 'btn btn-ghost' : 'btn btn-primary'} data-mode="rappel">Être rappelé par l’atelier</button>
+              <button type="button" class={SITE.calUrl ? 'btn btn-ghost' : 'btn btn-primary'} data-mode="rappel">Choisir un créneau d’appel</button>
+              {telLien && <a class="btn btn-ghost" href={`tel:${telLien}`} data-mode="tel">Appeler directement</a>}
               <button type="button" class="btn btn-ghost" data-mode="ecrit">Décrire ma demande par écrit</button>
             </div>
           </div>
@@ -107,9 +110,16 @@ const accept = FICHIERS.extensions.map((e) => `.${e}`).join(',');
               <p class="error" id="e-description"></p>
             </div>
 
-            <div class="field field-delai" data-rappel>
-              <label for="creneau">Quand vous rappeler ? <span class="opt">(facultatif)</span></label>
-              <select id="creneau" name="creneau"><option value="">Choisir</option>{CRENEAUX.map((c) => <option>{c}</option>)}</select>
+            <div class="field" data-rappel>
+              <span class="field-label" id="l-rdv">Créneau d’appel souhaité <span class="opt">(facultatif)</span></span>
+              <p class="field-help">Rendez-vous de 15 minutes, du lundi au vendredi. L’atelier vous confirme le créneau par e-mail.</p>
+              <div class="rdv" id="rdv" role="group" aria-labelledby="l-rdv">
+                <div class="rdv-jours" id="rdv-jours"></div>
+                <div class="rdv-heures" id="rdv-heures"></div>
+                <p class="rdv-choix" id="rdv-choix" aria-live="polite"></p>
+              </div>
+              <input type="hidden" name="rdv" id="rdv-valeur" />
+              {telLien && <p class="field-help">Pressé ? <a href={`tel:${telLien}`}>Appelez directement l’atelier</a>.</p>}
             </div>
 
             <div class="field field-delai" data-ecrit>

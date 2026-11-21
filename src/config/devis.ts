@@ -41,3 +41,35 @@ export const LIMITES = { nom: 120, entreprise: 120, email: 254, telephone: 30, d
 
 export const formatTaille = (o: number) =>
   o < 1024 * 1024 ? `${Math.max(1, Math.round(o / 1024))} Ko` : `${(o / 1024 / 1024).toFixed(1).replace('.', ',')} Mo`;
+
+/**
+ * Rendez-vous téléphonique : créneaux de 15 min, du lundi au vendredi, 9 h–12 h et 14 h–18 h (heure de Paris),
+ * sur les 5 prochains jours ouvrés. Jours fériés non exclus : l'atelier confirme chaque rendez-vous.
+ */
+export const APPEL = { plages: [[9, 12], [14, 18]] as const, pas: 15, jours: 5, delaiMinMin: 60 };
+
+/** « 2026-11-24T10:15 » (heure de Paris) → libellé « mardi 24 novembre à 10 h 15 », ou null si invalide. */
+export function rdvLibelle(v: string, maintenantParis?: string): string | null {
+  const m = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})$/.exec(v);
+  if (!m) return null;
+  const [an, mo, j, h, mi] = m.slice(1).map(Number);
+  const d = new Date(Date.UTC(an, mo - 1, j, h, mi));
+  if (d.getUTCMonth() !== mo - 1 || d.getUTCDate() !== j) return null;
+  const jour = d.getUTCDay();
+  if (jour === 0 || jour === 6) return null;
+  if (mi % APPEL.pas) return null;
+  const min = h * 60 + mi;
+  if (!APPEL.plages.some(([a, b]) => min >= a * 60 && min < b * 60)) return null;
+  if (maintenantParis) {
+    const now = new Date(maintenantParis + 'Z').getTime();
+    if (d.getTime() < now || d.getTime() > now + 16 * 864e5) return null;
+  }
+  const date = new Intl.DateTimeFormat('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC' }).format(d);
+  return `${date} à ${h} h ${String(mi).padStart(2, '0')}`;
+}
+
+/** Heure actuelle à Paris au format « AAAA-MM-JJTHH:MM ». */
+export function maintenantParis(date = new Date()): string {
+  const p = Object.fromEntries(new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Paris', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).formatToParts(date).map((x) => [x.type, x.value]));
+  return `${p.year}-${p.month}-${p.day}T${p.hour}:${p.minute}`;
+}

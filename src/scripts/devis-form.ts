@@ -1,4 +1,4 @@
-import { FICHIERS, formatTaille, estPrioritaire, BUDGET_MINIMUM } from '../config/devis';
+import { FICHIERS, formatTaille, estPrioritaire, BUDGET_MINIMUM, APPEL, rdvLibelle, maintenantParis } from '../config/devis';
 import { suivre } from './suivi';
 
 const form = document.getElementById('form-devis') as HTMLFormElement | null;
@@ -171,7 +171,10 @@ function initialiser(form: HTMLFormElement) {
     el('r-conf-ko').hidden = confirmation;
     if (form.classList.contains('mode-rappel')) {
       el('r-titre').textContent = 'Demande de rappel envoyée';
-      el('r-suite').textContent = 'L’atelier vous rappelle au plus vite, au numéro indiqué.';
+      const rdv = (el('rdv-valeur') as HTMLInputElement | null)?.value;
+      el('r-suite').textContent = rdv
+        ? `Créneau demandé : ${el('rdv-choix').textContent?.replace(/^Appel prévu /, '').replace(/\.$/, '')}. L’atelier vous le confirme par e-mail.`
+        : 'L’atelier vous rappelle au plus vite, au numéro indiqué.';
     }
     el('q-resume').hidden = true;
     form.hidden = true;
@@ -221,7 +224,11 @@ function initialiserQualif(form: HTMLFormElement, bouton: HTMLButtonElement) {
     const texte = ORDRE.map((k) => reponses[k]).filter(Boolean).join(' · ');
     el('q-resume-texte').textContent = texte ? `Vos réponses : ${texte}.` : '';
     el('q-resume').hidden = !resume || !texte;
-    form.querySelector<HTMLElement>(mode === 'rappel' ? '#nom' : '#description')?.focus();
+    if (mode === 'rappel' && !form.querySelector('input[name="prestation"]:checked')) {
+      const inconnu = form.querySelector<HTMLInputElement>('input[name="prestation"][value="inconnu"]');
+      if (inconnu) inconnu.checked = true;
+    }
+    form.querySelector<HTMLElement>(mode === 'rappel' ? '.rdv-jour' : '#description')?.focus();
     if (mode === 'rappel') suivre('rappel_choisi');
   }
 
@@ -264,6 +271,7 @@ function initialiserQualif(form: HTMLFormElement, bouton: HTMLButtonElement) {
     const mode = cible.closest<HTMLElement>('[data-mode]')?.dataset.mode;
     if (mode === 'rappel' || mode === 'ecrit') ouvrir(mode);
     else if (mode === 'appel') suivre('rappel_choisi', 'agenda');
+    else if (mode === 'tel') suivre('rappel_choisi', 'tel');
   });
 
   retour.addEventListener('click', () => { courant = Math.max(0, Math.min(courant, ORDRE.length) - 1); montrer(ORDRE[courant]); });
@@ -292,8 +300,70 @@ function initialiserQualif(form: HTMLFormElement, bouton: HTMLButtonElement) {
     montrer('profil');
   });
 
+  // Lien « Choisir un créneau d'appel » de la colonne de gauche : ouvre directement la demande de rappel.
+  document.querySelector('.aside-appel-lien')?.addEventListener('click', () => { courant = ORDRE.length; ouvrir('rappel', false); });
+
   // Démarrage : le questionnaire remplace le formulaire, sans voler le focus au chargement.
   form.hidden = true;
   qualif.hidden = false;
   montrer('profil', false);
 }
+
+/** Sélecteur de créneaux d'appel (heure de Paris) : 5 jours ouvrés, créneaux de 15 min. */
+function initialiserRdv() {
+  const jours = document.getElementById('rdv-jours');
+  const heures = document.getElementById('rdv-heures');
+  const choix = document.getElementById('rdv-choix');
+  const champ = document.getElementById('rdv-valeur') as HTMLInputElement | null;
+  if (!jours || !heures || !choix || !champ) return;
+  const valeur: HTMLInputElement = champ;
+  const [d0, t0] = maintenantParis().split('T');
+  const [an, mo, jo] = d0.split('-').map(Number);
+  const [hh, mm] = t0.split(':').map(Number);
+  const minMaintenant = hh * 60 + mm + APPEL.delaiMinMin;
+  const pad = (n: number) => String(n).padStart(2, '0');
+  const liste: { cle: string; court: string; heures: string[] }[] = [];
+  for (let k = 0; liste.length < APPEL.jours && k < 21; k++) {
+    const d = new Date(Date.UTC(an, mo - 1, jo + k));
+    if (d.getUTCDay() === 0 || d.getUTCDay() === 6) continue;
+    const cle = `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())}`;
+    const h: string[] = [];
+    for (const [a, b] of APPEL.plages) for (let m = a * 60; m < b * 60; m += APPEL.pas) {
+      if (k === 0 && m < minMaintenant) continue;
+      h.push(`${pad(Math.floor(m / 60))}:${pad(m % 60)}`);
+    }
+    if (!h.length) continue;
+    const court = new Intl.DateTimeFormat('fr-FR', { weekday: 'short', day: 'numeric', timeZone: 'UTC' }).format(d).replace('.', '');
+    liste.push({ cle, court: k === 0 ? `Aujourd’hui ${d.getUTCDate()}` : court, heures: h });
+  }
+  let jourActif = 0;
+  const bouton = (cls: string, texte: string) => Object.assign(document.createElement('button'), { type: 'button', className: cls, textContent: texte });
+  function choisir(v: string) {
+    valeur.value = v;
+    for (const b of heures!.querySelectorAll<HTMLButtonElement>('.rdv-heure')) b.setAttribute('aria-pressed', String(b.dataset.v === v));
+    const lib = v ? rdvLibelle(v) : null;
+    choix!.textContent = lib ? `Appel prévu ${lib} (heure de Paris).` : '';
+  }
+  function rendreHeures() {
+    const j = liste[jourActif];
+    heures!.replaceChildren(...j.heures.map((h) => {
+      const b = bouton('rdv-heure', h.replace(':', ' h '));
+      b.dataset.v = `${j.cle}T${h}`;
+      b.setAttribute('aria-pressed', String(valeur!.value === b.dataset.v));
+      b.addEventListener('click', () => choisir(valeur!.value === b.dataset.v ? '' : b.dataset.v!));
+      return b;
+    }));
+  }
+  jours.replaceChildren(...liste.map((j, i) => {
+    const b = bouton('rdv-jour', j.court);
+    b.setAttribute('aria-pressed', String(i === 0));
+    b.addEventListener('click', () => {
+      jourActif = i;
+      for (const x of jours.querySelectorAll('.rdv-jour')) x.setAttribute('aria-pressed', String(x === b));
+      rendreHeures();
+    });
+    return b;
+  }));
+  if (liste.length) rendreHeures();
+}
+initialiserRdv();
