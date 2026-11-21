@@ -1,7 +1,7 @@
 /** POST /api/evenement : compteur de conversions anonyme (aucun cookie, aucune IP, aucun identifiant). */
 import type { Env } from '../_lib/env';
 
-const AUTORISES = new Set(['devis_clic', 'devis_commence']);
+const AUTORISES = new Set(['devis_clic', 'devis_commence', 'qualif_termine', 'qualif_passe', 'rappel_choisi']);
 
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   try {

@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
-import { PRESTATIONS, DELAIS, LIVRAISONS, FICHIERS, LIMITES } from '../config/devis';
+import { PRESTATIONS, DELAIS, LIVRAISONS, BUDGETS, PROFILS, BESOINS_QUALIF, CRENEAUX, FICHIERS, LIMITES } from '../config/devis';
 import { SITE, APERCU, MONTRER_RESERVES } from '../config/site';
 const turnstileKey = SITE.turnstileSiteKey ?? import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
 const accept = FICHIERS.extensions.map((e) => `.${e}`).join(',');
@@ -28,12 +28,55 @@ const accept = FICHIERS.extensions.map((e) => `.${e}`).join(',');
       </aside>
 
       <div class="form-card">
+        <!-- Questionnaire de qualification : affiché par le script ; sans JavaScript, le formulaire reste directement accessible. -->
+        <div class="qualif" id="qualif" hidden>
+          <p class="qualif-etape" id="q-etape" aria-live="polite">Question 1 sur 4</p>
+          <div class="qualif-q" data-q="profil" role="group" aria-labelledby="q-t-profil">
+            <h2 id="q-t-profil">Vous êtes…</h2>
+            <div class="qualif-choix">{PROFILS.map((x) => <button type="button" class="qualif-btn" data-valeur={x}>{x}</button>)}</div>
+          </div>
+          <div class="qualif-q" data-q="besoin" role="group" aria-labelledby="q-t-besoin" hidden>
+            <h2 id="q-t-besoin">De quoi avez-vous besoin ?</h2>
+            <div class="qualif-choix">{BESOINS_QUALIF.map((x) => <button type="button" class="qualif-btn" data-valeur={x.label} data-prestation={x.prestation}>{x.label}</button>)}</div>
+          </div>
+          <div class="qualif-q" data-q="budget" role="group" aria-labelledby="q-t-budget" hidden>
+            <h2 id="q-t-budget">Quel budget envisagez-vous ?</h2>
+            <div class="qualif-choix">{BUDGETS.map((x) => <button type="button" class="qualif-btn" data-valeur={x}>{x}</button>)}</div>
+          </div>
+          <div class="qualif-q" data-q="delai" role="group" aria-labelledby="q-t-delai" hidden>
+            <h2 id="q-t-delai">Pour quand ?</h2>
+            <div class="qualif-choix">{DELAIS.map((x) => <button type="button" class="qualif-btn" data-valeur={x}>{x}</button>)}</div>
+          </div>
+
+          <div class="qualif-q qualif-fin" data-q="prioritaire" hidden>
+            <h2>Parlons-en de vive voix</h2>
+            <p>Pour un projet comme le vôtre, un échange de 15 minutes permet de bien cadrer le besoin et de vous faire un devis juste.</p>
+            <div class="qualif-actions">
+              {SITE.calUrl && <a class="btn btn-primary" href={SITE.calUrl} target="_blank" rel="noopener" data-mode="appel">Réserver un appel de 15 minutes</a>}
+              <button type="button" class={SITE.calUrl ? 'btn btn-ghost' : 'btn btn-primary'} data-mode="rappel">Être rappelé par l’atelier</button>
+              <button type="button" class="btn btn-ghost" data-mode="ecrit">Décrire ma demande par écrit</button>
+            </div>
+          </div>
+          <div class="qualif-q qualif-fin" data-q="minimum" hidden>
+            <h2>Bon à savoir</h2>
+            <p>La commande minimum est de 30 € hors livraison. Pour une très petite pièce, il est souvent plus intéressant d’en commander plusieurs ou de regrouper vos besoins.</p>
+            <div class="qualif-actions"><button type="button" class="btn btn-primary" data-mode="ecrit">Continuer ma demande</button></div>
+          </div>
+
+          <div class="qualif-nav">
+            <button type="button" class="qualif-lien" id="q-retour" hidden>Retour</button>
+            <button type="button" class="qualif-lien" id="q-passer">Je préfère décrire directement ma demande</button>
+          </div>
+        </div>
+
+        <p class="qualif-resume" id="q-resume" hidden><span id="q-resume-texte"></span> <button type="button" class="qualif-lien" id="q-modifier">Modifier</button></p>
+
         <form id="form-devis" action="/api/devis" method="post" enctype="multipart/form-data" novalidate data-apercu={APERCU ? '1' : undefined}>
           <fieldset class="form-section">
             <legend>Votre projet</legend>
             <p class="hint">Les champs marqués <span class="req" aria-hidden="true">*</span><span class="sr-only">d’un astérisque</span> sont obligatoires.</p>
 
-            <div class="field">
+            <div class="field" data-ecrit>
               <span class="field-label" id="l-prestation">Prestations souhaitées <span class="req" aria-hidden="true">*</span></span>
               <p class="field-help" id="h-prestation">Plusieurs choix possibles, par exemple Modélisation 3D et Impression 3D.</p>
               <div class="chips" role="group" aria-labelledby="l-prestation" aria-describedby="h-prestation e-prestation" data-champ="prestation">
@@ -45,25 +88,30 @@ const accept = FICHIERS.extensions.map((e) => `.${e}`).join(',');
             </div>
 
             <div class="field">
-              <label for="description">Description du besoin <span class="req" aria-hidden="true">*</span></label>
+              <label for="description"><span data-ecrit>Description du besoin <span class="req" aria-hidden="true">*</span></span><span data-rappel>Quelques mots sur votre projet <span class="opt">(facultatif)</span></span></label>
               <textarea id="description" name="description" required maxlength={LIMITES.description} aria-describedby="h-description e-description" placeholder="Ex. : support cassé sur une machine, à reproduire à partir de la pièce d’origine."></textarea>
               <p class="field-help" id="h-description">À quoi servira la pièce, d’où vous partez (croquis, pièce existante, fichier) et vos contraintes éventuelles.</p>
               <p class="error" id="e-description"></p>
             </div>
 
-            <div class="field field-delai">
+            <div class="field field-delai" data-rappel>
+              <label for="creneau">Quand vous rappeler ? <span class="opt">(facultatif)</span></label>
+              <select id="creneau" name="creneau"><option value="">Choisir</option>{CRENEAUX.map((c) => <option>{c}</option>)}</select>
+            </div>
+
+            <div class="field field-delai" data-ecrit>
               <label for="delai">Délai souhaité <span class="opt">(facultatif)</span></label>
               <select id="delai" name="delai"><option value="">Choisir</option>{DELAIS.map((d) => <option>{d}</option>)}</select>
               <p class="field-help">Le mode urgent ajoute 40 € au devis.</p>
             </div>
 
-            <div class="field field-delai">
+            <div class="field field-delai" data-ecrit>
               <label for="livraison">Vous souhaitez recevoir <span class="opt">(facultatif)</span></label>
               <select id="livraison" name="livraison"><option value="">Choisir</option>{LIVRAISONS.map((l) => <option>{l}</option>)}</select>
             </div>
           </fieldset>
 
-          <fieldset class="form-section">
+          <fieldset class="form-section" data-ecrit>
             <legend>Fichiers <span class="opt">(facultatif)</span></legend>
             <p class="hint">Photos, croquis, plans ou fichiers 3D. Vous pourrez aussi les envoyer plus tard.</p>
             <label class="dropzone" id="dropzone">
@@ -102,6 +150,9 @@ const accept = FICHIERS.extensions.map((e) => `.${e}`).join(',');
 
           <div class="hp" aria-hidden="true"><label>Laisser vide <input type="text" name="site_web" tabindex="-1" autocomplete="off" /></label></div>
           <input type="hidden" name="t0" id="t0" />
+          <input type="hidden" name="profil" id="profil" />
+          <input type="hidden" name="budget" id="budget" />
+          <input type="hidden" name="rappel" id="rappel" />
 
           {turnstileKey
             ? <div class="cf-turnstile antispam" data-sitekey={turnstileKey} data-language="fr" data-theme="dark" data-size="flexible"></div>
@@ -110,18 +161,18 @@ const accept = FICHIERS.extensions.map((e) => `.${e}`).join(',');
           <div class="submit-row">
             <div class="form-alert" id="alerte" role="alert" hidden></div>
             <div class="progress" id="progression" hidden><i></i></div>
-            <button class="btn btn-primary" type="submit" id="envoyer">Envoyer ma demande de devis</button>
+            <button class="btn btn-primary" type="submit" id="envoyer" data-ecrit-texte="Envoyer ma demande de devis" data-rappel-texte="Demander à être rappelé">Envoyer ma demande de devis</button>
             <p class="rgpd">Vos informations servent uniquement à étudier votre demande et à vous répondre. <a href="/politique-de-confidentialite">Politique de confidentialité</a></p>
           </div>
         </form>
 
         <div class="form-result" id="resultat" hidden tabindex="-1">
           <Icon name="valide" />
-          <h2>Demande envoyée</h2>
+          <h2 id="r-titre">Demande envoyée</h2>
           <p>Référence de votre demande : <span class="ref" id="r-ref"></span></p>
           <p id="r-conf-ok">Un e-mail de confirmation a été envoyé à <strong id="r-email"></strong>. Pensez à vérifier vos courriers indésirables.</p>
           <p id="r-conf-ko" hidden>Votre demande est bien enregistrée. Notez cette référence, elle facilitera vos échanges avec l’atelier.</p>
-          <p>L’atelier étudie votre projet et vous répond personnellement.</p>
+          <p id="r-suite">L’atelier étudie votre projet et vous répond personnellement.</p>
           <a class="btn btn-ghost" href="/">Retour à l’accueil</a>
         </div>
       </div>

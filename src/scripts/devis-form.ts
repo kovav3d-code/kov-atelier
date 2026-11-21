@@ -1,4 +1,4 @@
-import { FICHIERS, formatTaille } from '../config/devis';
+import { FICHIERS, formatTaille, estPrioritaire, BUDGET_MINIMUM } from '../config/devis';
 import { suivre } from './suivi';
 
 const form = document.getElementById('form-devis') as HTMLFormElement | null;
@@ -15,7 +15,7 @@ function initialiser(form: HTMLFormElement) {
   const progression = el('progression');
   const bouton = el<HTMLButtonElement>('envoyer');
   const resultat = el('resultat');
-  const libelleBouton = bouton.textContent ?? '';
+  let libelleBouton = bouton.textContent ?? '';
   el<HTMLInputElement>('t0').value = String(Date.now());
 
   // Préselection depuis une page service : /devis?prestation=impression
@@ -28,6 +28,8 @@ function initialiser(form: HTMLFormElement) {
     if (!c.checked) return;
     for (const autre of cases) if (autre !== c && (c.value === 'inconnu' || autre.value === 'inconnu')) autre.checked = false;
   });
+
+  initialiserQualif(form, bouton);
 
   let fichiers: File[] = [];
   let commence = false;
@@ -95,7 +97,7 @@ function initialiser(form: HTMLFormElement) {
     const v = (k: string) => String(fd.get(k) ?? '').trim();
     const erreurs: Record<string, string> = {};
     if (!fd.getAll('prestation').length) erreurs.prestation = 'Choisissez au moins une prestation, ou « Je ne sais pas encore ».';
-    if (v('description').length < 10) erreurs.description = 'Décrivez votre besoin en quelques mots (10 caractères minimum).';
+    if (v('rappel') !== '1' && v('description').length < 10) erreurs.description = 'Décrivez votre besoin en quelques mots (10 caractères minimum).';
     if (v('nom').length < 2) erreurs.nom = 'Indiquez votre nom et prénom.';
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v('email'))) erreurs.email = 'Indiquez une adresse e-mail valide, par exemple nom@domaine.fr.';
     if (!v('telephone')) erreurs.telephone = 'Indiquez un numéro de téléphone pour que l’atelier puisse vous joindre.';
@@ -132,6 +134,7 @@ function initialiser(form: HTMLFormElement) {
   });
 
   function envoyer(fd: FormData) {
+    libelleBouton = bouton.textContent ?? libelleBouton;
     bouton.disabled = true;
     bouton.textContent = fichiers.length ? 'Envoi des fichiers…' : 'Envoi en cours…';
     const barre = progression.firstElementChild as HTMLElement;
@@ -166,9 +169,115 @@ function initialiser(form: HTMLFormElement) {
     el('r-email').textContent = email;
     el('r-conf-ok').hidden = !confirmation;
     el('r-conf-ko').hidden = confirmation;
+    if (form.classList.contains('mode-rappel')) {
+      el('r-titre').textContent = 'Demande de rappel envoyée';
+      el('r-suite').textContent = 'L’atelier vous rappelle au plus vite, au numéro indiqué.';
+    }
+    el('q-resume').hidden = true;
     form.hidden = true;
     resultat.hidden = false;
     resultat.scrollIntoView({ behavior: 'smooth', block: 'center' });
     resultat.focus({ preventScroll: true });
   }
+}
+
+/**
+ * Questionnaire de qualification : 4 questions (profil, besoin, budget, délai), puis
+ * appel ou rappel pour les dossiers prioritaires, rappel du minimum de commande pour les petits budgets,
+ * sinon le formulaire directement. Les réponses pré-remplissent le formulaire.
+ */
+function initialiserQualif(form: HTMLFormElement, bouton: HTMLButtonElement) {
+  const trouve = document.getElementById('qualif');
+  if (!trouve) return;
+  const qualif: HTMLElement = trouve;
+  const el = (id: string) => document.getElementById(id) as HTMLElement;
+  const ORDRE = ['profil', 'besoin', 'budget', 'delai'] as const;
+  const reponses: Record<string, string> = {};
+  let prestation = '';
+  let dejaApplique = ''; // prestation cochée par une réponse précédente
+  let courant = 0; // index dans ORDRE, ou 4 pour les écrans de fin
+  const ecrans = Array.from(qualif.querySelectorAll<HTMLElement>('.qualif-q'));
+  const etape = el('q-etape');
+  const retour = el('q-retour');
+
+  function montrer(nom: string, focus = true) {
+    for (const e of ecrans) e.hidden = e.dataset.q !== nom;
+    const i = ORDRE.indexOf(nom as (typeof ORDRE)[number]);
+    etape.textContent = i >= 0 ? `Question ${i + 1} sur ${ORDRE.length}` : '';
+    etape.hidden = i < 0;
+    retour.hidden = nom === 'profil';
+    if (focus) {
+      const titre = ecrans.find((e) => e.dataset.q === nom)?.querySelector('h2');
+      if (titre) { titre.tabIndex = -1; titre.focus({ preventScroll: true }); }
+    }
+  }
+
+  function ouvrir(mode: 'ecrit' | 'rappel', resume = true) {
+    qualif.hidden = true;
+    form.hidden = false;
+    form.classList.toggle('mode-rappel', mode === 'rappel');
+    (el('rappel') as HTMLInputElement).value = mode === 'rappel' ? '1' : '';
+    bouton.textContent = (mode === 'rappel' ? bouton.dataset.rappelTexte : bouton.dataset.ecritTexte) ?? bouton.textContent;
+    const texte = ORDRE.map((k) => reponses[k]).filter(Boolean).join(' · ');
+    el('q-resume-texte').textContent = texte ? `Vos réponses : ${texte}.` : '';
+    el('q-resume').hidden = !resume || !texte;
+    form.querySelector<HTMLElement>(mode === 'rappel' ? '#nom' : '#description')?.focus();
+    if (mode === 'rappel') suivre('rappel_choisi');
+  }
+
+  function appliquer() {
+    (el('profil') as HTMLInputElement).value = reponses.profil ?? '';
+    (el('budget') as HTMLInputElement).value = reponses.budget ?? '';
+    const delai = form.querySelector<HTMLSelectElement>('#delai');
+    if (delai && reponses.delai) delai.value = reponses.delai;
+    if (prestation) {
+      for (const c of form.querySelectorAll<HTMLInputElement>('input[name="prestation"]')) {
+        if (c.value === dejaApplique && c.value !== prestation) c.checked = false; // réponse modifiée
+        if (c.value === prestation) c.checked = true;
+        else if (prestation === 'inconnu' || c.value === 'inconnu') c.checked = false;
+      }
+    }
+    dejaApplique = prestation;
+  }
+
+  function terminer() {
+    appliquer();
+    const prioritaire = estPrioritaire(reponses.profil ?? null, reponses.budget ?? null, prestation ? [prestation] : []);
+    courant = ORDRE.length;
+    if (prioritaire) { suivre('qualif_termine', 'prioritaire'); montrer('prioritaire'); }
+    else if (reponses.budget === BUDGET_MINIMUM) { suivre('qualif_termine', 'minimum'); montrer('minimum'); }
+    else { suivre('qualif_termine', 'direct'); ouvrir('ecrit'); }
+  }
+
+  qualif.addEventListener('click', (e) => {
+    const cible = e.target as HTMLElement;
+    const choix = cible.closest<HTMLButtonElement>('.qualif-btn');
+    if (choix) {
+      const nom = choix.closest<HTMLElement>('.qualif-q')!.dataset.q!;
+      reponses[nom] = choix.dataset.valeur ?? '';
+      if (nom === 'besoin') prestation = choix.dataset.prestation ?? '';
+      for (const b of choix.parentElement!.querySelectorAll('.qualif-btn')) b.setAttribute('aria-pressed', String(b === choix));
+      courant = ORDRE.indexOf(nom as (typeof ORDRE)[number]) + 1;
+      if (courant < ORDRE.length) montrer(ORDRE[courant]); else terminer();
+      return;
+    }
+    const mode = cible.closest<HTMLElement>('[data-mode]')?.dataset.mode;
+    if (mode === 'rappel' || mode === 'ecrit') ouvrir(mode);
+    else if (mode === 'appel') suivre('rappel_choisi', 'agenda');
+  });
+
+  retour.addEventListener('click', () => { courant = Math.max(0, Math.min(courant, ORDRE.length) - 1); montrer(ORDRE[courant]); });
+  el('q-passer').addEventListener('click', () => { suivre('qualif_passe'); ouvrir('ecrit', false); });
+  el('q-modifier').addEventListener('click', () => {
+    form.hidden = true;
+    el('q-resume').hidden = true;
+    qualif.hidden = false;
+    courant = 0;
+    montrer('profil');
+  });
+
+  // Démarrage : le questionnaire remplace le formulaire, sans voler le focus au chargement.
+  form.hidden = true;
+  qualif.hidden = false;
+  montrer('profil', false);
 }

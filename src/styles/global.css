@@ -648,3 +648,23 @@ ul, ol { margin: 0; }
   .forge-frappe, .forge-artisan, .forge-lame, .forge-halo, .forge-etincelles circle, .forge-braise { animation: none; }
   .forge-frappe { transform: rotate(-58deg); }
 }
+
+/* ---- Questionnaire de qualification (page Devis) */
+.qualif-etape { margin: 0 0 10px; color: var(--text-2); font-size: .9rem; font-weight: 600; letter-spacing: .02em; text-transform: uppercase; }
+.qualif-q h2 { font-size: clamp(1.35rem, 2.6vw, 1.7rem); letter-spacing: -0.02em; margin: 0 0 22px; outline: none; }
+.qualif-q > p { color: var(--text-2); margin: -8px 0 22px; max-width: 52ch; }
+.qualif-choix { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.qualif-btn { min-height: 56px; padding: 14px 18px; text-align: left; font: inherit; font-weight: 580; color: var(--text); background: var(--bg); border: 1.5px solid var(--line-strong); border-radius: 10px; cursor: pointer; transition: border-color .15s ease, background-color .15s ease, transform .15s ease; }
+.qualif-btn:hover { border-color: var(--bleu-clair); transform: translateY(-1px); }
+.qualif-btn:focus-visible { outline: 3px solid var(--bleu-clair); outline-offset: 2px; }
+.qualif-btn[aria-pressed="true"] { border-color: var(--bleu-clair); background: rgba(143, 176, 245, .12); }
+.qualif-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.qualif-nav { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+.qualif-lien { min-height: 44px; padding: 0; background: none; border: 0; font: inherit; font-size: .95rem; color: var(--text-2); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.qualif-lien:hover { color: var(--text); }
+.qualif-nav #q-passer { margin-left: auto; }
+.qualif-resume { margin: 0 0 24px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 8px; color: var(--text-2); font-size: .95rem; }
+.form-card [data-rappel] { display: none; }
+.mode-rappel [data-rappel] { display: revert; }
+.mode-rappel [data-ecrit] { display: none; }
+@media (prefers-reduced-motion: reduce) { .qualif-btn { transition: none; } .qualif-btn:hover { transform: none; } }

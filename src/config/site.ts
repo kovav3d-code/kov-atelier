@@ -17,6 +17,9 @@ export const SITE = {
   email: 'kovav3d@gmail.com' as string | null,
   googleBusinessUrl: 'https://maps.app.goo.gl/A63xX4MVkZPvfJw37' as string | null, // fiche Google Business Profile
 
+  // Lien de réservation d'appel (Cal.com, Calendly…) : le bouton « Réserver un appel » n'apparaît que s'il est renseigné.
+  calUrl: null as string | null,            // ex. 'https://cal.com/kov-atelier/15min'
+
   // Clé PUBLIQUE Cloudflare Turnstile (la clé secrète, elle, reste côté serveur)
   turnstileSiteKey: '0x4AAAAAAF68fViPVk21BOqh' as string | null,
 };

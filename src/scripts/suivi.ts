@@ -1,5 +1,5 @@
 /** Envoie un événement de conversion anonyme (aucun cookie, aucun identifiant). */
-export function suivre(nom: 'devis_clic' | 'devis_commence', source?: string) {
+export function suivre(nom: 'devis_clic' | 'devis_commence' | 'qualif_termine' | 'qualif_passe' | 'rappel_choisi', source?: string) {
   if ((window as any).KOV_APERCU) return; // prévisualisation : aucun envoi
   try {
     const corps = JSON.stringify({ e: nom, s: source ?? null, p: location.pathname });
