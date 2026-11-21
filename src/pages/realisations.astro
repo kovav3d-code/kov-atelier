@@ -2,7 +2,14 @@
 import Base from '../layouts/Base.astro';
 import CtaFinal from '../components/CtaFinal.astro';
 import { Image } from 'astro:assets';
-import { ATELIER } from '../config/galerie';
+import { ATELIER, GROUPES_ATELIER } from '../config/galerie';
+// Mobile : médias regroupés par projet ; tout média oublié dans un groupe part dans « Autres réalisations ».
+const parLegende = new Map(ATELIER.map((m) => [m.legende, m]));
+const ranges = new Set(GROUPES_ATELIER.flatMap((g) => g.legendes));
+const groupes = [
+  ...GROUPES_ATELIER.map((g) => ({ titre: g.titre, medias: g.legendes.map((l) => parLegende.get(l)).filter((m) => m !== undefined) })),
+  { titre: 'Autres réalisations', medias: ATELIER.filter((m) => !ranges.has(m.legende)) },
+].filter((g) => g.medias.length);
 import Modeles3D from '../components/Modeles3D.astro';
 import SwitchEclate from '../components/SwitchEclate.astro';
 ---
@@ -64,11 +71,64 @@ import SwitchEclate from '../components/SwitchEclate.astro';
           </li>
         ))}
       </ul>
+
+      <!-- Mobile : un groupe par projet ; en descendant, les photos du groupe défilent de côté -->
+      <div class="atelier-groupes">
+        {groupes.map((g) => (
+          <section class="groupe" style={`--n:${g.medias.length}`} data-groupe={g.medias.length > 1 ? '' : undefined} aria-label={g.titre}>
+            <div class="groupe-collant">
+              <h3 class="groupe-titre">{g.titre}{g.medias.length > 1 && <span class="groupe-compte" aria-hidden="true"><span class="groupe-n">1</span> / {g.medias.length}</span>}</h3>
+              <ul class="groupe-piste">
+                {g.medias.map((m) => (
+                  <li class="groupe-item">
+                    <figure>
+                      {m.type === 'photo' ? (
+                        <Image src={m.src} alt={m.alt} widths={[400, 700]} sizes="84vw" loading="lazy" />
+                      ) : (
+                        <video data-boucle muted loop playsinline preload="none" poster={m.poster} aria-label={m.alt}>
+                          <source src={m.mp4} type="video/mp4" />
+                        </video>
+                      )}
+                      <figcaption>{m.legende}</figcaption>
+                    </figure>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </section>
+        ))}
+      </div>
     </div>
   </section>
 
   <CtaFinal titre="Un projet comparable ?" source="realisations-final" />
   <script is:inline>
+    // Mobile : chaque groupe reste affiché pendant qu'on descend, et ses photos défilent de côté.
+    (function () {
+      var mq = window.matchMedia('(max-width: 719px)');
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      var groupes = [].slice.call(document.querySelectorAll('.groupe[data-groupe]'));
+      if (!groupes.length) return;
+      var prevu = false;
+      function maj() {
+        prevu = false;
+        if (!mq.matches) return;
+        groupes.forEach(function (g) {
+          var piste = g.querySelector('.groupe-piste');
+          var r = g.getBoundingClientRect();
+          var course = g.offsetHeight - g.querySelector('.groupe-collant').offsetHeight;
+          var p = course > 0 ? Math.min(1, Math.max(0, -r.top + 72) / course) : 0;
+          var max = piste.scrollWidth - piste.clientWidth;
+          piste.style.transform = 'translateX(' + (-p * max).toFixed(1) + 'px)';
+          var n = g.querySelector('.groupe-n');
+          if (n) n.textContent = String(Math.min(+g.style.getPropertyValue('--n'), Math.round(p * (+g.style.getPropertyValue('--n') - 1)) + 1));
+        });
+      }
+      document.documentElement.classList.add('groupes-pilotes');
+      addEventListener('scroll', function () { if (!prevu) { prevu = true; requestAnimationFrame(maj); } }, { passive: true });
+      addEventListener('resize', maj);
+      maj();
+    })();
     (function () {
       var b = document.querySelector('[data-son]'); var v = document.getElementById('video-bustes');
       if (!b || !v) return;

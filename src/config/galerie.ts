@@ -95,3 +95,18 @@ export const ATELIER: MediaAtelier[] = [
   { type: 'photo', src: potsOursinSuspendus, alt: 'Deux pots oursins suspendus, rose et bleu, avec des plantes retombantes', legende: 'Pots oursins suspendus, en situation' },
   { type: 'photo', src: plaqueRelief, alt: 'Plaque sculptée en relief organique imprimée en résine grise, posée sur un tapis de découpe', legende: 'Plaque sculptée en relief, résine' },
 ];
+
+/** Version mobile de « En vrai, à l'atelier » : les médias liés entre eux, regroupés par projet (repérés par leur légende). */
+export const GROUPES_ATELIER: { titre: string; legendes: string[] }[] = [
+  { titre: 'Pignon d’aspirateur robot', legendes: ['Pignon d’aspirateur robot : l’original usé, la pièce refaite'] },
+  { titre: 'Buste portrait', legendes: ['Buste portrait, finition noir brillant', 'Buste portrait, vue de trois quarts'] },
+  { titre: 'Masque sur mesure', legendes: ['Masque imprimé, finition noir brillant', 'À l’atelier : sculpture d’un masque', 'Le même masque, sculpté sur un scan de visage'] },
+  { titre: 'Golden Reaper', legendes: ['Golden Reaper, résine translucide', 'Golden Reaper, vue de dos', 'Détail d’impression résine'] },
+  { titre: 'Maquettes de mosquées', legendes: ['Maquette de la mosquée Hassan II', 'Maquette de la mosquée Omar Ali Saifuddien'] },
+  { titre: 'Pots oursins', legendes: ['Pots oursins, brut et peint', 'Pots oursins suspendus, en situation'] },
+  { titre: 'Jeu d’échecs', legendes: ['Jeu d’échecs en résine', 'L’échiquier complet'] },
+  { titre: 'Sculptures organiques', legendes: ['Sculpture organique ajourée, résine', 'Pièce organique, détail des écailles', 'Pièces organiques en résine', 'Socle de diorama organique', 'Plaque sculptée en relief, résine'] },
+  { titre: 'Maquette de conteneur', legendes: ['Maquette de conteneur, version brute', 'Maquette de conteneur, version finie'] },
+  { titre: 'Objets personnalisés', legendes: ['Trophée sur mesure pour une agence', 'Présentoir à montres personnalisé', 'Plaques QR code en relief'] },
+  { titre: 'Pièces techniques et figurines', legendes: ['Adaptateur de crosse pliante', 'Chat articulé, filament cuivré'] },
+];

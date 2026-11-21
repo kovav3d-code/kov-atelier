@@ -1090,3 +1090,26 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
 .bustes-son { position: absolute; right: 12px; bottom: 12px; min-height: 40px; padding: 0 14px; border: 1px solid rgba(247, 248, 246, .35); border-radius: 999px; background: rgba(20, 23, 27, .72); color: var(--text); font: inherit; font-size: .85rem; font-weight: 600; cursor: pointer; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
 .bustes-son:hover { border-color: var(--bleu-clair); }
 @media (max-width: 800px) { .bustes-grille { grid-template-columns: 1fr; } .bustes-video { max-width: 340px; margin-inline: auto; } }
+
+/* ---- Réalisations, mobile : « En vrai » regroupé par projet
+   Sans JavaScript : chaque groupe est une bande qu'on fait glisser du doigt.
+   Avec : le groupe reste affiché pendant qu'on descend et ses photos défilent de côté, au rythme du défilement. */
+.atelier-groupes { display: none; }
+@media (max-width: 719px) {
+  #en-vrai .atelier-mur { display: none; }
+  .atelier-groupes { display: block; margin-inline: calc(-1 * var(--gutter)); }
+  .groupe { padding: 8px 0 28px; }
+  .groupe-titre { display: flex; justify-content: space-between; align-items: baseline; margin: 0 var(--gutter) 12px; font-size: 1.15rem; }
+  .groupe-compte { font-family: 'Geist Mono', ui-monospace, monospace; font-size: .78rem; font-weight: 400; color: var(--atelier); letter-spacing: .06em; }
+  .groupe-piste { display: flex; gap: 12px; margin: 0; padding: 0 var(--gutter); list-style: none; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+  .groupe-piste::-webkit-scrollbar { display: none; }
+  .groupe-item { flex: 0 0 84vw; scroll-snap-align: center; }
+  .groupe:not([data-groupe]) .groupe-item { flex-basis: calc(100vw - 2 * var(--gutter)); }
+  .groupe-item figure { margin: 0; }
+  .groupe-item img, .groupe-item video { display: block; width: 100%; height: min(58svh, 460px); object-fit: cover; border-radius: 12px; background: var(--surface); }
+  .groupe-item figcaption { margin-top: 8px; color: var(--text-2); font-size: .9rem; }
+  /* Mode piloté par le défilement */
+  .groupes-pilotes .groupe[data-groupe] { height: calc(var(--n) * 62svh + 24svh); padding: 0; }
+  .groupes-pilotes .groupe[data-groupe] .groupe-collant { position: sticky; top: 72px; padding: 16px 0 24px; overflow: hidden; }
+  .groupes-pilotes .groupe[data-groupe] .groupe-piste { overflow: visible; scroll-snap-type: none; will-change: transform; }
+}
