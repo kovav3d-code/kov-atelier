@@ -20,6 +20,22 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 const og = await getImage({ src: ogImage, width: 1200, format: 'jpg' });
 const ogUrl = new URL(og.src, Astro.site);
 import NavImprimante from '../components/NavImprimante.astro';
+
+// Fil d'Ariane (données structurées) : aide Google à afficher « Kov Atelier › Page » dans les résultats.
+const PAGES: Record<string, string> = {
+  '/services': 'Services', '/realisations': 'Réalisations', '/comment-ca-marche': 'Comment ça marche',
+  '/devis': 'Demander un devis', '/contact': 'Contact', '/mentions-legales': 'Mentions légales',
+  '/politique-de-confidentialite': 'Politique de confidentialité',
+};
+const chemin = Astro.url.pathname.replace(/\/$/, '') || '/';
+const filAriane = PAGES[chemin] && !noindex ? {
+  '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Accueil', item: new URL('/', Astro.site).toString() },
+    { '@type': 'ListItem', position: 2, name: PAGES[chemin], item: canonical.toString() },
+  ],
+} : null;
+const donnees = [...(jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : []), ...(filAriane ? [filAriane] : [])];
 ---
 <!doctype html>
 <html lang="fr">
@@ -32,6 +48,7 @@ import NavImprimante from '../components/NavImprimante.astro';
     {noindex && <meta name="robots" content="noindex" />}
     <meta name="theme-color" content="#20252B" />
     <link rel="icon" href="/favicon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="fr_FR" />
@@ -40,8 +57,13 @@ import NavImprimante from '../components/NavImprimante.astro';
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogUrl} />
+    <meta property="og:image:width" content={String(og.attributes.width ?? 1200)} />
+    {og.attributes.height && <meta property="og:image:height" content={String(og.attributes.height)} />}
+    <meta property="og:image:alt" content={`${SITE.nom}, conception et impression 3D sur mesure`} />
     <meta name="twitter:card" content="summary_large_image" />
-    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {donnees.map((d) => <script type="application/ld+json" set:html={JSON.stringify(d)} />)}
   </head>
   <body class={masquerCtaMobile ? '' : 'has-mobile-cta'}>
     <a class="skip" href="#contenu">Aller au contenu</a>
