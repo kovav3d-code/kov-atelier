@@ -767,7 +767,7 @@ body:has(.hero-video) .site-header { transition: background-color .3s ease, bord
 @media (max-width: 600px) { .qualif-passer { width: 100%; justify-content: center; margin-left: 0; } }
 @media (prefers-reduced-motion: reduce) { .qualif-passer, .qualif-passer span { transition: none; } .qualif-passer:hover, .qualif-passer:hover span { transform: none; } }
 
-/* ---- Menu mobile ouvert : fond « sous-main d'atelier » (tapis de découpe vert, carreaux au centimètre, règle graduée, diagonale à 45°)
+/* ---- Menu mobile ouvert : fond « sous-main d'atelier » (tapis de découpe terre cuite, complémentaire du bleu, carreaux au centimètre, règle graduée, diagonale à 45°)
    Le tapis couvre l'en-tête et le menu d'un seul tenant. */
 @media (max-width: 960px) {
   .site-header:has(.main-nav[data-open]) { background: transparent !important; -webkit-backdrop-filter: none; backdrop-filter: none; }
@@ -776,13 +776,13 @@ body:has(.hero-video) .site-header { transition: background-color .3s ease, bord
     top: 0; padding-top: 72px; z-index: 0;
     background:
       url("/medias/sous-main-regle.svg") 12px 4px / auto 30px no-repeat,
-      linear-gradient(45deg, transparent calc(50% - .7px), rgba(207, 230, 216, .16) 50%, transparent calc(50% + .7px)),
+      linear-gradient(45deg, transparent calc(50% - .7px), rgba(242, 214, 196, .16) 50%, transparent calc(50% + .7px)),
       url("/medias/sous-main-grille.svg") 12px 12px / 200px 200px,
-      radial-gradient(120% 90% at 30% 0%, #23473A 0%, #1A372D 55%, #152B24 100%);
-    box-shadow: inset 0 0 0 1px rgba(207, 230, 216, .08), 0 18px 40px rgba(0, 0, 0, .35);
+      radial-gradient(120% 90% at 30% 0%, #5E3426 0%, #4C291E 55%, #3D2118 100%);
+    box-shadow: inset 0 0 0 1px rgba(242, 214, 196, .08), 0 18px 40px rgba(0, 0, 0, .35);
   }
-  .main-nav[data-open] a { border-bottom-color: rgba(207, 230, 216, .14); }
-  .main-nav[data-open] a::before { background: repeating-linear-gradient(to top, transparent 0 3px, rgba(207, 230, 216, .05) 3px 4px), rgba(32, 37, 43, .55); }
+  .main-nav[data-open] a { border-bottom-color: rgba(242, 214, 196, .14); }
+  .main-nav[data-open] a::before { background: repeating-linear-gradient(to top, transparent 0 3px, rgba(242, 214, 196, .05) 3px 4px), rgba(32, 37, 43, .55); }
 }
 
 /* ---- Ordinateur : pas de menu déroulant, les liens sont dans la barre du haut.
@@ -792,9 +792,9 @@ body:has(.hero-video) .site-header { transition: background-color .3s ease, bord
     background:
       url("/medias/sous-main-regle-bas.svg") 12px 100% / auto 22px no-repeat,
       url("/medias/sous-main-grille.svg") 12px 12px / 200px 200px,
-      linear-gradient(180deg, #1F4135 0%, #18342B 100%);
-    border-bottom-color: rgba(207, 230, 216, .16);
+      linear-gradient(180deg, #5A3124 0%, #4A281D 100%);
+    border-bottom-color: rgba(242, 214, 196, .16);
   }
-  .site-header .main-nav a { color: #D5E4DA; }
+  .site-header .main-nav a { color: #F1DFD3; }
   .site-header .main-nav a:hover, .site-header .main-nav a[aria-current="page"] { color: #fff; }
 }
