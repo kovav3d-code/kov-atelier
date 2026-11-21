@@ -616,9 +616,20 @@ ul, ol { margin: 0; }
 @media (prefers-reduced-motion: reduce) { .nav-imp-plateau, .nav-imp-led { transition: none; animation: none; } }
 
 /* ---------- Animation : anneau lumineux et carpes koï (boucle) ---------- */
-.koi { position: relative; margin: 28px auto 0; width: min(100%, 640px); aspect-ratio: 1043 / 1544; }
+.koi { position: relative; container-type: inline-size; margin: 20px auto 0; width: min(78vw, 380px); aspect-ratio: 1043 / 1544; }
+/* Page Réalisations : sur écran large, la sculpture se place à côté du titre (moins de hauteur, pas de vide). */
+.page-head--koi .wrap { display: grid; gap: 8px; }
+@media (min-width: 760px) {
+  .page-head--koi { padding-bottom: 0; }
+  .page-head--koi .wrap { grid-template-columns: minmax(0, 1fr) minmax(300px, 400px); align-items: center; gap: clamp(24px, 5vw, 72px); }
+  .page-head--koi .koi { margin: -24px 0 0; width: 100%; }
+}
 .koi-flotte { position: absolute; inset: 0; overflow: hidden; animation: koi-flotte 7s ease-in-out infinite;
-  -webkit-mask: radial-gradient(ellipse 72% 70% at 50% 48%, #000 72%, transparent 100%); mask: radial-gradient(ellipse 72% 70% at 50% 48%, #000 72%, transparent 100%); }
+  /* Bords fondus sur les quatre côtés : aucun contour rectangulaire, quel que soit le rendu des couleurs du navigateur. */
+  -webkit-mask: linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent), linear-gradient(180deg, transparent, #000 7%, #000 93%, transparent);
+  -webkit-mask-composite: source-in;
+  mask: linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent), linear-gradient(180deg, transparent, #000 7%, #000 93%, transparent);
+  mask-composite: intersect; }
 .koi-img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; }
 .koi-eau { position: absolute; inset: 0; filter: url(#koi-ondule);
   -webkit-mask: radial-gradient(ellipse 34% 26% at 52% 38%, #000 55%, transparent 100%); mask: radial-gradient(ellipse 34% 26% at 52% 38%, #000 55%, transparent 100%); }
@@ -632,17 +643,17 @@ ul, ol { margin: 0; }
 @keyframes koi-flotte { 50% { transform: translateY(-6px); } }
 @keyframes koi-pulse { 0%, 100% { opacity: .45; } 50% { opacity: 1; } }
 @keyframes koi-reflet { 0% { transform: translateX(-40%); } 60%, 100% { transform: translateX(40%); } }
-@keyframes koi-poussiere { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: .8; } 100% { transform: translateY(-960px); opacity: 0; } }
+@keyframes koi-poussiere { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: .8; } 100% { transform: translateY(-620px); opacity: 0; } }
 /* Liens intégrés à la sculpture : de la lumière, pas des boutons. Le calque est fondu en « screen » sur la sculpture :
    seule la lueur s'ajoute, comme si la géode et l'ornement s'éclairaient de l'intérieur, au rythme de l'anneau. */
 .koi-liens { position: absolute; inset: 0; animation: koi-flotte 7s ease-in-out infinite; pointer-events: none; mix-blend-mode: screen; }
-.koi-lien { --t: clamp(60px, 16vw, 104px); position: absolute; width: var(--t); aspect-ratio: 1; transform: translate(-50%, -50%);
+.koi-lien { --t: 21cqw; position: absolute; width: var(--t); aspect-ratio: 1; transform: translate(-50%, -50%);
   display: grid; place-items: center; pointer-events: auto; border-radius: 50%; color: #DCE6FF;
   background: radial-gradient(circle, rgba(143, 176, 245, .5) 0%, rgba(40, 100, 220, .32) 32%, rgba(40, 100, 220, .1) 55%, transparent 70%);
   -webkit-tap-highlight-color: transparent; animation: koi-souffle 4.5s ease-in-out infinite;
   transition: transform .4s cubic-bezier(.3, 1.4, .5, 1), filter .4s ease; }
 .koi-lien--geode { left: 51.6%; top: 7.4%; }
-.koi-lien--console { --t: clamp(54px, 13.5vw, 88px); left: 51.4%; top: 65.2%; animation-delay: -2.2s; }
+.koi-lien--console { --t: 17cqw; left: 51.4%; top: 65.2%; animation-delay: -2.2s; }
 .koi-lien:hover, .koi-lien:focus-visible { transform: translate(-50%, -50%) scale(1.12); filter: brightness(1.5) saturate(1.2); }
 .koi-lien:focus-visible { outline: 2px solid rgba(220, 230, 255, .8); outline-offset: 2px; }
 .koi-lien:active { transform: translate(-50%, -50%) scale(.96); }
