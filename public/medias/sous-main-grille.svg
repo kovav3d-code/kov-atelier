@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
   <!-- Sous-main de découpe : carreaux de 1 cm (40 px), ligne forte tous les 5 cm, repères au millimètre -->
-  <g fill="none" stroke="#DCE1E5">
+  <g fill="none" stroke="#DCE8C8">
     <path d="M40 0V200M80 0V200M120 0V200M160 0V200M0 40H200M0 80H200M0 120H200M0 160H200" stroke-opacity=".13" stroke-width="1"/>
     <path d="M0 .5H200M.5 0V200" stroke-opacity=".3" stroke-width="1.4"/>
     <path d="M20 0V200M60 0V200M100 0V200M140 0V200M180 0V200M0 20H200M0 60H200M0 100H200M0 140H200M0 180H200" stroke-opacity=".06" stroke-width="1" stroke-dasharray="2 6"/>
