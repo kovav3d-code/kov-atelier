@@ -5,6 +5,14 @@ import Icon from './Icon.astro';
 import { NAV } from '../config/site';
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 const { masquerCta = false } = Astro.props;
+
+// Menu mobile : chaque lien est une « étiquette » posée sur le sous-main, avec son repère, une note et l'outil qui le représente.
+const ETIQUETTES: Record<string, { note: string; outil: 'pied' | 'buste' | 'engrenage' | 'crayon' }> = {
+  '/services': { note: 'Concevoir · fabriquer', outil: 'pied' },
+  '/realisations': { note: 'Modèles 3D · atelier', outil: 'buste' },
+  '/comment-ca-marche': { note: 'De l’idée à la pièce', outil: 'engrenage' },
+  '/contact': { note: 'Une question ? Écrivez', outil: 'crayon' },
+};
 ---
 <header class="site-header">
   <div class="wrap header-inner">
@@ -13,7 +21,27 @@ const { masquerCta = false } = Astro.props;
     </a>
     <nav class="main-nav" id="menu" aria-label="Navigation principale">
       <ul>
-        {NAV.map((l) => <li><a href={l.href} aria-current={path === l.href ? 'page' : undefined}>{l.label}</a></li>)}
+        {NAV.map((l, i) => {
+          const e = ETIQUETTES[l.href];
+          return (
+            <li><a href={l.href} aria-current={path === l.href ? 'page' : undefined} data-outil={e?.outil}>
+              <span class="nav-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              <span class="nav-texte"><span class="nav-label">{l.label}</span>{e && <span class="nav-note">{e.note}</span>}</span>
+              {e?.outil === 'pied' && (
+                <svg class="nav-outil" viewBox="0 0 40 40" aria-hidden="true"><path d="M4 12h32v6H4z" /><path d="M8 18v14l4-4V18" /><g class="mobile"><path d="M22 10h6v8h-6z" /><path d="M24 18v10l3-3v-7" /></g><path d="M14 15h1M18 15h1M22 15h1M26 15h1M30 15h1" /></svg>
+              )}
+              {e?.outil === 'buste' && (
+                <svg class="nav-outil" viewBox="0 0 40 40" aria-hidden="true"><g class="imprime"><path d="M15 34h10v-3h4c1-4-1-8-5-10 3-2 4-5 4-8 0-6-4-9-8-9s-8 3-8 9c0 3 1 6 4 8-4 2-6 6-5 10h4z" /></g><path d="M8 36h24" /></svg>
+              )}
+              {e?.outil === 'engrenage' && (
+                <svg class="nav-outil" viewBox="0 0 40 40" aria-hidden="true"><g class="tourne"><circle cx="20" cy="20" r="9" /><circle cx="20" cy="20" r="3.5" /><path d="M20 7v4M20 29v4M7 20h4M29 20h4M10.8 10.8l2.8 2.8M26.4 26.4l2.8 2.8M10.8 29.2l2.8-2.8M26.4 13.6l2.8-2.8" /></g></svg>
+              )}
+              {e?.outil === 'crayon' && (
+                <svg class="nav-outil" viewBox="0 0 40 40" aria-hidden="true"><path class="trace" d="M5 34c6-3 12 2 18-1" /><g class="crayon"><path d="M24 30l-6 2 2-6 13-13 4 4z" /><path d="M30 16l4 4" /></g></svg>
+              )}
+            </a></li>
+          );
+        })}
       </ul>
     </nav>
     <div class="header-actions">

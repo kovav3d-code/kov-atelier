@@ -773,11 +773,11 @@ body:has(.hero-video) .site-header { transition: background-color .3s ease, bord
   .site-header:has(.main-nav[data-open]) { background: transparent !important; -webkit-backdrop-filter: none; backdrop-filter: none; }
   .header-inner > .brand, .header-inner > .header-actions { position: relative; z-index: 1; }
   .main-nav[data-open] {
-    top: 0; padding-top: 72px; z-index: 0;
+    top: 0; padding-top: 80px; z-index: 0;
     background:
-      url("/medias/sous-main-regle.svg") 12px 4px / auto 30px no-repeat,
+      url("/medias/sous-main-regle.svg") var(--gutter) 4px / auto 30px no-repeat,
       linear-gradient(45deg, transparent calc(50% - .7px), rgba(242, 214, 196, .16) 50%, transparent calc(50% + .7px)),
-      url("/medias/sous-main-grille.svg") 12px 12px / 200px 200px,
+      url("/medias/sous-main-grille.svg") var(--gutter) 0 / 200px 200px,
       radial-gradient(120% 90% at 30% 0%, #5E3426 0%, #4C291E 55%, #3D2118 100%);
     box-shadow: inset 0 0 0 1px rgba(242, 214, 196, .08), 0 18px 40px rgba(0, 0, 0, .35);
   }
@@ -797,4 +797,43 @@ body:has(.hero-video) .site-header { transition: background-color .3s ease, bord
   }
   .site-header .main-nav a { color: #F1DFD3; }
   .site-header .main-nav a:hover, .site-header .main-nav a[aria-current="page"] { color: #fff; }
+}
+
+/* ---- Polices des étiquettes du menu (licence SIL OFL, fichiers dans /fonts) */
+@font-face { font-family: 'Big Shoulders'; src: url('/fonts/BigShoulders-Bold.woff') format('woff'); font-weight: 700; font-display: swap; }
+@font-face { font-family: 'Geist Mono'; src: url('/fonts/GeistMono-Regular.woff') format('woff'); font-weight: 400; font-display: swap; }
+
+/* ---- Menu mobile : étiquettes alignées sur le quadrillage du sous-main
+   Chaque ligne fait 2 cm (80 px) : les traits du tapis servent de séparateurs.
+   Repère dans une case de 1 cm, libellé en capitales d'atelier, note technique, et un outil qui réagit au survol :
+   le pied à coulisse s'ouvre, le buste s'imprime, l'engrenage tourne, le crayon trace. */
+.nav-num, .nav-note, .nav-outil { display: none; }
+@media (max-width: 960px) {
+  .main-nav[data-open] ul { padding: 0 var(--gutter) 40px; }
+  .main-nav[data-open] a {
+    display: grid; grid-template-columns: 40px 1fr 40px; align-items: center; height: 80px; padding: 0 !important;
+    border-bottom: 0; color: #FBEDE3;
+  }
+  .main-nav[data-open] a::after { left: 0; height: 40px; }
+  .nav-num { display: block; text-align: center; font-family: 'Geist Mono', ui-monospace, monospace; font-size: .78rem; letter-spacing: .04em; color: rgba(242, 214, 196, .6); }
+  .nav-texte { display: flex; flex-direction: column; gap: 6px; padding-left: 14px; }
+  .nav-label { white-space: nowrap; font-family: 'Big Shoulders', 'Manrope', sans-serif; font-weight: 700; font-size: clamp(1.45rem, 6.2vw, 1.95rem); line-height: .9; text-transform: uppercase; letter-spacing: .035em; }
+  .nav-note { display: block; font-family: 'Geist Mono', ui-monospace, monospace; font-size: .7rem; text-transform: uppercase; letter-spacing: .1em; color: rgba(242, 214, 196, .62); }
+  .main-nav a[aria-current="page"] { color: #FBEDE3; }
+  .main-nav a[aria-current="page"] .nav-num, .main-nav a[aria-current="page"] .nav-label { color: var(--bleu-clair); }
+  .nav-outil { display: block; width: 32px; height: 32px; justify-self: center; fill: none; stroke: rgba(242, 214, 196, .75); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; overflow: visible; }
+  .nav-outil .mobile, .nav-outil .tourne, .nav-outil .crayon { transition: transform .35s cubic-bezier(.2, .7, .2, 1); transform-box: fill-box; transform-origin: center; }
+  .nav-outil .imprime { clip-path: inset(0 0 0 0); }
+  .nav-outil .trace { stroke-dasharray: 30; stroke-dashoffset: 30; transition: stroke-dashoffset .4s ease; }
+  .main-nav a:hover .nav-outil, .main-nav a:active .nav-outil { stroke: #FBEDE3; }
+  .main-nav a:hover .mobile { transform: translateX(5px); }
+  .main-nav a:hover .imprime { animation: outil-imprime .6s steps(6, end); }
+  .main-nav a:hover .tourne { transform: rotate(60deg); }
+  .main-nav a:hover .crayon { transform: translate(-3px, 2px) rotate(-6deg); }
+  .main-nav a:hover .trace { stroke-dashoffset: 0; }
+}
+@keyframes outil-imprime { from { clip-path: inset(100% 0 0 0); } to { clip-path: inset(0 0 0 0); } }
+@media (prefers-reduced-motion: reduce) {
+  .nav-outil .mobile, .nav-outil .tourne, .nav-outil .crayon, .nav-outil .trace { transition: none !important; }
+  .main-nav a:hover .imprime { animation: none; }
 }
