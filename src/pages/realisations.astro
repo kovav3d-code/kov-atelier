@@ -21,6 +21,27 @@ import SwitchEclate from '../components/SwitchEclate.astro';
     </div>
   </section>
 
+  <section class="section real-section" id="bustes" aria-labelledby="t-bustes">
+    <div class="wrap bustes-grille">
+      <div class="bustes-texte">
+        <h2 id="t-bustes">Bustes d’après photo</h2>
+        <p>Un buste qui ressemble vraiment à la personne : chaque visage est sculpté à la main dans ZBrush, à partir de vos photos, sans génération automatique. Il est ensuite imprimé en résine et fini à l’atelier.</p>
+        <ul class="bustes-etapes">
+          <li>Vous envoyez une ou plusieurs photos</li>
+          <li>Le visage est sculpté numériquement, vous validez le modèle</li>
+          <li>Le buste est imprimé, fini et expédié</li>
+        </ul>
+        <a class="btn btn-primary" href="/devis?prestation=artistique" data-cta="bustes">Demander un devis pour un buste</a>
+      </div>
+      <figure class="bustes-video">
+        <video id="video-bustes" data-boucle muted loop playsinline preload="metadata" poster="/videos/bustes/buste-d-apres-photo.jpg" aria-label="Vidéo de présentation : un buste sculpté d’après une photo ancienne, puis le sculpteur au travail">
+          <source src="/videos/bustes/buste-d-apres-photo.mp4" type="video/mp4" />
+        </video>
+        <button type="button" class="bustes-son" data-son aria-pressed="false">Activer le son</button>
+      </figure>
+    </div>
+  </section>
+
   <section class="section real-section" id="en-vrai" aria-labelledby="t-vrai">
     <div class="wrap">
       <div class="section-head">
@@ -47,4 +68,16 @@ import SwitchEclate from '../components/SwitchEclate.astro';
   </section>
 
   <CtaFinal titre="Un projet comparable ?" source="realisations-final" />
+  <script is:inline>
+    (function () {
+      var b = document.querySelector('[data-son]'); var v = document.getElementById('video-bustes');
+      if (!b || !v) return;
+      b.addEventListener('click', function () {
+        v.muted = !v.muted;
+        if (!v.muted) { v.currentTime = 0; v.play().catch(function () {}); }
+        b.setAttribute('aria-pressed', String(!v.muted));
+        b.textContent = v.muted ? 'Activer le son' : 'Couper le son';
+      });
+    })();
+  </script>
 </Base>

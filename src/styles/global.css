@@ -1077,3 +1077,16 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
 .page-404 h1 { max-width: 18ch; }
 .page-404 .hero-actions { margin-top: 28px; }
 .liens-404 { list-style: none; padding: 0; margin: 36px 0 0; display: flex; flex-wrap: wrap; gap: 12px 28px; }
+
+/* ---- Réalisations : bustes d'après photo (vidéo verticale) */
+.bustes-grille { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 340px); gap: clamp(28px, 5vw, 72px); align-items: center; }
+.bustes-texte h2 { margin-top: 0; }
+.bustes-texte p { color: var(--text-2); max-width: 56ch; }
+.bustes-etapes { margin: 20px 0 28px; padding: 0; list-style: none; display: grid; gap: 10px; counter-reset: etape; }
+.bustes-etapes li { counter-increment: etape; display: flex; gap: 12px; align-items: baseline; }
+.bustes-etapes li::before { content: "0" counter(etape); font-family: 'Geist Mono', ui-monospace, monospace; font-size: .8rem; color: var(--atelier); }
+.bustes-video { position: relative; margin: 0; }
+.bustes-video video { display: block; width: 100%; aspect-ratio: 720 / 1260; object-fit: cover; border-radius: 16px; border: 1px solid var(--line); background: var(--surface); }
+.bustes-son { position: absolute; right: 12px; bottom: 12px; min-height: 40px; padding: 0 14px; border: 1px solid rgba(247, 248, 246, .35); border-radius: 999px; background: rgba(20, 23, 27, .72); color: var(--text); font: inherit; font-size: .85rem; font-weight: 600; cursor: pointer; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.bustes-son:hover { border-color: var(--bleu-clair); }
+@media (max-width: 800px) { .bustes-grille { grid-template-columns: 1fr; } .bustes-video { max-width: 340px; margin-inline: auto; } }
