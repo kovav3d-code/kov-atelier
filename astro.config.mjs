@@ -8,6 +8,6 @@ const SITE_URL = process.env.SITE_URL || 'https://kov-atelier.com';
 export default defineConfig({
   site: SITE_URL,
   trailingSlash: 'ignore',
-  integrations: [sitemap({ filter: (page) => !page.includes('/admin') })],
+  integrations: [sitemap({ filter: (page) => !page.includes('/admin') && !/\/404\/?$/.test(page) })],
   build: { inlineStylesheets: 'auto' },
 });

@@ -1,0 +1,47 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../config/site';
+// Conditions générales d'utilisation du site (et non conditions de vente : celles-ci accompagnent chaque devis).
+// L'identité de l'exploitant est renvoyée aux mentions légales, à compléter une seule fois là-bas.
+const majour = '22 novembre 2026';
+---
+<Base title="Conditions générales d’utilisation | Kov Atelier" description="Conditions d’utilisation du site kov-atelier.com : accès, demandes de devis, contenus, propriété intellectuelle et responsabilité.">
+  <section class="page-head"><div class="wrap"><h1>Conditions générales d’utilisation</h1><p class="lead">En vigueur au {majour}.</p></div></section>
+  <section class="wrap prose" style="padding-bottom:clamp(64px,8vw,112px)">
+    <h2>1. Objet</h2>
+    <p>Les présentes conditions encadrent l’utilisation du site kov-atelier.com, édité par Kov Atelier (voir les <a href="/mentions-legales">mentions légales</a>). Utiliser le site vaut acceptation de ces conditions.</p>
+
+    <h2>2. Accès au site</h2>
+    <p>Le site est accessible gratuitement, à tout moment, sauf interruption pour maintenance ou en cas de panne. Kov Atelier peut modifier ou retirer tout ou partie de son contenu sans préavis.</p>
+
+    <h2>3. Demandes de devis et de contact</h2>
+    <p>Les formulaires de devis, de rappel et de contact servent à présenter un projet à l’atelier. Envoyer une demande ne vaut ni commande ni engagement, ni pour vous ni pour l’atelier. Toute prestation fait l’objet d’un devis écrit, accompagné de ses propres conditions, que vous acceptez séparément.</p>
+    <p>Les prix affichés sur le site sont indicatifs et « à partir de ». Seul le devis fait foi.</p>
+    <p>Vous vous engagez à transmettre des informations exactes et à n’envoyer que des fichiers, photos et plans que vous avez le droit d’utiliser. Les rendez-vous téléphoniques demandés en ligne sont confirmés par l’atelier.</p>
+
+    <h2>4. Fichiers et photos que vous envoyez</h2>
+    <p>Les fichiers joints à une demande servent uniquement à étudier et réaliser votre projet. Ils ne sont ni publiés ni transmis à des tiers sans votre accord. Leur conservation est décrite dans la <a href="/politique-de-confidentialite">politique de confidentialité</a>.</p>
+
+    <h2>5. Propriété intellectuelle</h2>
+    <p>Les textes, photos, vidéos, modèles 3D et animations du site appartiennent à Kov Atelier ou à leurs titulaires. Les modèles présentés en rotation à 360° ne sont pas téléchargeables. Toute reproduction, extraction ou réutilisation sans autorisation écrite est interdite.</p>
+    <p>Les pièces réalisées pour des clients ne sont montrées qu’avec leur accord.</p>
+
+    <h2>6. Utilisation interdite</h2>
+    <p>Il est interdit d’utiliser le site pour envoyer des messages non sollicités, des contenus illicites ou des fichiers malveillants, ou de tenter d’en perturber le fonctionnement. Les formulaires sont protégés contre les envois automatisés.</p>
+
+    <h2>7. Responsabilité</h2>
+    <p>Kov Atelier veille à l’exactitude des informations publiées, sans pouvoir garantir l’absence d’erreur. Les exemples, délais et prix présentés sont donnés à titre indicatif. L’atelier n’est pas responsable des sites externes vers lesquels pointent certains liens.</p>
+
+    <h2>8. Données personnelles et cookies</h2>
+    <p>Le traitement de vos données est décrit dans la <a href="/politique-de-confidentialite">politique de confidentialité</a>. Le site ne dépose aucun cookie publicitaire ni de mesure d’audience.</p>
+
+    <h2>9. Modification des conditions</h2>
+    <p>Ces conditions peuvent évoluer. La version en vigueur est celle publiée sur cette page, à la date indiquée en haut.</p>
+
+    <h2>10. Droit applicable</h2>
+    <p>Ces conditions sont soumises au droit français. En cas de litige, une solution amiable est recherchée en priorité ; à défaut, les tribunaux compétents sont ceux prévus par la loi.</p>
+
+    <h2>11. Contact</h2>
+    <p>{SITE.email && <a href={`mailto:${SITE.email}`}>{SITE.email}</a>}{SITE.telephone && <>, <a href={`tel:${SITE.telephone.replace(/\s/g, '')}`}>{SITE.telephone}</a></>}.</p>
+  </section>
+</Base>

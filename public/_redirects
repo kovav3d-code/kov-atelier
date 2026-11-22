@@ -1,0 +1,23 @@
+# Adresses courantes ou anciennes redirigées vers les bonnes pages (évite les liens cassés)
+/accueil                     /                                   301
+/index.html                  /                                   301
+/home                        /                                   301
+/realisation                 /realisations                       301
+/portfolio                   /realisations                       301
+/galerie                     /realisations                       301
+/service                     /services                           301
+/prestations                 /services                           301
+/tarifs                      /services                           301
+/prix                        /services                           301
+/devis-gratuit               /devis                              301
+/demande-de-devis            /devis                              301
+/quote                       /devis                              301
+/contactez-nous              /contact                            301
+/nous-contacter              /contact                            301
+/methode                     /comment-ca-marche                  301
+/mentions                    /mentions-legales                   301
+/confidentialite             /politique-de-confidentialite       301
+/politique-confidentialite   /politique-de-confidentialite       301
+/rgpd                        /politique-de-confidentialite       301
+/cgu                         /conditions-generales-utilisation   301
+/conditions-generales        /conditions-generales-utilisation   301
