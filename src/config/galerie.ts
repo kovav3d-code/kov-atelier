@@ -8,9 +8,10 @@ import conteneurGris from '../assets/realisations/conteneur-gris.jpg';
 import conteneurNoir from '../assets/realisations/conteneur-noir.jpg';
 import echecsResine from '../assets/realisations/echecs-resine.jpg';
 import echecsPlateau from '../assets/realisations/echecs-plateau.jpg';
-import figurineFace from '../assets/realisations/figurine-resine-face.jpg';
-import figurineDetail from '../assets/realisations/figurine-resine-detail.jpg';
-import figurineDos from '../assets/realisations/figurine-resine-dos.jpg';
+import goldenReaper1 from '../assets/realisations/golden-reaper-1.jpg';
+import goldenReaper2 from '../assets/realisations/golden-reaper-2.jpg';
+import goldenReaper3 from '../assets/realisations/golden-reaper-3.jpg';
+import goldenReaper4 from '../assets/realisations/golden-reaper-4.jpg';
 import masqueAtelier from '../assets/realisations/masque-atelier.jpg';
 import piecesResine from '../assets/realisations/pieces-resine.jpg';
 import piecesResineMain from '../assets/realisations/pieces-resine-main.jpg';
@@ -83,13 +84,15 @@ export const ATELIER: MediaAtelier[] = [
   { type: 'photo', src: potsOursin, alt: 'Deux pots en forme d’oursin imprimés en résine, l’un peint en bleu patiné avec une plante, l’autre brut tenu en main', legende: 'Pots oursins, brut et peint' },
   { type: 'video', mp4: '/videos/atelier/masque-imprime.mp4', poster: '/videos/atelier/masque-imprime.jpg', alt: 'Vidéo d’un masque imprimé en résine noire brillante, tenu en main et tourné pour montrer ses reliefs', legende: 'Masque imprimé, finition noir brillant' },
   { type: 'photo', src: sculptureAjouree, alt: 'Sculpture organique ajourée imprimée en résine grise, surfaces texturées et épines', legende: 'Sculpture organique ajourée, résine' },
-  { type: 'photo', src: figurineFace, alt: 'Figurine Golden Reaper imprimée en résine translucide, vue de face sur son socle', legende: 'Golden Reaper, résine translucide' },
+  { type: 'photo', src: goldenReaper1, alt: 'Figurine ailée en résine translucide dans l’imprimante, sous le capot orange', legende: 'Golden Reaper : dans l’imprimante' },
+  { type: 'photo', src: goldenReaper2, alt: 'Figurine ailée en résine translucide posée sur l’imprimante, à la lumière d’une fenêtre', legende: 'Golden Reaper, résine translucide' },
+  { type: 'photo', src: goldenReaper3, alt: 'Gros plan sur le visage, l’armure et les ailes de la figurine en résine translucide', legende: 'Golden Reaper : détail du visage et de l’armure' },
+  { type: 'photo', src: goldenReaper4, alt: 'Figurine en résine translucide sur son socle, éclairée par le bas', legende: 'Golden Reaper sur son socle' },
   { type: 'photo', src: echecsResine, alt: 'Pièces d’échecs imprimées en résine grise, détails des armures et des socles, sur un échiquier en verre', legende: 'Jeu d’échecs en résine' },
   { type: 'photo', src: adaptateur, alt: 'Crosse noire montée sur un adaptateur pliant imprimé en 3D, avec bouton de verrouillage strié et platine à deux trous', legende: 'Adaptateur de crosse pliante' },
   { type: 'photo', src: masqueAtelier, alt: 'Poste de travail de l’atelier, un masque en cours de sculpture sur tablette graphique, logiciel 3D sur un second écran', legende: 'À l’atelier : sculpture d’un masque' },
   { type: 'photo', src: piecesResineMain, alt: 'Pièce organique imprimée en résine tenue en main, détail des écailles et des pointes', legende: 'Pièce organique, détail des écailles' },
   { type: 'photo', src: trophee, alt: 'Trophée noir aux lignes d’immeubles stylisées, socle gravé au nom de l’agence', legende: 'Trophée sur mesure pour une agence' },
-  { type: 'photo', src: figurineDetail, alt: 'Détail d’une impression en résine translucide, visage, ailes et attaches', legende: 'Détail d’impression résine' },
   { type: 'photo', src: conteneurGris, alt: 'Maquette de conteneur aménagé avec enseigne, version brute', legende: 'Maquette de conteneur, version brute' },
   { type: 'photo', src: conteneurNoir, alt: 'La même maquette de conteneur en version noire, enseigne en relief', legende: 'Maquette de conteneur, version finie' },
   { type: 'photo', src: supportPc, alt: 'Boîtier noir ouvert installé sous un support d’écran, avec deux ventilateurs, câbles et ordinateur intégrés, gravure « KODY »', legende: 'Support d’écran pour platine : l’ordinateur et la ventilation intégrés' },
@@ -101,7 +104,6 @@ export const ATELIER: MediaAtelier[] = [
   { type: 'photo', src: aladdins, alt: 'Présentoir à montres personnalisé surmonté d’une figurine, plaque gravée', legende: 'Présentoir à montres personnalisé' },
   { type: 'photo', src: echecsPlateau, alt: 'Jeu d’échecs complet en résine grise disposé sur un plateau en verre', legende: 'L’échiquier complet' },
   { type: 'photo', src: piecesResine, alt: 'Trois queues à écailles et pointes et un socle à gueule ouverte, imprimés en résine grise', legende: 'Pièces organiques en résine' },
-  { type: 'photo', src: figurineDos, alt: 'Golden Reaper en résine translucide vu de dos, ailes déployées', legende: 'Golden Reaper, vue de dos' },
   { type: 'photo', src: plaquesQr, alt: 'Deux plaques imprimées avec QR code en relief', legende: 'Plaques QR code en relief' },
   { type: 'video', mp4: '/videos/atelier/masque-sculpture-zbrush.mp4', poster: '/videos/atelier/masque-sculpture-zbrush.jpg', alt: 'Vidéo du masque en cours de sculpture dans ZBrush, ajusté sur le scan 3D d’un visage', legende: 'Le même masque, sculpté sur un scan de visage' },
   { type: 'photo', src: mosqueeBrunei, alt: 'Maquette imprimée de la mosquée Omar Ali Saifuddien, coupole dorée et barque royale', legende: 'Maquette de la mosquée Omar Ali Saifuddien' },
@@ -116,7 +118,7 @@ export const GROUPES_ATELIER: { titre: string; legendes: string[] }[] = [
   { titre: 'Pignon d’aspirateur robot', legendes: ['Pignon d’aspirateur robot : l’original usé, la pièce refaite'] },
   { titre: 'Buste portrait', legendes: ['Buste portrait, finition noir brillant', 'Buste portrait, vue de trois quarts'] },
   { titre: 'Masque sur mesure', legendes: ['Masque imprimé, finition noir brillant', 'À l’atelier : sculpture d’un masque', 'Le même masque, sculpté sur un scan de visage'] },
-  { titre: 'Golden Reaper', legendes: ['Golden Reaper, résine translucide', 'Golden Reaper, vue de dos', 'Détail d’impression résine'] },
+  { titre: 'Golden Reaper', legendes: ['Golden Reaper, résine translucide', 'Golden Reaper : dans l’imprimante', 'Golden Reaper : détail du visage et de l’armure', 'Golden Reaper sur son socle'] },
   { titre: 'Maquettes de mosquées', legendes: ['Maquette de la mosquée Hassan II', 'Maquette de la mosquée Omar Ali Saifuddien'] },
   { titre: 'Pots oursins', legendes: ['Pots oursins, brut et peint', 'Pots oursins suspendus, en situation'] },
   { titre: 'Jeu d’échecs', legendes: ['Jeu d’échecs en résine', 'L’échiquier complet'] },
