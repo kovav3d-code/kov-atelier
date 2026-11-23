@@ -1163,3 +1163,56 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
 /* -- Formes : pilules pour les choix seulement, 8 px pour les boutons et liens */
 .btn { border-radius: 8px; }
 .qualif-passer, .real-nav a, .sommaire a, .bustes-son { border-radius: 8px; }
+
+/* ---- Réalisations « En vrai » : chaque projet est une pile de tirages posée sur le sous-main.
+   Survol (ordinateur) ou passage au milieu de l'écran (téléphone) : la pile s'ouvre en éventail.
+   Clic ou toucher : visionneuse plein écran. */
+#en-vrai { position: relative; }
+#en-vrai::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: .35;
+  background: url("/medias/sous-main-grille.svg") var(--gutter) 0 / 200px 200px; -webkit-mask: linear-gradient(transparent, #000 12%, #000 88%, transparent); mask: linear-gradient(transparent, #000 12%, #000 88%, transparent); }
+.piles-aide { margin: -8px 0 28px; color: var(--text-2); font-size: .9rem; }
+@media (hover: none) { .piles-aide { display: none; } }
+.piles { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); gap: 56px 40px; }
+.pile { display: grid; gap: 18px; justify-items: center; }
+.pile-btn { position: relative; display: block; width: min(100%, 290px); padding: 0; border: 0; background: none; cursor: zoom-in; -webkit-tap-highlight-color: transparent; }
+.pile-btn:focus-visible { outline: 3px solid var(--bleu-clair); outline-offset: 10px; border-radius: 6px; }
+.pile-cartes { position: relative; display: block; aspect-ratio: 4 / 5; }
+.carte { position: absolute; inset: 0; padding: 8px 8px 30px; background: #EDE6DA; border-radius: 2px; box-shadow: 0 6px 14px rgba(0, 0, 0, .35);
+  transform: rotate(calc(var(--r) * (1 - var(--k) * 2.2))) translate(calc(var(--k) * 5px), calc(var(--k) * 4px));
+  z-index: calc(3 - var(--k)); transition: transform .45s cubic-bezier(.2, .8, .2, 1), box-shadow .45s ease; }
+.carte img { display: block; width: 100%; height: 100%; object-fit: cover; background: #2A3037; }
+/* Ruban adhésif sur le tirage du dessus */
+.carte[style*="--k:0"]::after { content: ""; position: absolute; top: -9px; left: 50%; width: 70px; height: 20px; margin-left: -35px; transform: rotate(-4deg);
+  background: rgba(217, 195, 160, .55); box-shadow: 0 1px 2px rgba(0, 0, 0, .15); }
+.carte-lecture { position: absolute; left: 50%; top: calc(50% - 11px); width: 44px; height: 44px; margin: -22px 0 0 -22px; display: grid; place-items: center; border-radius: 50%; background: rgba(20, 23, 27, .72); color: #F7F8F6; font-size: 15px; padding-left: 3px; }
+/* Éventail */
+.pile-btn:hover .carte, .pile-btn:focus-visible .carte, .pile.en-vue .carte { box-shadow: 0 14px 28px rgba(0, 0, 0, .45); }
+.pile-btn:hover .carte[style*="--k:0"], .pile-btn:focus-visible .carte[style*="--k:0"], .pile.en-vue .carte[style*="--k:0"] { transform: translateY(-8px) scale(1.04) rotate(0deg); }
+.pile-btn:hover .carte[style*="--k:1"], .pile-btn:focus-visible .carte[style*="--k:1"], .pile.en-vue .carte[style*="--k:1"] { transform: translate(30%, 4px) rotate(9deg); }
+.pile-btn:hover .carte[style*="--k:2"], .pile-btn:focus-visible .carte[style*="--k:2"], .pile.en-vue .carte[style*="--k:2"] { transform: translate(-30%, 6px) rotate(-9deg); }
+.pile[data-n="2"] .pile-btn:hover .carte[style*="--k:1"], .pile[data-n="2"].en-vue .carte[style*="--k:1"] { transform: translate(24%, 2px) rotate(7deg); }
+.pile-titre { margin: 0; display: grid; gap: 2px; text-align: center; font-weight: 600; }
+.pile-titre span { font-family: 'Geist Mono', ui-monospace, monospace; font-size: .8rem; font-weight: 400; color: var(--atelier); }
+@media (max-width: 719px) { .piles { gap: 64px; } .pile-btn { width: min(78vw, 300px); } }
+
+/* Visionneuse */
+.visionneuse { width: min(100vw - 24px, 1100px); max-width: none; max-height: calc(100dvh - 24px); padding: 0; border: 1px solid var(--line-strong); border-radius: 12px; background: var(--surface-2); color: var(--text); overflow: hidden; }
+.visionneuse::backdrop { background: rgba(10, 12, 15, .82); }
+.visionneuse[open] { display: grid; grid-template-rows: auto minmax(0, 1fr) auto auto; animation: v-ouvre .25s cubic-bezier(.2, .8, .2, 1); }
+@keyframes v-ouvre { from { opacity: 0; transform: translateY(12px) scale(.98); } }
+.v-tete { display: flex; align-items: center; gap: 16px; padding: 12px 12px 12px 20px; border-bottom: 1px solid var(--line); }
+.v-titre { margin: 0; font-weight: 700; }
+.v-compte { margin: 0 auto 0 0; font-family: 'Geist Mono', ui-monospace, monospace; font-size: .85rem; color: var(--atelier); }
+.v-fermer, .v-nav { min-width: 44px; min-height: 44px; border: 1px solid var(--line-strong); border-radius: 8px; background: var(--surface); color: var(--text); font-size: 1.5rem; line-height: 1; cursor: pointer; }
+.v-fermer:hover, .v-nav:hover { border-color: var(--bleu-clair); }
+.v-scene { position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 16px 12px; min-height: 0; }
+.v-media { margin: 0; display: grid; place-items: center; min-height: 0; height: min(56dvh, 680px); touch-action: pan-y; }
+.v-media img, .v-media video { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 4px; user-select: none; -webkit-user-drag: none; }
+.v-legende { margin: 0; padding: 0 20px 12px; color: var(--text-2); text-align: center; }
+.v-vignettes { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; padding: 0 12px 16px; }
+.v-vignette { width: 56px; height: 56px; padding: 0; border: 2px solid transparent; border-radius: 6px; overflow: hidden; background: none; cursor: pointer; opacity: .55; }
+.v-vignette img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.v-vignette[aria-current="true"] { border-color: var(--atelier); opacity: 1; }
+.v-seule .v-nav, .v-seule .v-vignettes { visibility: hidden; }
+@media (max-width: 600px) { .v-scene { grid-template-columns: minmax(0, 1fr); } .v-nav { display: none; } .v-media { height: 54dvh; } }
+@media (prefers-reduced-motion: reduce) { .carte { transition: none; } .visionneuse[open] { animation: none; } }

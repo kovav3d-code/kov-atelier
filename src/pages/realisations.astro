@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import CtaFinal from '../components/CtaFinal.astro';
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
 import { ATELIER, GROUPES_ATELIER } from '../config/galerie';
 // Mobile : médias regroupés par projet ; tout média oublié dans un groupe part dans « Autres réalisations ».
 const parLegende = new Map(ATELIER.map((m) => [m.legende, m]));
@@ -10,6 +10,14 @@ const groupes = [
   ...GROUPES_ATELIER.map((g) => ({ titre: g.titre, medias: g.legendes.map((l) => parLegende.get(l)).filter((m) => m !== undefined) })),
   { titre: 'Autres réalisations', medias: ATELIER.filter((m) => !ranges.has(m.legende)) },
 ].filter((g) => g.medias.length);
+// Visionneuse : chaque projet devient une pile de tirages ; les médias en grand format sont préparés au build.
+const piles = await Promise.all(groupes.map(async (g) => ({
+  titre: g.titre,
+  medias: await Promise.all(g.medias.map(async (m) => m.type === 'photo'
+    ? { type: 'photo', src: (await getImage({ src: m.src, width: 1600, format: 'webp' })).src, alt: m.alt, legende: m.legende }
+    : { type: 'video', src: m.mp4, poster: m.poster, alt: m.alt, legende: m.legende })),
+})));
+const INCLINAISONS = [-3, 2.5, -1.5, 3.5, -2.5, 1.5, -3.5, 2];
 import Modeles3D from '../components/Modeles3D.astro';
 import SwitchEclate from '../components/SwitchEclate.astro';
 ---
@@ -55,78 +63,94 @@ import SwitchEclate from '../components/SwitchEclate.astro';
         <h2 id="t-vrai">En vrai, à l’atelier</h2>
         <p>Les pièces imprimées, finies et montées : résine, filament, finitions, et quelques coulisses de fabrication.</p>
       </div>
-      <ul class="atelier-mur">
-        {ATELIER.map((m, i) => (
-          <li class="atelier-item">
-            <figure>
-              {m.type === 'photo' ? (
-                <Image src={m.src} alt={m.alt} widths={[400, 700, 1000]} sizes="(max-width: 600px) 100vw, (max-width: 960px) 50vw, 380px" loading={i < 3 ? 'eager' : 'lazy'} />
-              ) : (
-                <video data-boucle muted loop playsinline preload="metadata" poster={m.poster} aria-label={m.alt}>
-                  <source src={m.mp4} type="video/mp4" />
-                </video>
-              )}
-              <figcaption>{m.legende}</figcaption>
-            </figure>
+      <p class="piles-aide">Survolez une pile pour l’ouvrir, cliquez pour voir les photos en grand.</p>
+      <ul class="piles">
+        {groupes.map((g, gi) => (
+          <li class="pile" style={`--r:${INCLINAISONS[gi % INCLINAISONS.length]}deg`} data-n={g.medias.length}>
+            <button type="button" class="pile-btn" data-pile={gi} aria-label={`${g.titre} : voir ${g.medias.length > 1 ? `les ${g.medias.length} photos` : 'la photo'} en grand`}>
+              <span class="pile-cartes" aria-hidden="true">
+                {g.medias.slice(0, 3).map((m, k) => (
+                  <span class="carte" style={`--k:${k}`}>
+                    {m.type === 'photo'
+                      ? <Image src={m.src} alt="" widths={[360, 560]} sizes="(max-width: 600px) 80vw, 300px" loading="lazy" />
+                      : <img src={m.poster} alt="" loading="lazy" decoding="async" />}
+                    {m.type === 'video' && <span class="carte-lecture">▶</span>}
+                  </span>
+                ))}
+              </span>
+            </button>
+            <p class="pile-titre">{g.titre}<span>{g.medias.length > 1 ? `${g.medias.length} photos` : '1 photo'}</span></p>
           </li>
         ))}
       </ul>
 
-      <!-- Mobile : un groupe par projet ; en descendant, les photos du groupe défilent de côté -->
-      <div class="atelier-groupes">
-        {groupes.map((g) => (
-          <section class="groupe" style={`--n:${g.medias.length}`} data-groupe={g.medias.length > 1 ? '' : undefined} aria-label={g.titre}>
-            <div class="groupe-collant">
-              <h3 class="groupe-titre">{g.titre}{g.medias.length > 1 && <span class="groupe-compte" aria-hidden="true"><span class="groupe-n">1</span> / {g.medias.length}</span>}</h3>
-              <ul class="groupe-piste">
-                {g.medias.map((m) => (
-                  <li class="groupe-item">
-                    <figure>
-                      {m.type === 'photo' ? (
-                        <Image src={m.src} alt={m.alt} widths={[400, 700]} sizes="84vw" loading="lazy" />
-                      ) : (
-                        <video data-boucle muted loop playsinline preload="none" poster={m.poster} aria-label={m.alt}>
-                          <source src={m.mp4} type="video/mp4" />
-                        </video>
-                      )}
-                      <figcaption>{m.legende}</figcaption>
-                    </figure>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </section>
-        ))}
-      </div>
+      <dialog class="visionneuse" id="visionneuse" aria-labelledby="v-titre">
+        <div class="v-tete">
+          <p class="v-titre" id="v-titre"></p>
+          <p class="v-compte" aria-live="polite"></p>
+          <button type="button" class="v-fermer" data-v="fermer" aria-label="Fermer">×</button>
+        </div>
+        <div class="v-scene">
+          <button type="button" class="v-nav v-prec" data-v="prec" aria-label="Photo précédente">‹</button>
+          <figure class="v-media"></figure>
+          <button type="button" class="v-nav v-suiv" data-v="suiv" aria-label="Photo suivante">›</button>
+        </div>
+        <p class="v-legende"></p>
+        <div class="v-vignettes"></div>
+      </dialog>
+      <script type="application/json" id="piles-donnees" set:html={JSON.stringify(piles)} />
     </div>
   </section>
 
   <CtaFinal titre="Un projet comparable ?" source="realisations-final" />
   <script is:inline>
-    // Mobile : les photos de chaque groupe défilent seules toutes les 3 secondes quand le groupe est visible.
-    // Un glissement du doigt met le défilement en pause quelques secondes.
+    // Piles de tirages : sur téléphone, la pile qui passe au milieu de l'écran s'ouvre en éventail.
+    // Au clic ou au toucher : visionneuse plein écran, flèches, clavier, glissement du doigt, vignettes.
     (function () {
-      var mq = window.matchMedia('(max-width: 719px)');
-      var reduit = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      [].slice.call(document.querySelectorAll('.groupe[data-groupe]')).forEach(function (g) {
-        var piste = g.querySelector('.groupe-piste');
-        var items = piste.querySelectorAll('.groupe-item');
-        var n = g.querySelector('.groupe-n');
-        var visible = false, pause = 0;
-        function index() {
-          var pas = items.length > 1 ? items[1].offsetLeft - items[0].offsetLeft : 1;
-          return Math.min(items.length - 1, Math.max(0, Math.round(piste.scrollLeft / pas)));
-        }
-        piste.addEventListener('scroll', function () { if (n) n.textContent = String(index() + 1); }, { passive: true });
-        ['touchstart', 'pointerdown', 'wheel'].forEach(function (ev) { piste.addEventListener(ev, function () { pause = Date.now() + 6000; }, { passive: true }); });
-        new IntersectionObserver(function (es) { visible = es[0].isIntersecting; }, { threshold: 0.5 }).observe(piste);
-        if (reduit) return;
-        setInterval(function () {
-          if (!mq.matches || !visible || Date.now() < pause || document.hidden) return;
-          var suivant = (index() + 1) % items.length;
-          piste.scrollTo({ left: items[suivant].offsetLeft - items[0].offsetLeft, behavior: 'smooth' });
-        }, 3000);
+      var donnees = JSON.parse((document.getElementById('piles-donnees') || {}).textContent || '[]');
+      var dlg = document.getElementById('visionneuse');
+      if (!dlg || !donnees.length) return;
+      var mq = window.matchMedia('(hover: none)');
+      if ('IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function (es) {
+          es.forEach(function (e) { e.target.classList.toggle('en-vue', mq.matches && e.isIntersecting); });
+        }, { rootMargin: '-38% 0px -38% 0px' });
+        document.querySelectorAll('.pile').forEach(function (p) { io.observe(p); });
+      }
+      var media = dlg.querySelector('.v-media'), legende = dlg.querySelector('.v-legende'), titre = dlg.querySelector('.v-titre'),
+          compte = dlg.querySelector('.v-compte'), vignettes = dlg.querySelector('.v-vignettes'), pile = 0, i = 0;
+      function montrer(k) {
+        var liste = donnees[pile].medias; i = (k + liste.length) % liste.length; var m = liste[i];
+        media.replaceChildren();
+        var el;
+        if (m.type === 'photo') { el = new Image(); el.src = m.src; el.alt = m.alt; el.decoding = 'async'; }
+        else { el = document.createElement('video'); el.src = m.src; el.poster = m.poster; el.muted = true; el.loop = true; el.playsInline = true; el.controls = true; el.autoplay = true; el.setAttribute('aria-label', m.alt); }
+        media.appendChild(el);
+        legende.textContent = m.legende;
+        compte.textContent = liste.length > 1 ? (i + 1) + ' / ' + liste.length : '';
+        dlg.classList.toggle('v-seule', liste.length < 2);
+        vignettes.querySelectorAll('button').forEach(function (b, k2) { b.setAttribute('aria-current', String(k2 === i)); });
+      }
+      function ouvrir(p) {
+        pile = p; titre.textContent = donnees[p].titre;
+        vignettes.replaceChildren.apply(vignettes, donnees[p].medias.map(function (m, k) {
+          var b = document.createElement('button'); b.type = 'button'; b.className = 'v-vignette'; b.setAttribute('aria-label', 'Photo ' + (k + 1));
+          var im = new Image(); im.src = m.type === 'photo' ? m.src : m.poster; im.alt = ''; im.loading = 'lazy'; b.appendChild(im);
+          b.addEventListener('click', function () { montrer(k); }); return b;
+        }));
+        montrer(0); dlg.showModal();
+      }
+      document.querySelectorAll('[data-pile]').forEach(function (b) { b.addEventListener('click', function () { ouvrir(+b.dataset.pile); }); });
+      dlg.addEventListener('click', function (e) {
+        var a = e.target.closest && e.target.closest('[data-v]');
+        if (a) { var v = a.dataset.v; if (v === 'fermer') dlg.close(); else montrer(i + (v === 'suiv' ? 1 : -1)); return; }
+        if (e.target === dlg) dlg.close();
       });
+      dlg.addEventListener('keydown', function (e) { if (e.key === 'ArrowRight') montrer(i + 1); if (e.key === 'ArrowLeft') montrer(i - 1); });
+      dlg.addEventListener('close', function () { media.replaceChildren(); });
+      var x0 = null;
+      media.addEventListener('pointerdown', function (e) { x0 = e.clientX; });
+      media.addEventListener('pointerup', function (e) { if (x0 === null) return; var dx = e.clientX - x0; x0 = null; if (Math.abs(dx) > 45) montrer(i + (dx < 0 ? 1 : -1)); });
     })();
     (function () {
       var b = document.querySelector('[data-son]'); var v = document.getElementById('video-bustes');
