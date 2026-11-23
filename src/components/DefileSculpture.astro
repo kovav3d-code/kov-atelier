@@ -30,6 +30,10 @@ const ETAPES = [
           </div>
         ))}
       </div>
+      <div class="sdf-indice" aria-hidden="true">
+        <span>Faites défiler</span>
+        <svg viewBox="0 0 24 24"><path d="M6 8l6 6 6-6" /><path d="M6 13l6 6 6-6" /></svg>
+      </div>
       <div class="sdf-barre" aria-hidden="true"><span></span></div>
     </div>
   </section>
@@ -62,6 +66,7 @@ const ETAPES = [
       if (i !== dernier || force) { var im = proche(i); if (im) { cx.drawImage(im, 0, 0, cv.width, cv.height); dernier = imgs[i] ? i : -1; } }
       etapes.forEach(function (e) { var de = +e.dataset.de, a = +e.dataset.a; var v = p >= de && p < a; e.classList.toggle('visible', v); });
       barre.style.transform = 'scaleX(' + p.toFixed(4) + ')';
+      s.classList.toggle('sdf-fin', p > 0.84);
     }
     var attente = false;
     addEventListener('scroll', function () { if (attente) return; attente = true; requestAnimationFrame(function () { attente = false; dessiner(false); }); }, { passive: true });

@@ -1313,3 +1313,14 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
   .sw-touche, .sw-boitier, .sw-base, .sw-piece img, .sw > h1, .sw > .lead, .sw-lien, .sw-fil { animation: none; }
 }
 
+
+/* Indice de défilement : deux chevrons qui descendent doucement, masqués à la dernière étape */
+.sdf-indice { position: absolute; left: 50%; bottom: 22px; z-index: 2; display: grid; justify-items: center; gap: 4px; transform: translateX(-50%);
+  color: rgba(247, 248, 246, .7); font-family: 'Geist Mono', ui-monospace, monospace; font-size: .75rem; pointer-events: none; transition: opacity .4s ease; }
+.sdf-indice svg { width: 22px; height: 22px; fill: none; stroke: var(--atelier); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; animation: sdf-chevrons 1.8s ease-in-out infinite; }
+.sdf-indice path:first-child { opacity: .45; }
+@keyframes sdf-chevrons { 0%, 100% { transform: translateY(-3px); opacity: .5; } 50% { transform: translateY(4px); opacity: 1; } }
+.sdf-fin .sdf-indice { opacity: 0; }
+@media (max-width: 799px) { .sdf-indice { left: auto; right: 16px; bottom: auto; top: 18px; transform: none; } }
+.sdf-reduit .sdf-indice { display: none; }
+@media (prefers-reduced-motion: reduce) { .sdf-indice svg { animation: none; } }
