@@ -25,6 +25,9 @@ import sculptureAjouree from '../assets/realisations/sculpture-organique-ajouree
 import dioramaOrganique from '../assets/realisations/diorama-organique.jpg';
 import plaqueRelief from '../assets/realisations/plaque-relief-resine.jpg';
 import chatArticule from '../assets/realisations/chat-articule.jpg';
+import supportPc from '../assets/realisations/support-ecran-pc-integre.jpg';
+import supportBoitier from '../assets/realisations/support-ecran-boitier.jpg';
+import supportDessus from '../assets/realisations/support-ecran-dessus.jpg';
 import cambridgeAvant from '../assets/realisations/maquette-cambridge-avant.jpg';
 import cambridgeArriere from '../assets/realisations/maquette-cambridge-arriere.jpg';
 
@@ -48,7 +51,7 @@ export const MODELES: Modele3D[] = [
   { id: 'buste-portrait', titre: 'Buste portrait', legende: 'Sculpture numérique, impression résine', categorie: 'Sculptures et figurines', alt: 'Rotation à 360° d’un buste d’homme sculpté en 3D, barbe courte et chemise à col', video: { mp4: '/videos/modeles/buste-portrait-360.mp4', poster: '/videos/modeles/buste-portrait-360.jpg' } },
   { id: 'contenant-filete', titre: 'Contenant fileté à anse', legende: 'Assemblage de cinq pièces : corps, socle à robinet, bouchon, anse et molette', categorie: 'Pièces techniques', alt: 'Rotation à 360° d’un contenant cylindrique avec bouchon à anse et molette latérale', video: { mp4: '/videos/modeles/contenant-filete-360.mp4', poster: '/videos/modeles/contenant-filete-360.jpg' } },
   { id: 'pignon-aspirateur', titre: 'Pignon de remplacement pour aspirateur robot', legende: 'Pièce introuvable remodélisée', categorie: 'Pièces techniques', alt: 'Rotation à 360° d’un pignon denté avec moyeu central', video: { mp4: '/videos/modeles/pignon-aspirateur-360.mp4', poster: '/videos/modeles/pignon-aspirateur-360.jpg' } },
-  { id: 'boitier-ecran', titre: 'Boîtier support d’écran', legende: 'Conception sur mesure, découpes et fixations', categorie: 'Pièces techniques', alt: 'Rotation à 360° d’un boîtier rectangulaire ouvert avec découpes latérales', video: { mp4: '/videos/modeles/boitier-ecran-360.mp4', poster: '/videos/modeles/boitier-ecran-360.jpg' } },
+  { id: 'boitier-ecran', titre: 'Support d’écran pour platine, PC intégré', legende: 'Boîtier sur mesure : ventilation, passages de câbles, gravure personnalisée', categorie: 'Pièces techniques', alt: 'Rotation à 360° du boîtier support d’écran : caisson rectangulaire ouvert avec découpes pour ventilateurs et connectique', video: { mp4: '/videos/modeles/boitier-ecran-360.mp4', poster: '/videos/modeles/boitier-ecran-360.jpg' } },
   { id: 'piece-arbalete', titre: 'Pièce d’arbalète', legende: 'Conception sur mesure, version 3', categorie: 'Pièces techniques', alt: 'Rotation à 360° d’une pièce de carénage d’arbalète, coque à pans coupés avec ses points de fixation', video: { mp4: '/videos/modeles/piece-arbalete-360.mp4', poster: '/videos/modeles/piece-arbalete-360.jpg' } },
   { id: 'angle-fenetre', titre: 'Angle de fenêtre', legende: 'Pièce de remplacement', categorie: 'Pièces techniques', alt: 'Rotation à 360° d’une pièce d’angle de fenêtre', video: { mp4: '/videos/modeles/angle-fenetre-360.mp4', poster: '/videos/modeles/angle-fenetre-360.jpg' } },
   { id: 'engrenage-double', titre: 'Engrenage double de remplacement', legende: 'Pignon et couronne d’une seule pièce, version 2', categorie: 'Pièces techniques', alt: 'Rotation à 360° d’un engrenage double : une grande couronne dentée surmontée d’un petit pignon', video: { mp4: '/videos/modeles/engrenage-double-360.mp4', poster: '/videos/modeles/engrenage-double-360.jpg' } },
@@ -86,6 +89,9 @@ export const ATELIER: MediaAtelier[] = [
   { type: 'photo', src: figurineDetail, alt: 'Détail d’une impression en résine translucide, visage, ailes et attaches', legende: 'Détail d’impression résine' },
   { type: 'photo', src: conteneurGris, alt: 'Maquette de conteneur aménagé avec enseigne, version brute', legende: 'Maquette de conteneur, version brute' },
   { type: 'photo', src: conteneurNoir, alt: 'La même maquette de conteneur en version noire, enseigne en relief', legende: 'Maquette de conteneur, version finie' },
+  { type: 'photo', src: supportPc, alt: 'Boîtier noir ouvert installé sous un support d’écran, avec deux ventilateurs, câbles et ordinateur intégrés, gravure « KODY »', legende: 'Support d’écran pour platine : l’ordinateur et la ventilation intégrés' },
+  { type: 'photo', src: supportBoitier, alt: 'Boîtier noir imprimé, vide, avec ses découpes pour la connectique et ses aimants aux angles', legende: 'Le boîtier imprimé, avant montage' },
+  { type: 'photo', src: supportDessus, alt: 'Boîtier vu de dessus avec deux découpes pour ventilateurs, ergots de fixation et nom gravé', legende: 'Vue de dessus : découpes de ventilation et nom gravé' },
   { type: 'photo', src: cambridgeAvant, alt: 'Maquette imprimée de la résidence Cambridge, façade avant, devant une photo du bâtiment réel affichée à l’écran', legende: 'Résidence Cambridge : la maquette face au bâtiment, côté entrée' },
   { type: 'photo', src: cambridgeArriere, alt: 'Maquette imprimée de la résidence Cambridge, façade arrière avec balcons et accès au parking, devant une photo du bâtiment réel', legende: 'Résidence Cambridge : façade arrière et accès au parking' },
   { type: 'photo', src: busteStudio, alt: 'Buste imprimé en 3D d’un homme barbu, finition noir brillant, vu de trois quarts sur fond clair', legende: 'Buste portrait, vue de trois quarts' },
@@ -112,6 +118,7 @@ export const GROUPES_ATELIER: { titre: string; legendes: string[] }[] = [
   { titre: 'Pots oursins', legendes: ['Pots oursins, brut et peint', 'Pots oursins suspendus, en situation'] },
   { titre: 'Jeu d’échecs', legendes: ['Jeu d’échecs en résine', 'L’échiquier complet'] },
   { titre: 'Sculptures organiques', legendes: ['Sculpture organique ajourée, résine', 'Pièce organique, détail des écailles', 'Pièces organiques en résine', 'Socle de diorama organique', 'Plaque sculptée en relief, résine'] },
+  { titre: 'Support d’écran pour platine', legendes: ['Support d’écran pour platine : l’ordinateur et la ventilation intégrés', 'Le boîtier imprimé, avant montage', 'Vue de dessus : découpes de ventilation et nom gravé'] },
   { titre: 'Maquette de la résidence Cambridge', legendes: ['Résidence Cambridge : la maquette face au bâtiment, côté entrée', 'Résidence Cambridge : façade arrière et accès au parking'] },
   { titre: 'Maquette de conteneur', legendes: ['Maquette de conteneur, version brute', 'Maquette de conteneur, version finie'] },
   { titre: 'Objets personnalisés', legendes: ['Trophée sur mesure pour une agence', 'Présentoir à montres personnalisé', 'Plaques QR code en relief'] },
