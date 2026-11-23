@@ -1,0 +1,77 @@
+---
+// « Entrer dans l'atelier » : une petite planète 3D jouable (création originale de l'atelier).
+// On déplace la Buse (petit robot tête d'impression) au clavier (ZQSD, WASD, flèches) ou au doigt (manette tactile).
+// En approchant d'une station, une carte s'ouvre avec un lien vers la page correspondante du site.
+// Page autonome (sans en-tête ni pied de page du site) ; la liste des stations reste lisible sans JavaScript.
+import { SITE } from '../config/site';
+const STATIONS = [
+  { id: 'accueil', titre: 'Bienvenue à l’atelier', texte: 'Promenez-vous sur la planète Kov : chaque station présente une partie du travail de l’atelier.', lien: '/', bouton: 'Version classique du site' },
+  { id: 'impression', titre: 'L’imprimante', texte: 'Résine pour le détail, filament pour la solidité : la pièce sort couche après couche.', lien: '/comment-ca-marche', bouton: 'Comment ça marche' },
+  { id: 'sculptures', titre: 'La galerie', texte: 'Bustes, sculptures et figurines, modélisés à la main puis imprimés.', lien: '/realisations', bouton: 'Voir les réalisations' },
+  { id: 'technique', titre: 'L’établi', texte: 'Pièces introuvables, engrenages, boîtiers : conçus d’après vos cotes ou une photo.', lien: '/services', bouton: 'Voir les services' },
+  { id: 'devis', titre: 'Le bureau des devis', texte: 'Décrivez votre projet : croquis, plan, photo ou simple idée.', lien: '/devis', bouton: 'Demander un devis' },
+  ...(SITE.cultsUrl ? [{ id: 'boutique', titre: 'La boutique', texte: 'Des fichiers STL prêts à imprimer, en vente sur Cults3D.', lien: SITE.cultsUrl, bouton: 'Ouvrir la boutique' }] : []),
+];
+---
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>L’atelier en 3D | Kov Atelier</title>
+  <meta name="description" content="Promenez-vous dans l’atelier Kov en 3D : impression, sculptures, pièces techniques et devis, sur une petite planète jouable." />
+  <link rel="canonical" href={new URL('/atelier', Astro.site)} />
+  <link rel="icon" href="/favicon.png" type="image/png" />
+  <meta name="theme-color" content="#EFE6D2" />
+  <style>
+    @font-face { font-family: 'Silkscreen'; src: url('/fonts/Silkscreen-Regular.woff') format('woff'); font-display: swap; }
+    @font-face { font-family: 'Geist Mono'; src: url('/fonts/GeistMono-Regular.woff') format('woff'); font-display: swap; }
+    :root { --kraft: #D9C3A0; --encre: #20252B; --bleu: #2864DC; --creme: #EFE6D2; }
+    html, body { margin: 0; height: 100%; background: var(--creme); color: var(--encre); overflow: hidden; font-family: 'Geist Mono', ui-monospace, monospace; }
+    #scene { position: fixed; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; outline: none; }
+    .ui { position: fixed; z-index: 2; }
+    .marque { top: 18px; left: 20px; font-family: 'Silkscreen', monospace; font-size: 1.05rem; color: var(--encre); text-decoration: none; text-transform: uppercase;
+      padding: 8px 12px; background: rgba(239, 230, 210, .8); border: 2px solid var(--encre); box-shadow: 3px 3px 0 var(--encre); }
+    .sortie { top: 18px; right: 20px; font-family: 'Silkscreen', monospace; font-size: .75rem; color: var(--encre); text-decoration: none; text-transform: uppercase;
+      padding: 9px 12px; background: #fff; border: 2px solid var(--encre); box-shadow: 3px 3px 0 var(--encre); }
+    .marque:hover, .sortie:hover { transform: translate(1px, 1px); box-shadow: 2px 2px 0 var(--encre); }
+    .aide { bottom: 18px; left: 50%; transform: translateX(-50%); font-size: .78rem; padding: 8px 12px; background: rgba(32, 37, 43, .82); color: #F7F8F6; max-width: calc(100vw - 40px); text-align: center; transition: opacity .6s; }
+    .aide kbd { font-family: 'Silkscreen', monospace; font-size: .7rem; padding: 1px 5px; border: 1px solid var(--kraft); color: var(--kraft); }
+    .aide.cache { opacity: 0; pointer-events: none; }
+    .carte { left: 50%; bottom: 64px; width: min(420px, calc(100vw - 32px)); transform: translate(-50%, 16px); opacity: 0; pointer-events: none;
+      background: #fff; border: 2px solid var(--encre); box-shadow: 5px 5px 0 var(--encre); padding: 18px 20px; transition: opacity .25s, transform .25s; }
+    .carte.ouverte { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
+    .carte h2 { margin: 0 0 8px; font-family: 'Silkscreen', monospace; font-weight: 400; font-size: 1.15rem; text-transform: uppercase; }
+    .carte p { margin: 0 0 14px; font-size: .86rem; line-height: 1.55; }
+    .carte a { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px; background: var(--bleu); color: #fff; text-decoration: none;
+      font-family: 'Silkscreen', monospace; font-size: .8rem; text-transform: uppercase; border: 2px solid var(--encre); }
+    .carte a:hover { background: #1E4FB4; }
+    .carte small { margin-left: 10px; font-size: .72rem; color: #5C4D3A; }
+    .manette { left: 22px; bottom: 22px; width: 120px; height: 120px; border-radius: 50%; border: 2px solid rgba(32, 37, 43, .5); background: rgba(255, 255, 255, .35); display: none; touch-action: none; }
+    .manette span { position: absolute; left: 50%; top: 50%; width: 48px; height: 48px; margin: -24px 0 0 -24px; border-radius: 50%; background: var(--encre); opacity: .8; }
+    @media (hover: none) and (pointer: coarse) { .manette { display: block; } .aide .clavier { display: none; } .carte { bottom: 160px; } }
+    @media (hover: hover) { .aide .tactile { display: none; } }
+    .chargement { inset: 0; display: grid; place-items: center; font-family: 'Silkscreen', monospace; text-transform: uppercase; background: var(--creme); transition: opacity .5s; }
+    .chargement.fini { opacity: 0; pointer-events: none; }
+    .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    noscript .liste, .sans-3d .liste { position: fixed; inset: 80px 20px 20px; overflow: auto; z-index: 3; background: var(--creme); }
+  </style>
+</head>
+<body>
+  <canvas id="scene" tabindex="0" aria-label="Planète de l’atelier en 3D : déplacez le personnage avec les flèches pour visiter les stations"></canvas>
+  <a class="ui marque" href="/">Kov Atelier</a>
+  <a class="ui sortie" href="/">Quitter ✕</a>
+  <p class="ui aide" id="aide"><span class="clavier"><kbd>Z Q S D</kbd> ou <kbd>flèches</kbd> pour marcher, <kbd>Entrée</kbd> pour ouvrir</span><span class="tactile">Glissez la manette pour marcher</span></p>
+  <div class="ui carte" id="carte" role="dialog" aria-live="polite" aria-labelledby="carte-titre">
+    <h2 id="carte-titre"></h2><p id="carte-texte"></p><a id="carte-lien" href="/"></a><small class="clavier">ou Entrée</small>
+  </div>
+  <div class="ui manette" id="manette" aria-hidden="true"><span></span></div>
+  <div class="ui chargement" id="chargement">Chargement de l’atelier…</div>
+  <nav class="sr liste" aria-label="Stations de l’atelier">
+    <ul>{STATIONS.map((s) => <li><a href={s.lien}>{s.titre} : {s.bouton}</a></li>)}</ul>
+  </nav>
+  <noscript><div class="liste"><ul>{STATIONS.map((s) => <li><a href={s.lien}>{s.titre} : {s.bouton}</a></li>)}</ul></div></noscript>
+  <script type="application/json" id="stations" set:html={JSON.stringify(STATIONS)}></script>
+  <script type="module" src="/atelier/jeu.js"></script>
+</body>
+</html>

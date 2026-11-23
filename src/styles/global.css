@@ -1352,3 +1352,56 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
 .real-cta { gap: 10px; padding-inline: 26px; font-size: 1.05rem; border-color: var(--atelier); }
 .real-cta span { display: inline-block; transition: transform .25s cubic-bezier(.2, .8, .2, 1); }
 .real-cta:hover span, .real-cta:focus-visible span { transform: translateX(5px); }
+
+/* ==== Accueil « pixel technique » ====
+   Titre en police pixel (Silkscreen, OFL), textes courts en Geist Mono, lecture machine à droite,
+   buste en points dessiné en basse définition puis agrandi sans lissage. Préfixe hx- (pas de collision). */
+@font-face { font-family: 'Silkscreen'; src: url('/fonts/Silkscreen-Regular.woff') format('woff'); font-weight: 400; font-display: swap; }
+.hx { position: relative; isolation: isolate; overflow: hidden; background: var(--graphite); padding: clamp(48px, 8vw, 112px) 0 clamp(32px, 5vw, 56px);
+  background-image: linear-gradient(rgba(217, 195, 160, .05) 1px, transparent 1px), linear-gradient(90deg, rgba(217, 195, 160, .05) 1px, transparent 1px);
+  background-size: 40px 40px; }
+.hx-voxels { position: absolute; z-index: -1; right: max(-4vw, calc(50% - 760px)); top: 50%; width: min(64vw, 760px); height: auto; aspect-ratio: 1;
+  transform: translateY(-54%); image-rendering: pixelated; image-rendering: crisp-edges; opacity: .95; }
+.hx-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 40px; }
+.hx-texte { max-width: 720px; }
+.hx-sur { display: flex; align-items: center; gap: 10px; margin: 0 0 22px; font-family: 'Silkscreen', 'Geist Mono', monospace; font-size: .8rem; color: var(--atelier); text-transform: uppercase; }
+.hx-led { width: 8px; height: 8px; background: #5BD08A; box-shadow: 0 0 8px #5BD08A; animation: hx-led 1.6s steps(2, end) infinite; }
+@keyframes hx-led { 50% { opacity: .25; } }
+.hx h1 { margin: 0 0 24px; font-family: 'Silkscreen', 'Geist Mono', monospace; font-weight: 400; text-transform: uppercase; color: var(--atelier);
+  font-size: clamp(2.1rem, 5.4vw, 4.4rem); line-height: 1.32; letter-spacing: .01em; }
+.hx-souligne { color: var(--blanc); background: linear-gradient(var(--bleu), var(--bleu)) 0 88% / 100% 4px no-repeat; padding-bottom: 2px; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+.hx-lead { max-width: 600px; margin: 0 0 28px; font-family: 'Geist Mono', ui-monospace, monospace; font-size: clamp(.92rem, 1.4vw, 1.02rem); line-height: 1.65; color: var(--blanc); }
+.hx-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px; }
+.hx-jeu { display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 18px; border: 1px solid var(--atelier); color: var(--atelier);
+  font-family: 'Silkscreen', 'Geist Mono', monospace; font-size: .9rem; text-transform: uppercase; text-decoration: none; background: rgba(217, 195, 160, .06); }
+.hx-jeu span { animation: hx-clign 1s steps(2, end) infinite; }
+.hx-jeu:hover, .hx-jeu:focus-visible { background: var(--atelier); color: var(--graphite); }
+@keyframes hx-clign { 50% { opacity: 0; } }
+.hx-note { margin: 18px 0 0; font-family: 'Geist Mono', ui-monospace, monospace; font-size: .8rem; color: var(--text-2); }
+/* Lecture machine : valeurs à chasse fixe, filet sous chaque ligne */
+.hx-machine { margin: 0; display: grid; grid-template-columns: repeat(5, minmax(0, auto)); gap: 14px 28px; max-width: 760px; font-family: 'Geist Mono', ui-monospace, monospace; font-size: .8rem; }
+.hx-machine div { display: flex; justify-content: space-between; gap: 24px; padding-bottom: 6px; border-bottom: 1px solid rgba(217, 195, 160, .45); }
+.hx-machine dt { color: var(--atelier); font-family: 'Silkscreen', monospace; text-transform: uppercase; }
+.hx-machine dd { margin: 0; color: var(--blanc); font-variant-numeric: tabular-nums; }
+/* Index : 01 / 02 / 03 en grands chiffres pixel */
+.hx-index { list-style: none; margin: clamp(48px, 7vw, 88px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; border-top: 1px solid rgba(217, 195, 160, .3); }
+.hx-index li + li { border-left: 1px solid rgba(217, 195, 160, .3); }
+.hx-index a { display: grid; gap: 6px; padding: 22px 24px 8px; color: inherit; text-decoration: none; }
+.hx-index a:hover .hx-num, .hx-index a:focus-visible .hx-num { color: var(--bleu-clair); }
+.hx-num { font-family: 'Silkscreen', monospace; font-size: clamp(2.4rem, 5vw, 3.6rem); line-height: 1; color: var(--blanc); transition: color .2s; }
+.hx-it { font-family: 'Silkscreen', monospace; font-size: .85rem; text-transform: uppercase; color: var(--atelier); }
+.hx-ix { font-family: 'Geist Mono', monospace; font-size: .8rem; color: var(--text-2); }
+@media (max-width: 899px) {
+  .hx-machine { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 18px; }
+  .hx-machine div:last-child { grid-column: span 2; }
+  .hx-voxels { right: -18vw; top: 4%; width: 96vw; transform: none; opacity: .35; }
+}
+@media (max-width: 599px) {
+  .hx-index { grid-template-columns: 1fr; }
+  .hx-index li + li { border-left: 0; border-top: 1px solid rgba(217, 195, 160, .3); }
+  .hx-index a { grid-template-columns: auto 1fr; column-gap: 16px; padding: 16px 4px; }
+  .hx-num { grid-row: span 2; font-size: 2.2rem; }
+}
+@media (prefers-reduced-motion: reduce) { .hx-led, .hx-jeu span { animation: none; } }
+/* Le reste de l'accueil adopte les titres pixel */
+body:has(.hx) main h2 { font-family: 'Silkscreen', 'Geist Mono', monospace; font-weight: 400; text-transform: uppercase; letter-spacing: .01em; line-height: 1.12; }

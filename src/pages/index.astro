@@ -4,7 +4,7 @@ import Services from '../components/Services.astro';
 import Steps from '../components/Steps.astro';
 import Modeles3D from '../components/Modeles3D.astro';
 import Icon from '../components/Icon.astro';
-import IntroVideo from '../components/IntroVideo.astro';
+import HeroPixel from '../components/HeroPixel.astro';
 import DefileSculpture from '../components/DefileSculpture.astro';
 import { SITE } from '../config/site';
 import { SERVICES } from '../config/services';
@@ -53,29 +53,7 @@ const BESOINS = [
   description="Modélisation et impression 3D sur mesure à Florange, près de Thionville, Metz et du Luxembourg : prototypes, pièces techniques. Expédition partout."
   jsonLd={jsonLd}
 >
-  <section class="hero">
-    <IntroVideo />
-    <div class="wrap hero-grid hero-seul">
-      <div>
-        <div class="title-block">
-          <h1>Conçu à la main,<br /> <em>imprimé couche après couche</em></h1>
-          <div class="cote" aria-hidden="true"><i></i><span>sur mesure</span><i></i></div>
-        </div>
-        <p class="lead">Modélisation et impression 3D sur mesure à Florange, à côté du Luxembourg. Pièces cassées ou obsolètes, prototypes, pièces techniques et créations personnalisées, pour les professionnels comme pour les particuliers.</p>
-        <div class="hero-actions">
-          <a class="btn btn-primary" href="/devis" data-cta="hero">Demander un devis</a>
-          <a class="btn btn-ghost" href="#realisations">Voir nos réalisations</a>
-        </div>
-        <p class="hero-note">Vous pouvez partir d’un croquis, d’un plan technique, d’une photo, d’un fichier 3D ou d’une simple idée.</p>
-        <ul class="hero-faits">
-          <li>La pièce livrée chez vous, ou le fichier seul, au choix</li>
-          <li>Réponse sous 30 minutes en journée</li>
-          <li>Un seul interlocuteur, du premier échange à la pièce finie</li>
-          <li>Florange, Luxembourg, expédition partout</li>
-        </ul>
-      </div>
-    </div>
-  </section>
+  <HeroPixel />
 
   <DefileSculpture />
 
