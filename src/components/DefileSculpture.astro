@@ -1,7 +1,8 @@
 ---
-// Section « façon Apple » : pendant le défilement, la sculpture (Cthulhu en 5 pièces) passe de l'éclaté à l'assemblé,
-// fait un tour complet puis la caméra s'approche de la tête. Images pré-calculées (rendus 3D de l'atelier, pas d'IA),
-// dessinées dans un canvas selon la position de défilement. Quatre textes se relaient à côté.
+// Section « façon Apple » : dès que la section arrive à l'écran, la sculpture (Cthulhu en 5 pièces) passe toute seule
+// de l'éclaté à l'assemblé, fait un tour complet puis la caméra s'approche de la tête, et s'arrête sur la dernière image.
+// Aucun défilement nécessaire. Images pré-calculées (rendus 3D de l'atelier, pas d'IA) dessinées dans un canvas.
+// Quatre textes se relaient à côté ; bouton « Revoir » à la fin. Se met en pause si la section sort de l'écran.
 // Sans images dans public/defile/cthulhu, la section n'apparaît pas. Animations réduites : image fixe + textes à la suite.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -30,10 +31,7 @@ const ETAPES = [
           </div>
         ))}
       </div>
-      <div class="sdf-indice" aria-hidden="true">
-        <span>Faites défiler</span>
-        <svg viewBox="0 0 24 24"><path d="M6 8l6 6 6-6" /><path d="M6 13l6 6 6-6" /></svg>
-      </div>
+      <button type="button" class="sdf-revoir" hidden>↻ Revoir l’animation</button>
       <div class="sdf-barre" aria-hidden="true"><span></span></div>
     </div>
   </section>
@@ -44,32 +42,42 @@ const ETAPES = [
     if (!s) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { s.classList.add('sdf-reduit'); return; }
     var cv = s.querySelector('canvas'), cx = cv.getContext('2d'), N = +s.dataset.n, dos = s.dataset.dossier;
-    var etapes = [].slice.call(s.querySelectorAll('.sdf-etape')), barre = s.querySelector('.sdf-barre span');
-    var imgs = new Array(N), charge = false, dernier = -1;
+    var etapes = [].slice.call(s.querySelectorAll('.sdf-etape')), barre = s.querySelector('.sdf-barre span'), revoir = s.querySelector('.sdf-revoir');
+    var DUREE = 9000;                                  // durée totale de l'animation (ms)
+    var imgs = new Array(N), nbCharges = 0, charge = false, dernier = -1;
+    var p = 0, joue = false, visible = false, fini = false, t0 = 0;
     function nom(i) { return dos + 'c' + ('00' + i).slice(-3) + '.webp'; }
-    function img(i, cb) { var im = new Image(); im.decoding = 'async'; im.onload = function () { imgs[i] = im; if (cb) cb(); }; im.src = nom(i); }
-    // Première image tout de suite, les autres quand la section approche (une sur quatre d'abord, puis le reste).
+    function img(i, cb) { var im = new Image(); im.decoding = 'async'; im.onload = function () { imgs[i] = im; nbCharges++; if (cb) cb(); }; im.onerror = function () { nbCharges++; if (cb) cb(); }; im.src = nom(i); }
     img(0, function () { dessiner(true); });
     function charger() {
       if (charge) return; charge = true;
-      var ordre = [];
-      for (var i = 0; i < N; i += 4) ordre.push(i);
-      for (i = 0; i < N; i++) if (i % 4) ordre.push(i);
-      var k = 0; (function suite() { var lot = ordre.slice(k, k + 6); k += 6; var r = lot.length; if (!r) return;
-        lot.forEach(function (j) { img(j, function () { if (--r === 0) suite(); dessiner(true); }); }); })();
+      var k = 1; (function suite() { var lot = []; while (lot.length < 8 && k < N) lot.push(k++); var r = lot.length; if (!r) return;
+        lot.forEach(function (j) { img(j, function () { if (--r === 0) suite(); peutDemarrer(); }); }); })();
     }
-    new IntersectionObserver(function (es) { if (es[0].isIntersecting) charger(); }, { rootMargin: '150% 0px' }).observe(s);
-    function progres() { var r = s.getBoundingClientRect(); var p = -r.top / (r.height - innerHeight); return Math.max(0, Math.min(1, p)); }
     function proche(i) { for (var d = 0; d < N; d++) { if (imgs[i - d]) return imgs[i - d]; if (imgs[i + d]) return imgs[i + d]; } return null; }
     function dessiner(force) {
-      var p = progres(), i = Math.round(p * (N - 1));
+      var i = Math.round(p * (N - 1));
       if (i !== dernier || force) { var im = proche(i); if (im) { cx.drawImage(im, 0, 0, cv.width, cv.height); dernier = imgs[i] ? i : -1; } }
-      etapes.forEach(function (e) { var de = +e.dataset.de, a = +e.dataset.a; var v = p >= de && p < a; e.classList.toggle('visible', v); });
+      etapes.forEach(function (e) { e.classList.toggle('visible', p >= +e.dataset.de && p < +e.dataset.a); });
       barre.style.transform = 'scaleX(' + p.toFixed(4) + ')';
-      s.classList.toggle('sdf-fin', p > 0.84);
     }
-    var attente = false;
-    addEventListener('scroll', function () { if (attente) return; attente = true; requestAnimationFrame(function () { attente = false; dessiner(false); }); }, { passive: true });
+    function boucle(t) {
+      if (!joue) return;
+      if (!t0) t0 = t - p * DUREE;
+      p = Math.min(1, (t - t0) / DUREE);
+      dessiner(false);
+      if (p >= 1) { joue = false; fini = true; revoir.hidden = false; return; }
+      requestAnimationFrame(boucle);
+    }
+    function lancer() { if (joue || fini) return; joue = true; t0 = 0; requestAnimationFrame(boucle); }
+    // Démarre quand la section est bien visible et que toutes les images sont prêtes.
+    function peutDemarrer() { if (visible && nbCharges >= N - 1) lancer(); }
+    new IntersectionObserver(function (es) { if (es[0].isIntersecting) charger(); }, { rootMargin: '150% 0px' }).observe(s);
+    new IntersectionObserver(function (es) {
+      visible = es[0].intersectionRatio >= 0.55;
+      if (visible) peutDemarrer(); else if (joue) joue = false;   // pause hors écran, reprise au retour
+    }, { threshold: [0, 0.55, 1] }).observe(s);
+    revoir.addEventListener('click', function () { revoir.hidden = true; fini = false; p = 0; dessiner(true); lancer(); });
     addEventListener('resize', function () { dessiner(true); });
   })();
 </script>

@@ -1249,8 +1249,8 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
 
 /* ---- Accueil : sculpture au défilement (façon page produit). La scène reste fixe pendant 4 écrans de défilement ;
    le canvas affiche l'image qui correspond à la position, les textes se relaient à gauche (en bas sur téléphone). */
-.sdf { position: relative; height: 420vh; background: #15181C; }
-.sdf-scene { position: sticky; top: 0; height: 100vh; height: 100dvh; overflow: hidden; display: grid; }
+.sdf { position: relative; height: 100vh; height: 100dvh; min-height: 560px; background: #15181C; }
+.sdf-scene { position: relative; height: 100%; overflow: hidden; display: grid; }
 .sdf-canvas, .sdf-fixe { position: absolute; top: 50%; left: 62%; width: min(100dvh, 92vw); height: auto; aspect-ratio: 1; transform: translate(-50%, -50%);
   -webkit-mask: radial-gradient(closest-side, #000 72%, transparent); mask: radial-gradient(closest-side, #000 72%, transparent); }
 .sdf-fixe { display: none; }
@@ -1264,7 +1264,6 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
 .sdf-barre { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: rgba(255, 255, 255, .06); }
 .sdf-barre span { display: block; height: 100%; background: var(--atelier); transform: scaleX(0); transform-origin: 0 50%; }
 @media (max-width: 799px) {
-  .sdf { height: 380vh; }
   .sdf-canvas, .sdf-fixe { left: 50%; top: 40%; width: min(108vw, 70dvh); }
   .sdf-textes { align-self: end; padding-bottom: max(28px, env(safe-area-inset-bottom)); }
   .sdf-textes::before { content: ""; position: absolute; inset: -90px calc(var(--gutter) * -1) -40px; background: linear-gradient(transparent, rgba(21, 24, 28, .92) 45%); z-index: -1; }
@@ -1335,16 +1334,14 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
 
 
 
-/* Indice de défilement : deux chevrons qui descendent doucement, masqués à la dernière étape */
-.sdf-indice { position: absolute; left: 50%; bottom: 22px; z-index: 2; display: grid; justify-items: center; gap: 4px; transform: translateX(-50%);
-  color: rgba(247, 248, 246, .7); font-family: 'Geist Mono', ui-monospace, monospace; font-size: .75rem; pointer-events: none; transition: opacity .4s ease; }
-.sdf-indice svg { width: 22px; height: 22px; fill: none; stroke: var(--atelier); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; animation: sdf-chevrons 1.8s ease-in-out infinite; }
-.sdf-indice path:first-child { opacity: .45; }
-@keyframes sdf-chevrons { 0%, 100% { transform: translateY(-3px); opacity: .5; } 50% { transform: translateY(4px); opacity: 1; } }
-.sdf-fin .sdf-indice { opacity: 0; }
-@media (max-width: 799px) { .sdf-indice { left: auto; right: 16px; bottom: auto; top: 92px; transform: none; } }
-.sdf-reduit .sdf-indice { display: none; }
-@media (prefers-reduced-motion: reduce) { .sdf-indice svg { animation: none; } }
+/* Bouton « Revoir » : discret, en bas à droite, apparaît une fois l'animation terminée */
+.sdf-revoir { position: absolute; right: var(--gutter); bottom: 22px; z-index: 2; padding: 8px 14px; border: 1px solid rgba(217, 195, 160, .45); border-radius: 8px;
+  background: rgba(21, 24, 28, .6); color: var(--atelier); font-family: 'Geist Mono', ui-monospace, monospace; font-size: .8rem; cursor: pointer; animation: sdf-apparait .5s ease both; }
+.sdf-revoir:hover { border-color: var(--atelier); background: rgba(217, 195, 160, .1); }
+.sdf-revoir[hidden] { display: none; }
+@keyframes sdf-apparait { from { opacity: 0; transform: translateY(6px); } }
+@media (max-width: 799px) { .sdf-revoir { top: 90px; bottom: auto; right: 16px; } }
+.sdf-reduit .sdf-revoir { display: none; }
 
 /* Accueil : aperçu des réalisations puis bouton vers la page complète */
 .real-suite { display: grid; justify-items: center; gap: 10px; margin: clamp(32px, 5vw, 48px) 0 0; text-align: center; }
