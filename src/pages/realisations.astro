@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import CtaFinal from '../components/CtaFinal.astro';
+import { SITE } from '../config/site';
 import { Image, getImage } from 'astro:assets';
 import { ATELIER, GROUPES_ATELIER } from '../config/galerie';
 // Mobile : médias regroupés par projet ; tout média oublié dans un groupe part dans « Autres réalisations ».
@@ -32,6 +33,12 @@ import SwitchEclate from '../components/SwitchEclate.astro';
         <p>La bibliothèque des modèles conçus à l’atelier : pièces techniques, sculptures et figurines, chacune présentée en rotation à 360°.</p>
       </div>
       <Modeles3D filtres />
+      {SITE.cultsUrl && (
+        <p class="real-suite">
+          <a class="btn btn-ghost real-cta" href={SITE.cultsUrl} target="_blank" rel="noopener" data-cta="cults3d">Voir plus de modèles sur Cults3D<span aria-hidden="true">↗</span></a>
+          <span>Fichiers STL à télécharger, prêts à imprimer</span>
+        </p>
+      )}
     </div>
   </section>
 
