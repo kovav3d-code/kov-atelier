@@ -1278,21 +1278,35 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
 .defile-reduit .defile-textes { display: grid; gap: 32px; }
 .defile-reduit .defile-etape, .defile-reduit .defile-textes::before { position: static; width: auto; opacity: 1; visibility: visible; transform: none; }
 
-/* ---- En-tête Réalisations : interrupteur éclaté animé.
-   Arrivée : la touche descend en place, le boîtier puis la base remontent. Ensuite chaque pièce flotte doucement.
-   Défilement : les pièces s'écartent (vue éclatée qui s'ouvre), réglé par --s (0 en haut de page, 1 après 60 % d'écran). */
-.sw { --s: 0; }
-.sw-touche, .sw-boitier, .sw-base { transform: none; }
-.sw-touche { translate: 0 calc(-4px - var(--s) * 48px); rotate: calc(var(--s) * -7deg); animation: sw-arrive-haut .9s cubic-bezier(.2, .8, .2, 1) both; }
-.sw-boitier { translate: calc(-13 * var(--u)) calc(var(--s) * 22px); rotate: calc(var(--s) * 5deg); animation: sw-arrive-bas .9s cubic-bezier(.2, .8, .2, 1) .12s both; }
-.sw-base { translate: 0 calc(8px + var(--s) * 60px); rotate: calc(var(--s) * -3deg); animation: sw-arrive-bas .9s cubic-bezier(.2, .8, .2, 1) .24s both; }
-.sw-touche img { animation: sw-flotte 5s ease-in-out 1s infinite alternate; }
-.sw-boitier img { animation: sw-flotte-petit 5.6s ease-in-out 1.2s infinite alternate; }
-@keyframes sw-arrive-haut { from { transform: translateY(-56px) rotate(-6deg); opacity: 0; } }
-@keyframes sw-arrive-bas { from { transform: translateY(44px); opacity: 0; } }
-@keyframes sw-flotte { to { transform: translateY(-7px) rotate(-1deg); } }
-@keyframes sw-flotte-petit { to { transform: translateY(5px) rotate(.8deg); } }
+/* ---- En-tête Réalisations : interrupteur éclaté, mise en scène jouée une seule fois à l'ouverture (rien n'est lié au défilement).
+   0 s : la touche tombe d'en haut et se pose avec un léger rebond, son ombre se resserre en même temps.
+   0,25 s : le titre et le texte montent en fondu. 0,45 s : les deux boutons apparaissent, le fil se trace entre eux.
+   0,6 s : boîtier puis base remontent d'en bas. Ensuite, flottement très lent des trois pièces, décalé entre elles. */
+.sw-touche, .sw-boitier, .sw-base { transform: none; translate: none; rotate: none; }
+.sw-boitier { translate: calc(-13 * var(--u)) 0; }
+.sw-base { translate: 0 8px; }
+.sw-touche { animation: sw-tombe 1.1s cubic-bezier(.3, 1.35, .5, 1) both; }
+.sw-boitier { animation: sw-monte 1s cubic-bezier(.2, .9, .25, 1) .6s both; }
+.sw-base { animation: sw-monte 1s cubic-bezier(.2, .9, .25, 1) .75s both; }
+.sw > h1 { animation: sw-fondu .8s cubic-bezier(.2, .8, .2, 1) .25s both; }
+.sw > .lead { animation: sw-fondu .8s cubic-bezier(.2, .8, .2, 1) .35s both; }
+.sw-lien { animation: sw-pop .6s cubic-bezier(.3, 1.4, .5, 1) .45s both; }
+.sw-lien:last-child { animation-delay: .6s; }
+.sw-fil { transform-origin: 0 50%; animation: sw-trace .5s ease-out .7s both; }
+/* Flottement : sur l'image, pour ne pas se mélanger avec l'arrivée */
+.sw-touche img { animation: sw-flotte 4.8s ease-in-out 1.2s infinite alternate; }
+.sw-boitier img { animation: sw-flotte-b 5.4s ease-in-out 1.6s infinite alternate; }
+.sw-base img { animation: sw-flotte-c 6s ease-in-out 1.8s infinite alternate; }
+@keyframes sw-tombe { 0% { transform: translateY(-90px) rotate(-8deg); opacity: 0; } 35% { opacity: 1; } 100% { transform: none; opacity: 1; } }
+@keyframes sw-monte { from { transform: translateY(60px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes sw-fondu { from { transform: translateY(14px); opacity: 0; } }
+@keyframes sw-pop { from { transform: scale(.6); opacity: 0; } }
+@keyframes sw-trace { from { transform: scaleX(0); } }
+@keyframes sw-flotte { from { transform: translateY(0) rotate(0); } to { transform: translateY(-8px) rotate(-1.2deg); } }
+@keyframes sw-flotte-b { from { transform: translateY(0); } to { transform: translateY(5px) rotate(.8deg); } }
+@keyframes sw-flotte-c { from { transform: translateY(0); } to { transform: translateY(3px); } }
 @media (max-width: 600px) { .sw { --u: .27px; } }
 @media (prefers-reduced-motion: reduce) {
-  .sw-touche, .sw-boitier, .sw-base, .sw-touche img, .sw-boitier img { animation: none; }
+  .sw-touche, .sw-boitier, .sw-base, .sw-piece img, .sw > h1, .sw > .lead, .sw-lien, .sw-fil { animation: none; }
 }
+

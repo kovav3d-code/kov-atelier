@@ -2,8 +2,8 @@
 // En-tête de la page Réalisations : un interrupteur de clavier en vue éclatée, détouré, qui « respire ».
 // La touche flotte au-dessus du titre ; le boîtier et la base (ressort, contacts) attendent en dessous.
 // Entre les deux, les deux liens de la page : l'objectif photo (photos et vidéos) et le cube 3D (modèles 3D),
-// reliés par un fil. À l'arrivée les pièces se mettent en place puis flottent ; au défilement, la vue éclatée
-// s'ouvre (les pièces s'écartent). Fixes si l'utilisateur limite les animations.
+// reliés par un fil. Mise en scène jouée une fois à l'ouverture, puis flottement lent (voir global.css).
+// Fixes si l'utilisateur limite les animations.
 import { Image } from 'astro:assets';
 import touche from '../assets/realisations/switch-touche.png';
 import boitier from '../assets/realisations/switch-boitier.png';
@@ -44,13 +44,3 @@ const tailles = '(max-width: 600px) 70vw, 340px';
     </div>
   </div>
 </div>
-<script is:inline>
-  (function () {
-    var sw = document.querySelector('.sw');
-    if (!sw || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    var attente = false;
-    function maj() { attente = false; var s = Math.min(1, Math.max(0, scrollY / (innerHeight * 0.6))); sw.style.setProperty('--s', s.toFixed(3)); }
-    addEventListener('scroll', function () { if (!attente) { attente = true; requestAnimationFrame(maj); } }, { passive: true });
-    maj();
-  })();
-</script>
