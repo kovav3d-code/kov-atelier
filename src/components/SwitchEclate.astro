@@ -2,7 +2,8 @@
 // En-tête de la page Réalisations : un interrupteur de clavier en vue éclatée, détouré, qui « respire ».
 // La touche flotte au-dessus du titre ; le boîtier et la base (ressort, contacts) attendent en dessous.
 // Entre les deux, les deux liens de la page : l'objectif photo (photos et vidéos) et le cube 3D (modèles 3D),
-// reliés par un fil. Mise en scène jouée une fois à l'ouverture, puis flottement lent (voir global.css).
+// reliés par un fil. À l'ouverture, les trois pièces « s'impriment » couche par couche (base, boîtier, touche),
+// une ligne lumineuse marque la couche en cours ; puis flottement lent (voir global.css).
 // Fixes si l'utilisateur limite les animations.
 import { Image } from 'astro:assets';
 import touche from '../assets/realisations/switch-touche.png';
@@ -11,7 +12,7 @@ import base from '../assets/realisations/switch-base.png';
 const tailles = '(max-width: 600px) 70vw, 340px';
 ---
 <div class="sw">
-  <div class="sw-piece sw-touche" aria-hidden="true">
+  <div class="sw-piece sw-touche" aria-hidden="true" style={`--png:url(${touche.src})`}>
     <Image src={touche} alt="" widths={[300, 480, 700]} sizes={tailles} format="webp" loading="eager" />
   </div>
 
@@ -36,10 +37,10 @@ const tailles = '(max-width: 600px) 70vw, 340px';
   </nav>
 
   <div class="sw-bas" aria-hidden="true">
-    <div class="sw-piece sw-boitier">
+    <div class="sw-piece sw-boitier" style={`--png:url(${boitier.src})`}>
       <Image src={boitier} alt="" widths={[260, 400, 540]} sizes={tailles} format="webp" loading="eager" />
     </div>
-    <div class="sw-piece sw-base">
+    <div class="sw-piece sw-base" style={`--png:url(${base.src})`}>
       <Image src={base} alt="" widths={[280, 440, 600]} sizes={tailles} format="webp" loading="eager" />
     </div>
   </div>
