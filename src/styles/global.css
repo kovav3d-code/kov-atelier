@@ -1321,6 +1321,6 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
 .sdf-indice path:first-child { opacity: .45; }
 @keyframes sdf-chevrons { 0%, 100% { transform: translateY(-3px); opacity: .5; } 50% { transform: translateY(4px); opacity: 1; } }
 .sdf-fin .sdf-indice { opacity: 0; }
-@media (max-width: 799px) { .sdf-indice { left: auto; right: 16px; bottom: auto; top: 18px; transform: none; } }
+@media (max-width: 799px) { .sdf-indice { left: auto; right: 16px; bottom: auto; top: 92px; transform: none; } }
 .sdf-reduit .sdf-indice { display: none; }
 @media (prefers-reduced-motion: reduce) { .sdf-indice svg { animation: none; } }
