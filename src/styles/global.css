@@ -1210,24 +1210,26 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
 @media (max-width: 719px) { .piles { gap: 48px; } .pile-btn { width: min(84vw, 320px); } }
 
 /* Visionneuse */
-.visionneuse { width: min(100vw - 24px, 1100px); max-width: none; max-height: calc(100dvh - 24px); padding: 0; border: 1px solid var(--line-strong); border-radius: 12px; background: var(--surface-2); color: var(--text); overflow: hidden; }
-.visionneuse::backdrop { background: rgba(10, 12, 15, .82); }
+/* Pas de fenêtre : la photo flotte seule sur le fond assombri, les commandes posées discrètement autour. */
+.visionneuse { width: 100vw; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; border-radius: 0; background: transparent; color: var(--text); overflow: hidden; }
+.visionneuse::backdrop { background: rgba(8, 10, 12, .92); }
+.visionneuse:focus { outline: none; }
 .visionneuse[open] { display: grid; grid-template-rows: auto minmax(0, 1fr) auto auto; animation: v-ouvre .25s cubic-bezier(.2, .8, .2, 1); }
 @keyframes v-ouvre { from { opacity: 0; transform: translateY(12px) scale(.98); } }
-.v-tete { display: flex; align-items: center; gap: 16px; padding: 12px 12px 12px 20px; border-bottom: 1px solid var(--line); }
+.v-tete { display: flex; align-items: center; gap: 16px; padding: 12px 12px 0 20px; }
 .v-titre { margin: 0; font-weight: 700; }
 .v-compte { margin: 0 auto 0 0; font-family: 'Geist Mono', ui-monospace, monospace; font-size: .85rem; color: var(--atelier); }
-.v-fermer, .v-nav { min-width: 44px; min-height: 44px; border: 1px solid var(--line-strong); border-radius: 8px; background: var(--surface); color: var(--text); font-size: 1.5rem; line-height: 1; cursor: pointer; }
-.v-fermer:hover, .v-nav:hover { border-color: var(--bleu-clair); }
+.v-fermer, .v-nav { min-width: 44px; min-height: 44px; border: 0; border-radius: 8px; background: transparent; color: rgba(247, 248, 246, .75); font-size: 1.9rem; line-height: 1; cursor: pointer; }
+.v-fermer:hover, .v-nav:hover { color: #fff; background: rgba(255, 255, 255, .08); }
 .v-scene { position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 16px 12px; min-height: 0; }
-/* L'image occupe toute la zone et s'y ajuste entière (contain) : jamais recadrée ni agrandie au-delà de l'écran. */
-.v-media { margin: 0; position: relative; min-height: 0; height: clamp(240px, 100dvh - 300px, 760px); touch-action: pan-y; }
-.v-media img, .v-media video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; user-select: none; -webkit-user-drag: none; }
-.v-legende { margin: 0; padding: 0 20px 12px; color: var(--text-2); text-align: center; }
+/* L'image occupe toute la zone libre et s'y ajuste entière (contain) : jamais recadrée. */
+.v-media { margin: 0; position: relative; min-height: 0; height: 100%; touch-action: pan-y; }
+.v-media img, .v-media video { position: absolute; inset: 0; margin: auto; width: auto; height: auto; max-width: 100%; max-height: 100%; border-radius: 3px; box-shadow: 0 20px 60px rgba(0, 0, 0, .5); user-select: none; -webkit-user-drag: none; }
+.v-legende { margin: 0; padding: 4px 20px 10px; color: var(--text-2); text-align: center; }
 .v-vignettes { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; padding: 0 12px 16px; }
 .v-vignette { width: 56px; height: 56px; padding: 0; border: 2px solid transparent; border-radius: 6px; overflow: hidden; background: none; cursor: pointer; opacity: .55; }
 .v-vignette img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .v-vignette[aria-current="true"] { border-color: var(--atelier); opacity: 1; }
 .v-seule .v-nav, .v-seule .v-vignettes { visibility: hidden; }
-@media (max-width: 600px) { .v-scene { grid-template-columns: minmax(0, 1fr); } .v-nav { display: none; } .v-media { height: clamp(220px, 100dvh - 280px, 70dvh); } }
+@media (max-width: 600px) { .v-scene { grid-template-columns: minmax(0, 1fr); } .v-nav { display: none; } }
 @media (prefers-reduced-motion: reduce) { .tirage, .tirage img { transition: none; } .visionneuse[open] { animation: none; } }

@@ -83,7 +83,7 @@ import SwitchEclate from '../components/SwitchEclate.astro';
         ))}
       </ul>
 
-      <dialog class="visionneuse" id="visionneuse" aria-labelledby="v-titre">
+      <dialog class="visionneuse" id="visionneuse" aria-labelledby="v-titre" tabindex="-1">
         <div class="v-tete">
           <p class="v-titre" id="v-titre"></p>
           <p class="v-compte" aria-live="polite"></p>
@@ -137,13 +137,14 @@ import SwitchEclate from '../components/SwitchEclate.astro';
           var im = new Image(); im.src = m.type === 'photo' ? m.src : m.poster; im.alt = ''; im.loading = 'lazy'; b.appendChild(im);
           b.addEventListener('click', function () { montrer(k); }); return b;
         }));
-        montrer(0); dlg.showModal();
+        montrer(0); dlg.showModal(); dlg.focus();
       }
       document.querySelectorAll('[data-pile]').forEach(function (b) { b.addEventListener('click', function () { ouvrir(+b.dataset.pile); }); });
       dlg.addEventListener('click', function (e) {
         var a = e.target.closest && e.target.closest('[data-v]');
         if (a) { var v = a.dataset.v; if (v === 'fermer') dlg.close(); else montrer(i + (v === 'suiv' ? 1 : -1)); return; }
-        if (e.target === dlg) dlg.close();
+        // Pas de fenêtre : un clic dans le vide autour de la photo ferme.
+        if (e.target === dlg || e.target.matches('.v-scene, .v-media, .v-tete, .v-vignettes')) dlg.close();
       });
       dlg.addEventListener('keydown', function (e) { if (e.key === 'ArrowRight') montrer(i + 1); if (e.key === 'ArrowLeft') montrer(i - 1); });
       dlg.addEventListener('close', function () { media.replaceChildren(); });
