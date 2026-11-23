@@ -502,6 +502,16 @@ html { scrollbar-color: var(--line-strong) var(--graphite); }
 .modele-badge { position: absolute; left: 12px; top: 12px; padding: 3px 9px; border-radius: 999px; background: rgba(32, 37, 43, .7); color: var(--bleu-clair); font-size: .75rem; font-weight: 600; letter-spacing: .04em; pointer-events: none; }
 .modele-titre { margin: 14px 0 0; font-weight: 600; }
 .modele-legende { margin: 2px 0 0; color: var(--text-2); font-size: .92rem; }
+/* Téléphone : vue d'ensemble, deux modèles par ligne, titres courts, filtres sur une ligne qui défile */
+@media (max-width: 719px) {
+  .modeles-grille { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 12px; }
+  .modele-titre { margin-top: 8px; font-size: .88rem; line-height: 1.3; }
+  .modele-legende { display: none; }
+  .modele-badge { left: 6px; top: 6px; padding: 1px 6px; font-size: .65rem; }
+  #modeles-3d .filters { flex-wrap: nowrap; overflow-x: auto; margin: 0 calc(var(--gutter) * -1) 20px; padding: 0 var(--gutter) 4px; scrollbar-width: none; }
+  #modeles-3d .filters::-webkit-scrollbar { display: none; }
+  #modeles-3d .filter { flex: none; }
+}
 .atelier-mur { list-style: none; margin: 0; padding: 0; columns: 3 300px; column-gap: 18px; }
 .atelier-item { break-inside: avoid; margin-bottom: 18px; }
 .atelier-item figure { margin: 0; border-radius: var(--r-md); overflow: hidden; background: var(--surface); border: 1px solid var(--line); }
