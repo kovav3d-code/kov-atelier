@@ -1164,8 +1164,9 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
 .btn { border-radius: 8px; }
 .qualif-passer, .real-nav a, .sommaire a, .bustes-son { border-radius: 8px; }
 
-/* ---- Réalisations « En vrai » : chaque projet est une pile de tirages posée sur le sous-main.
-   Survol (ordinateur) ou passage au milieu de l'écran (téléphone) : la pile s'ouvre en éventail.
+/* ---- Réalisations « En vrai » : chaque projet est un plateau d'impression, ses photos posées dessus comme des pièces
+   imprimées, chacune entourée de sa jupe (skirt) tracée en kraft. Survol (ordinateur) ou passage au milieu de l'écran
+   (téléphone) : le plateau s'incline et les pièces se décollent l'une après l'autre, la jupe reste sur le plateau.
    Clic ou toucher : visionneuse plein écran. */
 #en-vrai { position: relative; }
 #en-vrai::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: .35;
@@ -1173,27 +1174,39 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
 .piles-aide { margin: -8px 0 28px; color: var(--text-2); font-size: .9rem; }
 @media (hover: none) { .piles-aide { display: none; } }
 .piles { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); gap: 56px 40px; }
-.pile { display: grid; gap: 18px; justify-items: center; }
-.pile-btn { position: relative; display: block; width: min(100%, 290px); padding: 0; border: 0; background: none; cursor: zoom-in; -webkit-tap-highlight-color: transparent; }
-.pile-btn:focus-visible { outline: 3px solid var(--bleu-clair); outline-offset: 10px; border-radius: 6px; }
-.pile-cartes { position: relative; display: block; aspect-ratio: 4 / 5; }
-.carte { position: absolute; inset: 0; padding: 8px 8px 30px; background: #EDE6DA; border-radius: 2px; box-shadow: 0 6px 14px rgba(0, 0, 0, .35);
-  transform: rotate(calc(var(--r) * (1 - var(--k) * 2.2))) translate(calc(var(--k) * 5px), calc(var(--k) * 4px));
-  z-index: calc(3 - var(--k)); transition: transform .45s cubic-bezier(.2, .8, .2, 1), box-shadow .45s ease; }
-.carte img { display: block; width: 100%; height: 100%; object-fit: cover; background: #2A3037; }
-/* Ruban adhésif sur le tirage du dessus */
-.carte[style*="--k:0"]::after { content: ""; position: absolute; top: -9px; left: 50%; width: 70px; height: 20px; margin-left: -35px; transform: rotate(-4deg);
-  background: rgba(217, 195, 160, .55); box-shadow: 0 1px 2px rgba(0, 0, 0, .15); }
-.carte-lecture { position: absolute; left: 50%; top: calc(50% - 11px); width: 44px; height: 44px; margin: -22px 0 0 -22px; display: grid; place-items: center; border-radius: 50%; background: rgba(20, 23, 27, .72); color: #F7F8F6; font-size: 15px; padding-left: 3px; }
-/* Éventail */
-.pile-btn:hover .carte, .pile-btn:focus-visible .carte, .pile.en-vue .carte { box-shadow: 0 14px 28px rgba(0, 0, 0, .45); }
-.pile-btn:hover .carte[style*="--k:0"], .pile-btn:focus-visible .carte[style*="--k:0"], .pile.en-vue .carte[style*="--k:0"] { transform: translateY(-8px) scale(1.04) rotate(0deg); }
-.pile-btn:hover .carte[style*="--k:1"], .pile-btn:focus-visible .carte[style*="--k:1"], .pile.en-vue .carte[style*="--k:1"] { transform: translate(30%, 4px) rotate(9deg); }
-.pile-btn:hover .carte[style*="--k:2"], .pile-btn:focus-visible .carte[style*="--k:2"], .pile.en-vue .carte[style*="--k:2"] { transform: translate(-30%, 6px) rotate(-9deg); }
-.pile[data-n="2"] .pile-btn:hover .carte[style*="--k:1"], .pile[data-n="2"].en-vue .carte[style*="--k:1"] { transform: translate(24%, 2px) rotate(7deg); }
+.pile { display: grid; gap: 16px; justify-items: center; }
+.pile-btn { position: relative; display: block; width: min(100%, 300px); padding: 14px 0 0; border: 0; background: none; cursor: zoom-in; perspective: 900px; -webkit-tap-highlight-color: transparent; }
+.pile-btn:focus-visible { outline: 3px solid var(--bleu-clair); outline-offset: 8px; border-radius: 10px; }
+/* Le plateau : acier à revêtement texturé, grille de repères, languette de préhension en haut */
+.plateau { position: relative; display: grid; gap: 7%; padding: 9%; aspect-ratio: 1; border-radius: 10px;
+  background:
+    radial-gradient(rgba(255, 255, 255, .07) .6px, transparent 1px) 0 0 / 4px 4px,
+    linear-gradient(rgba(217, 195, 160, .09) 1px, transparent 1px) 0 0 / 25% 25%,
+    linear-gradient(90deg, rgba(217, 195, 160, .09) 1px, transparent 1px) 0 0 / 25% 25%,
+    linear-gradient(160deg, #2B3036, #1A1E22);
+  border: 1px solid rgba(255, 255, 255, .08); box-shadow: 0 10px 22px rgba(0, 0, 0, .4), inset 0 1px 0 rgba(255, 255, 255, .06);
+  transform-origin: 50% 100%; transition: transform .5s cubic-bezier(.2, .8, .2, 1); }
+.plateau::before { content: ""; position: absolute; top: -12px; left: 50%; width: 22%; height: 14px; margin-left: -11%; border-radius: 6px 6px 0 0;
+  background: #2B3036; border: 1px solid rgba(255, 255, 255, .08); border-bottom: 0; }
+.plateau-repere { position: absolute; right: 10px; bottom: 6px; font-family: 'Geist Mono', ui-monospace, monospace; font-size: .7rem; color: rgba(217, 195, 160, .55); letter-spacing: .02em; }
+/* Disposition des pièces selon leur nombre */
+.pile[data-n="1"] .plateau { grid-template: 1fr / 1fr; padding: 13%; }
+.pile[data-n="2"] .plateau { grid-template: 1fr / 1fr 1fr; align-items: center; }
+.pile[data-n="2"] .piece { aspect-ratio: 3 / 4; }
+.pile[data-n="3"] .plateau { grid-template: 1fr 1fr / 1.5fr 1fr; }
+.pile[data-n="3"] .piece[style*="--k:0"] { grid-row: span 2; }
+/* Une pièce : la photo posée, entourée de sa jupe */
+.piece { position: relative; display: block; min-height: 0; border-radius: 4px; outline: 1.5px solid rgba(217, 195, 160, .8); outline-offset: 5px; }
+.piece img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 4px; background: #2A3037;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .5); transform-origin: 50% 100%;
+  transition: transform .5s cubic-bezier(.2, .8, .2, 1) calc(var(--k) * 70ms), box-shadow .5s ease calc(var(--k) * 70ms); }
+.piece-lecture { position: absolute; left: 50%; top: 50%; width: 40px; height: 40px; margin: -20px 0 0 -20px; display: grid; place-items: center; border-radius: 50%; background: rgba(20, 23, 27, .72); color: #F7F8F6; font-size: 14px; padding-left: 3px; pointer-events: none; }
+/* Décollage */
+.pile-btn:hover .plateau, .pile-btn:focus-visible .plateau, .pile.en-vue .plateau { transform: rotateX(12deg); }
+.pile-btn:hover .piece img, .pile-btn:focus-visible .piece img, .pile.en-vue .piece img { transform: translateY(-9px) rotateX(-14deg) scale(1.03); box-shadow: 0 14px 18px rgba(0, 0, 0, .5); }
 .pile-titre { margin: 0; display: grid; gap: 2px; text-align: center; font-weight: 600; }
 .pile-titre span { font-family: 'Geist Mono', ui-monospace, monospace; font-size: .8rem; font-weight: 400; color: var(--atelier); }
-@media (max-width: 719px) { .piles { gap: 64px; } .pile-btn { width: min(78vw, 300px); } }
+@media (max-width: 719px) { .piles { gap: 56px; } .pile-btn { width: min(84vw, 320px); } }
 
 /* Visionneuse */
 .visionneuse { width: min(100vw - 24px, 1100px); max-width: none; max-height: calc(100dvh - 24px); padding: 0; border: 1px solid var(--line-strong); border-radius: 12px; background: var(--surface-2); color: var(--text); overflow: hidden; }
@@ -1216,4 +1229,4 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
 .v-vignette[aria-current="true"] { border-color: var(--atelier); opacity: 1; }
 .v-seule .v-nav, .v-seule .v-vignettes { visibility: hidden; }
 @media (max-width: 600px) { .v-scene { grid-template-columns: minmax(0, 1fr); } .v-nav { display: none; } .v-media { height: clamp(220px, 100dvh - 280px, 70dvh); } }
-@media (prefers-reduced-motion: reduce) { .carte { transition: none; } .visionneuse[open] { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .plateau, .piece img { transition: none; } .visionneuse[open] { animation: none; } }

@@ -10,14 +10,13 @@ const groupes = [
   ...GROUPES_ATELIER.map((g) => ({ titre: g.titre, medias: g.legendes.map((l) => parLegende.get(l)).filter((m) => m !== undefined) })),
   { titre: 'Autres réalisations', medias: ATELIER.filter((m) => !ranges.has(m.legende)) },
 ].filter((g) => g.medias.length);
-// Visionneuse : chaque projet devient une pile de tirages ; les médias en grand format sont préparés au build.
+// Visionneuse : chaque projet devient un plateau d'impression ; les médias en grand format sont préparés au build.
 const piles = await Promise.all(groupes.map(async (g) => ({
   titre: g.titre,
   medias: await Promise.all(g.medias.map(async (m) => m.type === 'photo'
     ? { type: 'photo', src: (await getImage({ src: m.src, width: 1600, format: 'webp' })).src, alt: m.alt, legende: m.legende }
     : { type: 'video', src: m.mp4, poster: m.poster, alt: m.alt, legende: m.legende })),
 })));
-const INCLINAISONS = [-3, 2.5, -1.5, 3.5, -2.5, 1.5, -3.5, 2];
 import Modeles3D from '../components/Modeles3D.astro';
 import SwitchEclate from '../components/SwitchEclate.astro';
 ---
@@ -63,18 +62,19 @@ import SwitchEclate from '../components/SwitchEclate.astro';
         <h2 id="t-vrai">En vrai, à l’atelier</h2>
         <p>Les pièces imprimées, finies et montées : résine, filament, finitions, et quelques coulisses de fabrication.</p>
       </div>
-      <p class="piles-aide">Survolez une pile pour l’ouvrir, cliquez pour voir les photos en grand.</p>
+      <p class="piles-aide">Survolez un plateau pour décoller les pièces, cliquez pour voir les photos en grand.</p>
       <ul class="piles">
         {groupes.map((g, gi) => (
-          <li class="pile" style={`--r:${INCLINAISONS[gi % INCLINAISONS.length]}deg`} data-n={g.medias.length}>
+          <li class="pile" data-n={Math.min(g.medias.length, 3)}>
             <button type="button" class="pile-btn" data-pile={gi} aria-label={`${g.titre} : voir ${g.medias.length > 1 ? `les ${g.medias.length} photos` : 'la photo'} en grand`}>
-              <span class="pile-cartes" aria-hidden="true">
+              <span class="plateau" aria-hidden="true">
+                <span class="plateau-repere">{String(gi + 1).padStart(2, '0')}</span>
                 {g.medias.slice(0, 3).map((m, k) => (
-                  <span class="carte" style={`--k:${k}`}>
+                  <span class="piece" style={`--k:${k}`}>
                     {m.type === 'photo'
                       ? <Image src={m.src} alt="" widths={[360, 560]} sizes="(max-width: 600px) 80vw, 300px" loading="lazy" />
                       : <img src={m.poster} alt="" loading="lazy" decoding="async" />}
-                    {m.type === 'video' && <span class="carte-lecture">▶</span>}
+                    {m.type === 'video' && <span class="piece-lecture">▶</span>}
                   </span>
                 ))}
               </span>
@@ -104,7 +104,7 @@ import SwitchEclate from '../components/SwitchEclate.astro';
 
   <CtaFinal titre="Un projet comparable ?" source="realisations-final" />
   <script is:inline>
-    // Piles de tirages : sur téléphone, la pile qui passe au milieu de l'écran s'ouvre en éventail.
+    // Plateaux d'impression : sur téléphone, le plateau qui passe au milieu de l'écran décolle ses pièces.
     // Au clic ou au toucher : visionneuse plein écran, flèches, clavier, glissement du doigt, vignettes.
     (function () {
       var donnees = JSON.parse((document.getElementById('piles-donnees') || {}).textContent || '[]');
