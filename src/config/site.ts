@@ -18,7 +18,7 @@ export const SITE = {
   googleBusinessUrl: 'https://maps.app.goo.gl/A63xX4MVkZPvfJw37' as string | null, // fiche Google Business Profile
 
   // Lien de réservation d'appel (Cal.com, Calendly…) : le bouton « Réserver un appel » n'apparaît que s'il est renseigné.
-  cultsUrl: null as string | null,          // boutique Cults3D, ex. 'https://cults3d.com/fr/utilisateurs/NOM/modeles-3d'
+  cultsUrl: 'https://cults3d.com/en/users/Kova3D/3d-models' as string | null, // boutique Cults3D
   calUrl: null as string | null,            // ex. 'https://cal.com/kov-atelier/15min'
 
   // Clé PUBLIQUE Cloudflare Turnstile (la clé secrète, elle, reste côté serveur)
