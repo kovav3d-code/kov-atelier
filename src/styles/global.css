@@ -494,6 +494,9 @@ html { scrollbar-color: var(--line-strong) var(--graphite); }
 /* Le noir des rotations rendues disparaît dans le fond du site (mode « éclaircir ») */
 .modele-scene video { mix-blend-mode: lighten; object-fit: contain; }
 .modele-scene video, .modele-canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+/* Rendus en studio : une vignette arrondie avec son propre fond, plus de fusion avec la page */
+.modele--studio .modele-scene { border-radius: 12px; overflow: hidden; background: #15181C; box-shadow: 0 0 0 1px rgba(255, 255, 255, .06); }
+.modele--studio .modele-scene video { mix-blend-mode: normal; object-fit: cover; }
 .modele-canvas canvas { display: block; width: 100%; height: 100%; cursor: grab; }
 .modele-canvas canvas:active { cursor: grabbing; }
 .modele-canvas::before { content: ""; position: absolute; left: 50%; top: 50%; width: 34px; height: 34px; margin: -17px; border-radius: 50%; border: 2px solid rgba(143, 176, 245, .25); border-top-color: var(--bleu-clair); animation: kov-tourne 1s linear infinite; }

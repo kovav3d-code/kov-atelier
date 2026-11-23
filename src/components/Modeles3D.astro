@@ -20,7 +20,7 @@ const liste = limite ? MODELES.slice(0, limite) : MODELES;
 )}
 <ul class="modeles-grille">
   {liste.map((m) => (
-    <li class="modele" data-categorie={m.categorie}>
+    <li class:list={["modele", { "modele--studio": m.studio }]} data-categorie={m.categorie}>
       <div class="modele-scene">
         {m.fichier ? (
           <div class="modele-canvas" data-modele-3d data-fichier={m.fichier} data-couleur={m.couleur} role="img" aria-label={m.alt}></div>
