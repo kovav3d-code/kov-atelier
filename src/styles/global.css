@@ -1164,49 +1164,50 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
 .btn { border-radius: 8px; }
 .qualif-passer, .real-nav a, .sommaire a, .bustes-son { border-radius: 8px; }
 
-/* ---- Réalisations « En vrai » : chaque projet est un plateau d'impression, ses photos posées dessus comme des pièces
-   imprimées, chacune entourée de sa jupe (skirt) tracée en kraft. Survol (ordinateur) ou passage au milieu de l'écran
-   (téléphone) : le plateau s'incline et les pièces se décollent l'une après l'autre, la jupe reste sur le plateau.
+/* ---- Réalisations « En vrai » : chaque projet est un petit tas de tirages papier posés sur le sous-main quadrillé.
+   Pas de cadre : la photo imprimée bord à bord, grain du papier, léger reflet, coin qui se soulève, ombre de contact.
+   Survol (ordinateur) ou passage au milieu de l'écran (téléphone) : les tirages s'écartent un peu.
    Clic ou toucher : visionneuse plein écran. */
 #en-vrai { position: relative; }
-#en-vrai::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: .35;
-  background: url("/medias/sous-main-grille.svg") var(--gutter) 0 / 200px 200px; -webkit-mask: linear-gradient(transparent, #000 12%, #000 88%, transparent); mask: linear-gradient(transparent, #000 12%, #000 88%, transparent); }
+#en-vrai::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: .5;
+  background: url("/medias/sous-main-grille.svg") var(--gutter) 0 / 200px 200px; -webkit-mask: linear-gradient(transparent, #000 8%, #000 92%, transparent); mask: linear-gradient(transparent, #000 8%, #000 92%, transparent); }
 .piles-aide { margin: -8px 0 28px; color: var(--text-2); font-size: .9rem; }
 @media (hover: none) { .piles-aide { display: none; } }
-.piles { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); gap: 56px 40px; }
-.pile { display: grid; gap: 16px; justify-items: center; }
-.pile-btn { position: relative; display: block; width: min(100%, 300px); padding: 14px 0 0; border: 0; background: none; cursor: zoom-in; perspective: 900px; -webkit-tap-highlight-color: transparent; }
-.pile-btn:focus-visible { outline: 3px solid var(--bleu-clair); outline-offset: 8px; border-radius: 10px; }
-/* Le plateau : acier à revêtement texturé, grille de repères, languette de préhension en haut */
-.plateau { position: relative; display: grid; gap: 7%; padding: 9%; aspect-ratio: 1; border-radius: 10px;
+.piles { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); gap: 48px 40px; }
+.pile { display: grid; gap: 14px; justify-items: center; }
+.pile-btn { position: relative; display: block; width: min(100%, 300px); padding: 0; border: 0; background: none; cursor: zoom-in; -webkit-tap-highlight-color: transparent; }
+.pile-btn:focus-visible { outline: 3px solid var(--bleu-clair); outline-offset: 8px; border-radius: 6px; }
+.tirages { position: relative; display: block; aspect-ratio: 1; }
+/* Un tirage : la photo seule, aux proportions d'origine */
+.tirage { position: absolute; left: 50%; top: 50%; width: 70%; z-index: calc(3 - var(--k));
+  transform: translate(-50%, -50%) translate(var(--x, 0), var(--y, 0)) rotate(var(--rr, var(--r)));
+  transition: transform .5s cubic-bezier(.2, .8, .2, 1); }
+.tirage img { display: block; width: 100%; height: auto; max-height: 300px; object-fit: cover; border-radius: 1px; background: #2A3037;
+  box-shadow: 0 0 0 .5px rgba(0, 0, 0, .35), 0 1px 1px rgba(0, 0, 0, .35), 0 3px 6px rgba(0, 0, 0, .28), 0 14px 22px -10px rgba(0, 0, 0, .55);
+  transition: box-shadow .5s ease; }
+/* Papier : grain, reflet de la lumière en haut à gauche, coin bas droit légèrement soulevé */
+.tirage::after { content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: 1px;
   background:
-    radial-gradient(rgba(255, 255, 255, .07) .6px, transparent 1px) 0 0 / 4px 4px,
-    linear-gradient(rgba(217, 195, 160, .09) 1px, transparent 1px) 0 0 / 25% 25%,
-    linear-gradient(90deg, rgba(217, 195, 160, .09) 1px, transparent 1px) 0 0 / 25% 25%,
-    linear-gradient(160deg, #2B3036, #1A1E22);
-  border: 1px solid rgba(255, 255, 255, .08); box-shadow: 0 10px 22px rgba(0, 0, 0, .4), inset 0 1px 0 rgba(255, 255, 255, .06);
-  transform-origin: 50% 100%; transition: transform .5s cubic-bezier(.2, .8, .2, 1); }
-.plateau::before { content: ""; position: absolute; top: -12px; left: 50%; width: 22%; height: 14px; margin-left: -11%; border-radius: 6px 6px 0 0;
-  background: #2B3036; border: 1px solid rgba(255, 255, 255, .08); border-bottom: 0; }
-.plateau-repere { position: absolute; right: 10px; bottom: 6px; font-family: 'Geist Mono', ui-monospace, monospace; font-size: .7rem; color: rgba(217, 195, 160, .55); letter-spacing: .02em; }
-/* Disposition des pièces selon leur nombre */
-.pile[data-n="1"] .plateau { grid-template: 1fr / 1fr; padding: 13%; }
-.pile[data-n="2"] .plateau { grid-template: 1fr / 1fr 1fr; align-items: center; }
-.pile[data-n="2"] .piece { aspect-ratio: 3 / 4; }
-.pile[data-n="3"] .plateau { grid-template: 1fr 1fr / 1.5fr 1fr; }
-.pile[data-n="3"] .piece[style*="--k:0"] { grid-row: span 2; }
-/* Une pièce : la photo posée, entourée de sa jupe */
-.piece { position: relative; display: block; min-height: 0; border-radius: 4px; outline: 1.5px solid rgba(217, 195, 160, .8); outline-offset: 5px; }
-.piece img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 4px; background: #2A3037;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, .5); transform-origin: 50% 100%;
-  transition: transform .5s cubic-bezier(.2, .8, .2, 1) calc(var(--k) * 70ms), box-shadow .5s ease calc(var(--k) * 70ms); }
-.piece-lecture { position: absolute; left: 50%; top: 50%; width: 40px; height: 40px; margin: -20px 0 0 -20px; display: grid; place-items: center; border-radius: 50%; background: rgba(20, 23, 27, .72); color: #F7F8F6; font-size: 14px; padding-left: 3px; pointer-events: none; }
-/* Décollage */
-.pile-btn:hover .plateau, .pile-btn:focus-visible .plateau, .pile.en-vue .plateau { transform: rotateX(12deg); }
-.pile-btn:hover .piece img, .pile-btn:focus-visible .piece img, .pile.en-vue .piece img { transform: translateY(-9px) rotateX(-14deg) scale(1.03); box-shadow: 0 14px 18px rgba(0, 0, 0, .5); }
+    linear-gradient(315deg, rgba(0, 0, 0, .22) 0, rgba(0, 0, 0, 0) 9%),
+    linear-gradient(135deg, rgba(255, 255, 255, .14) 0, rgba(255, 255, 255, 0) 38%, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, .1) 100%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23g)'/%3E%3C/svg%3E");
+  mix-blend-mode: soft-light; }
+/* Ombre plus marquée sous le coin soulevé */
+.tirage::before { content: ""; position: absolute; right: 3%; bottom: 4px; width: 40%; height: 18%; z-index: -1;
+  box-shadow: 6px 8px 12px rgba(0, 0, 0, .45); transform: rotate(4deg) skew(8deg); }
+.tirage-lecture { position: absolute; left: 50%; top: 50%; z-index: 1; width: 40px; height: 40px; margin: -20px 0 0 -20px; display: grid; place-items: center; border-radius: 50%; background: rgba(20, 23, 27, .72); color: #F7F8F6; font-size: 14px; padding-left: 3px; }
+/* Position de chaque tirage dans le tas */
+.tirage[style*="--k:1"] { --x: 14%; --y: -9%; --rr: calc(var(--r) * -2.2 + 4deg); }
+.tirage[style*="--k:2"] { --x: -15%; --y: 8%; --rr: calc(var(--r) * 1.8 - 5deg); }
+/* Survol : ils s'écartent, celui du dessus se soulève */
+.pile-btn:hover .tirage[style*="--k:0"], .pile-btn:focus-visible .tirage[style*="--k:0"], .pile.en-vue .tirage[style*="--k:0"] { --y: -3%; --rr: 0deg; }
+.pile-btn:hover .tirage[style*="--k:0"] img, .pile-btn:focus-visible .tirage[style*="--k:0"] img, .pile.en-vue .tirage[style*="--k:0"] img {
+  box-shadow: 0 0 0 .5px rgba(0, 0, 0, .3), 0 2px 3px rgba(0, 0, 0, .3), 0 10px 16px rgba(0, 0, 0, .3), 0 26px 34px -12px rgba(0, 0, 0, .6); }
+.pile-btn:hover .tirage[style*="--k:1"], .pile-btn:focus-visible .tirage[style*="--k:1"], .pile.en-vue .tirage[style*="--k:1"] { --x: 28%; --y: -6%; --rr: 8deg; }
+.pile-btn:hover .tirage[style*="--k:2"], .pile-btn:focus-visible .tirage[style*="--k:2"], .pile.en-vue .tirage[style*="--k:2"] { --x: -28%; --y: 6%; --rr: -8deg; }
 .pile-titre { margin: 0; display: grid; gap: 2px; text-align: center; font-weight: 600; }
 .pile-titre span { font-family: 'Geist Mono', ui-monospace, monospace; font-size: .8rem; font-weight: 400; color: var(--atelier); }
-@media (max-width: 719px) { .piles { gap: 56px; } .pile-btn { width: min(84vw, 320px); } }
+@media (max-width: 719px) { .piles { gap: 48px; } .pile-btn { width: min(84vw, 320px); } }
 
 /* Visionneuse */
 .visionneuse { width: min(100vw - 24px, 1100px); max-width: none; max-height: calc(100dvh - 24px); padding: 0; border: 1px solid var(--line-strong); border-radius: 12px; background: var(--surface-2); color: var(--text); overflow: hidden; }
@@ -1229,4 +1230,4 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
 .v-vignette[aria-current="true"] { border-color: var(--atelier); opacity: 1; }
 .v-seule .v-nav, .v-seule .v-vignettes { visibility: hidden; }
 @media (max-width: 600px) { .v-scene { grid-template-columns: minmax(0, 1fr); } .v-nav { display: none; } .v-media { height: clamp(220px, 100dvh - 280px, 70dvh); } }
-@media (prefers-reduced-motion: reduce) { .plateau, .piece img { transition: none; } .visionneuse[open] { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .tirage, .tirage img { transition: none; } .visionneuse[open] { animation: none; } }

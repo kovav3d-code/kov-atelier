@@ -10,7 +10,7 @@ const groupes = [
   ...GROUPES_ATELIER.map((g) => ({ titre: g.titre, medias: g.legendes.map((l) => parLegende.get(l)).filter((m) => m !== undefined) })),
   { titre: 'Autres réalisations', medias: ATELIER.filter((m) => !ranges.has(m.legende)) },
 ].filter((g) => g.medias.length);
-// Visionneuse : chaque projet devient un plateau d'impression ; les médias en grand format sont préparés au build.
+// Visionneuse : chaque projet devient un petit tas de tirages papier ; les médias en grand format sont préparés au build.
 const piles = await Promise.all(groupes.map(async (g) => ({
   titre: g.titre,
   medias: await Promise.all(g.medias.map(async (m) => m.type === 'photo'
@@ -62,19 +62,18 @@ import SwitchEclate from '../components/SwitchEclate.astro';
         <h2 id="t-vrai">En vrai, à l’atelier</h2>
         <p>Les pièces imprimées, finies et montées : résine, filament, finitions, et quelques coulisses de fabrication.</p>
       </div>
-      <p class="piles-aide">Survolez un plateau pour décoller les pièces, cliquez pour voir les photos en grand.</p>
+      <p class="piles-aide">Survolez des tirages pour les écarter, cliquez pour voir les photos en grand.</p>
       <ul class="piles">
         {groupes.map((g, gi) => (
-          <li class="pile" data-n={Math.min(g.medias.length, 3)}>
+          <li class="pile" data-n={Math.min(g.medias.length, 3)} style={`--r:${[-2, 1.5, -1, 2.5, -1.5, 1, -2.5, 2][gi % 8]}deg`}>
             <button type="button" class="pile-btn" data-pile={gi} aria-label={`${g.titre} : voir ${g.medias.length > 1 ? `les ${g.medias.length} photos` : 'la photo'} en grand`}>
-              <span class="plateau" aria-hidden="true">
-                <span class="plateau-repere">{String(gi + 1).padStart(2, '0')}</span>
+              <span class="tirages" aria-hidden="true">
                 {g.medias.slice(0, 3).map((m, k) => (
-                  <span class="piece" style={`--k:${k}`}>
+                  <span class="tirage" style={`--k:${k}`}>
                     {m.type === 'photo'
-                      ? <Image src={m.src} alt="" widths={[360, 560]} sizes="(max-width: 600px) 80vw, 300px" loading="lazy" />
+                      ? <Image src={m.src} alt="" widths={[360, 560]} sizes="(max-width: 600px) 70vw, 240px" loading="lazy" />
                       : <img src={m.poster} alt="" loading="lazy" decoding="async" />}
-                    {m.type === 'video' && <span class="piece-lecture">▶</span>}
+                    {m.type === 'video' && <span class="tirage-lecture">▶</span>}
                   </span>
                 ))}
               </span>
@@ -104,7 +103,7 @@ import SwitchEclate from '../components/SwitchEclate.astro';
 
   <CtaFinal titre="Un projet comparable ?" source="realisations-final" />
   <script is:inline>
-    // Plateaux d'impression : sur téléphone, le plateau qui passe au milieu de l'écran décolle ses pièces.
+    // Tirages papier : sur téléphone, les tirages qui passent au milieu de l'écran s'écartent.
     // Au clic ou au toucher : visionneuse plein écran, flèches, clavier, glissement du doigt, vignettes.
     (function () {
       var donnees = JSON.parse((document.getElementById('piles-donnees') || {}).textContent || '[]');
