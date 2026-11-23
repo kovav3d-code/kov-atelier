@@ -25,6 +25,8 @@ import sculptureAjouree from '../assets/realisations/sculpture-organique-ajouree
 import dioramaOrganique from '../assets/realisations/diorama-organique.jpg';
 import plaqueRelief from '../assets/realisations/plaque-relief-resine.jpg';
 import chatArticule from '../assets/realisations/chat-articule.jpg';
+import cambridgeAvant from '../assets/realisations/maquette-cambridge-avant.jpg';
+import cambridgeArriere from '../assets/realisations/maquette-cambridge-arriere.jpg';
 
 /**
  * Modèle 3D affiché en rotation continue.
@@ -38,7 +40,7 @@ export type Modele3D = {
   alt: string;
   fichier?: string;
   couleur?: string; // couleur du matériau pour un .stl (sans couleur propre)
-  categorie: 'Pièces techniques' | 'Sculptures et figurines';
+  categorie: 'Pièces techniques' | 'Sculptures et figurines' | 'Maquettes';
   video?: { mp4: string; poster: string };
 };
 
@@ -49,6 +51,8 @@ export const MODELES: Modele3D[] = [
   { id: 'boitier-ecran', titre: 'Boîtier support d’écran', legende: 'Conception sur mesure, découpes et fixations', categorie: 'Pièces techniques', alt: 'Rotation à 360° d’un boîtier rectangulaire ouvert avec découpes latérales', video: { mp4: '/videos/modeles/boitier-ecran-360.mp4', poster: '/videos/modeles/boitier-ecran-360.jpg' } },
   { id: 'piece-arbalete', titre: 'Pièce d’arbalète', legende: 'Conception sur mesure, version 3', categorie: 'Pièces techniques', alt: 'Rotation à 360° d’une pièce de carénage d’arbalète, coque à pans coupés avec ses points de fixation', video: { mp4: '/videos/modeles/piece-arbalete-360.mp4', poster: '/videos/modeles/piece-arbalete-360.jpg' } },
   { id: 'angle-fenetre', titre: 'Angle de fenêtre', legende: 'Pièce de remplacement', categorie: 'Pièces techniques', alt: 'Rotation à 360° d’une pièce d’angle de fenêtre', video: { mp4: '/videos/modeles/angle-fenetre-360.mp4', poster: '/videos/modeles/angle-fenetre-360.jpg' } },
+  { id: 'engrenage-double', titre: 'Engrenage double de remplacement', legende: 'Pignon et couronne d’une seule pièce, version 2', categorie: 'Pièces techniques', alt: 'Rotation à 360° d’un engrenage double : une grande couronne dentée surmontée d’un petit pignon', video: { mp4: '/videos/modeles/engrenage-double-360.mp4', poster: '/videos/modeles/engrenage-double-360.jpg' } },
+  { id: 'maquette-cambridge', titre: 'Maquette de la résidence Cambridge', legende: 'Maquette d’architecture en deux blocs assemblés', categorie: 'Maquettes', alt: 'Rotation à 360° de la maquette d’un immeuble de quatre étages avec balcons, façade avant puis façade arrière', video: { mp4: '/videos/modeles/maquette-cambridge-360.mp4', poster: '/videos/modeles/maquette-cambridge-360.jpg' } },
   { id: 'chat-articule', titre: 'Chat articulé', legende: 'Figurine articulée, imprimée en filament', categorie: 'Sculptures et figurines', alt: 'Rotation à 360° d’un chat articulé au large sourire, assis, bras le long du corps', video: { mp4: '/videos/modeles/chat-articule-360.mp4', poster: '/videos/modeles/chat-articule-360.jpg' } },
   { id: 'masque-sculpte', titre: 'Masque sculpté sur mesure', legende: 'Sculpté sur le scan 3D d’un visage', categorie: 'Sculptures et figurines', alt: 'Rotation à 360° d’un masque couvrant le bas du visage, mâchoire aux crocs apparents', video: { mp4: '/videos/modeles/masque-sculpte-360.mp4', poster: '/videos/modeles/masque-sculpte-360.jpg' } },
   {
@@ -82,6 +86,8 @@ export const ATELIER: MediaAtelier[] = [
   { type: 'photo', src: figurineDetail, alt: 'Détail d’une impression en résine translucide, visage, ailes et attaches', legende: 'Détail d’impression résine' },
   { type: 'photo', src: conteneurGris, alt: 'Maquette de conteneur aménagé avec enseigne, version brute', legende: 'Maquette de conteneur, version brute' },
   { type: 'photo', src: conteneurNoir, alt: 'La même maquette de conteneur en version noire, enseigne en relief', legende: 'Maquette de conteneur, version finie' },
+  { type: 'photo', src: cambridgeAvant, alt: 'Maquette imprimée de la résidence Cambridge, façade avant, devant une photo du bâtiment réel affichée à l’écran', legende: 'Résidence Cambridge : la maquette face au bâtiment, côté entrée' },
+  { type: 'photo', src: cambridgeArriere, alt: 'Maquette imprimée de la résidence Cambridge, façade arrière avec balcons et accès au parking, devant une photo du bâtiment réel', legende: 'Résidence Cambridge : façade arrière et accès au parking' },
   { type: 'photo', src: busteStudio, alt: 'Buste imprimé en 3D d’un homme barbu, finition noir brillant, vu de trois quarts sur fond clair', legende: 'Buste portrait, vue de trois quarts' },
   { type: 'photo', src: aladdins, alt: 'Présentoir à montres personnalisé surmonté d’une figurine, plaque gravée', legende: 'Présentoir à montres personnalisé' },
   { type: 'photo', src: echecsPlateau, alt: 'Jeu d’échecs complet en résine grise disposé sur un plateau en verre', legende: 'L’échiquier complet' },
@@ -106,6 +112,7 @@ export const GROUPES_ATELIER: { titre: string; legendes: string[] }[] = [
   { titre: 'Pots oursins', legendes: ['Pots oursins, brut et peint', 'Pots oursins suspendus, en situation'] },
   { titre: 'Jeu d’échecs', legendes: ['Jeu d’échecs en résine', 'L’échiquier complet'] },
   { titre: 'Sculptures organiques', legendes: ['Sculpture organique ajourée, résine', 'Pièce organique, détail des écailles', 'Pièces organiques en résine', 'Socle de diorama organique', 'Plaque sculptée en relief, résine'] },
+  { titre: 'Maquette de la résidence Cambridge', legendes: ['Résidence Cambridge : la maquette face au bâtiment, côté entrée', 'Résidence Cambridge : façade arrière et accès au parking'] },
   { titre: 'Maquette de conteneur', legendes: ['Maquette de conteneur, version brute', 'Maquette de conteneur, version finie'] },
   { titre: 'Objets personnalisés', legendes: ['Trophée sur mesure pour une agence', 'Présentoir à montres personnalisé', 'Plaques QR code en relief'] },
   { titre: 'Pièces techniques et figurines', legendes: ['Adaptateur de crosse pliante', 'Chat articulé, filament cuivré'] },
