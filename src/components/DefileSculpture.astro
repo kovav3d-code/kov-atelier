@@ -16,21 +16,21 @@ const ETAPES = [
 ];
 ---
 {actif && (
-  <section class="defile" aria-label="La sculpture Cthulhu, de ses cinq pièces à la sculpture assemblée" data-defile data-dossier={DOSSIER} data-n={N}>
-    <div class="defile-scene">
-      <canvas class="defile-canvas" width="1000" height="1000" aria-hidden="true"></canvas>
-      <img class="defile-fixe" src={`${DOSSIER}c085.webp`} alt="La sculpture Cthulhu assemblée sur son socle gravé, rendu 3D" width="1000" height="1000" loading="lazy" decoding="async" />
-      <div class="defile-textes">
+  <section class="sdf" aria-label="La sculpture Cthulhu, de ses cinq pièces à la sculpture assemblée" data-defile data-dossier={DOSSIER} data-n={N}>
+    <div class="sdf-scene">
+      <canvas class="sdf-canvas" width="1000" height="1000" aria-hidden="true"></canvas>
+      <img class="sdf-fixe" src={`${DOSSIER}c085.webp`} alt="La sculpture Cthulhu assemblée sur son socle gravé, rendu 3D" width="1000" height="1000" loading="lazy" decoding="async" />
+      <div class="sdf-textes">
         {ETAPES.map((e) => (
-          <div class="defile-etape" data-de={e.de} data-a={e.a}>
-            <p class="defile-sur">{e.sur}</p>
+          <div class="sdf-etape" data-de={e.de} data-a={e.a}>
+            <p class="sdf-sur">{e.sur}</p>
             <h2>{e.titre}</h2>
             <p>{e.texte}</p>
             {e.cta && <a class="btn btn-primary" href="/devis?prestation=artistique" data-cta="defile">Demander un devis</a>}
           </div>
         ))}
       </div>
-      <div class="defile-barre" aria-hidden="true"><span></span></div>
+      <div class="sdf-barre" aria-hidden="true"><span></span></div>
     </div>
   </section>
 )}
@@ -38,9 +38,9 @@ const ETAPES = [
   (function () {
     var s = document.querySelector('[data-defile]');
     if (!s) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { s.classList.add('defile-reduit'); return; }
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { s.classList.add('sdf-reduit'); return; }
     var cv = s.querySelector('canvas'), cx = cv.getContext('2d'), N = +s.dataset.n, dos = s.dataset.dossier;
-    var etapes = [].slice.call(s.querySelectorAll('.defile-etape')), barre = s.querySelector('.defile-barre span');
+    var etapes = [].slice.call(s.querySelectorAll('.sdf-etape')), barre = s.querySelector('.sdf-barre span');
     var imgs = new Array(N), charge = false, dernier = -1;
     function nom(i) { return dos + 'c' + ('00' + i).slice(-3) + '.webp'; }
     function img(i, cb) { var im = new Image(); im.decoding = 'async'; im.onload = function () { imgs[i] = im; if (cb) cb(); }; im.src = nom(i); }
