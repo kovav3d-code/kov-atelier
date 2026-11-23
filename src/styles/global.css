@@ -1243,3 +1243,37 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
 .v-seule .v-nav, .v-seule .v-vignettes { visibility: hidden; }
 @media (max-width: 600px) { .v-scene { grid-template-columns: minmax(0, 1fr); } .v-nav { display: none; } }
 @media (prefers-reduced-motion: reduce) { .tirage, .tirage img { transition: none; } .visionneuse[open] { animation: none; } }
+
+/* ---- Accueil : sculpture au défilement (façon page produit). La scène reste fixe pendant 4 écrans de défilement ;
+   le canvas affiche l'image qui correspond à la position, les textes se relaient à gauche (en bas sur téléphone). */
+.defile { position: relative; height: 420vh; background: #15181C; }
+.defile-scene { position: sticky; top: 0; height: 100vh; height: 100dvh; overflow: hidden; display: grid; }
+.defile-canvas, .defile-fixe { position: absolute; top: 50%; left: 62%; width: min(100dvh, 92vw); height: auto; aspect-ratio: 1; transform: translate(-50%, -50%);
+  -webkit-mask: radial-gradient(closest-side, #000 72%, transparent); mask: radial-gradient(closest-side, #000 72%, transparent); }
+.defile-fixe { display: none; }
+.defile-textes { position: relative; z-index: 1; align-self: center; width: min(100% - 2 * var(--gutter), 1200px); margin: 0 auto; }
+.defile-etape { position: absolute; top: 50%; left: 0; width: min(38%, 420px); transform: translateY(calc(-50% + 18px)); opacity: 0; visibility: hidden;
+  transition: opacity .5s ease, transform .6s cubic-bezier(.2, .8, .2, 1), visibility 0s linear .5s; }
+.defile-etape.visible { opacity: 1; visibility: visible; transform: translateY(-50%); transition: opacity .5s ease, transform .6s cubic-bezier(.2, .8, .2, 1), visibility 0s; }
+.defile-sur { margin: 0 0 10px; font-family: 'Geist Mono', ui-monospace, monospace; font-size: .85rem; color: var(--atelier); }
+.defile-etape h2 { margin: 0 0 14px; font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(2.4rem, 5vw, 4.2rem); line-height: 1.02; }
+.defile-etape p:not(.defile-sur) { margin: 0 0 22px; color: var(--text-2); font-size: 1.05rem; line-height: 1.55; }
+.defile-barre { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: rgba(255, 255, 255, .06); }
+.defile-barre span { display: block; height: 100%; background: var(--atelier); transform: scaleX(0); transform-origin: 0 50%; }
+@media (max-width: 799px) {
+  .defile { height: 380vh; }
+  .defile-canvas, .defile-fixe { left: 50%; top: 40%; width: min(108vw, 70dvh); }
+  .defile-textes { align-self: end; padding-bottom: max(28px, env(safe-area-inset-bottom)); }
+  .defile-textes::before { content: ""; position: absolute; inset: -90px calc(var(--gutter) * -1) -40px; background: linear-gradient(transparent, rgba(21, 24, 28, .92) 45%); z-index: -1; }
+  .defile-etape { top: auto; bottom: 0; width: 100%; transform: translateY(18px); }
+  .defile-etape.visible { transform: none; }
+  .defile-etape h2 { font-size: clamp(2rem, 9vw, 2.6rem); margin-bottom: 8px; }
+  .defile-etape p:not(.defile-sur) { font-size: .95rem; margin-bottom: 16px; }
+}
+/* Animations réduites : pas de scène collante, image fixe puis les textes à la suite */
+.defile-reduit { height: auto; }
+.defile-reduit .defile-scene { position: relative; height: auto; display: block; padding: 64px 0; }
+.defile-reduit .defile-canvas, .defile-reduit .defile-barre { display: none; }
+.defile-reduit .defile-fixe { display: block; position: relative; left: auto; top: auto; transform: none; margin: 0 auto; width: min(560px, 90vw); }
+.defile-reduit .defile-textes { display: grid; gap: 32px; }
+.defile-reduit .defile-etape, .defile-reduit .defile-textes::before { position: static; width: auto; opacity: 1; visibility: visible; transform: none; }

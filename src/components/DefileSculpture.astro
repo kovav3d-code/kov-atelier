@@ -1,0 +1,70 @@
+---
+// Section « façon Apple » : pendant le défilement, la sculpture (Cthulhu en 5 pièces) passe de l'éclaté à l'assemblé,
+// fait un tour complet puis la caméra s'approche de la tête. Images pré-calculées (rendus 3D de l'atelier, pas d'IA),
+// dessinées dans un canvas selon la position de défilement. Quatre textes se relaient à côté.
+// Sans images dans public/defile/cthulhu, la section n'apparaît pas. Animations réduites : image fixe + textes à la suite.
+import fs from 'node:fs';
+import path from 'node:path';
+const DOSSIER = '/defile/cthulhu/';
+const N = 120;
+const actif = fs.existsSync(path.join(process.cwd(), 'public', DOSSIER, 'c000.webp'));
+const ETAPES = [
+  { de: 0, a: 0.2, sur: 'Sculpture en cinq pièces', titre: 'Pensée pièce par pièce', texte: 'Tête, corps, ailes, logo, socle : chaque élément est modélisé pour s’imprimer seul, puis s’emboîter.' },
+  { de: 0.24, a: 0.44, sur: 'Assemblage', titre: 'Puis réunie', texte: 'Les pièces se rejoignent pour former la sculpture finale.' },
+  { de: 0.5, a: 0.8, sur: 'À 360°', titre: 'Travaillée sous tous les angles', texte: 'Ailes, tentacules, gravures du socle : chaque face est sculptée, pas seulement celle de la photo.' },
+  { de: 0.86, a: 1.01, sur: 'Votre projet', titre: 'Jusqu’au moindre détail', texte: 'Une figurine, un buste, une pièce de collection : on la conçoit avec vous.', cta: true },
+];
+---
+{actif && (
+  <section class="defile" aria-label="La sculpture Cthulhu, de ses cinq pièces à la sculpture assemblée" data-defile data-dossier={DOSSIER} data-n={N}>
+    <div class="defile-scene">
+      <canvas class="defile-canvas" width="1000" height="1000" aria-hidden="true"></canvas>
+      <img class="defile-fixe" src={`${DOSSIER}c085.webp`} alt="La sculpture Cthulhu assemblée sur son socle gravé, rendu 3D" width="1000" height="1000" loading="lazy" decoding="async" />
+      <div class="defile-textes">
+        {ETAPES.map((e) => (
+          <div class="defile-etape" data-de={e.de} data-a={e.a}>
+            <p class="defile-sur">{e.sur}</p>
+            <h2>{e.titre}</h2>
+            <p>{e.texte}</p>
+            {e.cta && <a class="btn btn-primary" href="/devis?prestation=artistique" data-cta="defile">Demander un devis</a>}
+          </div>
+        ))}
+      </div>
+      <div class="defile-barre" aria-hidden="true"><span></span></div>
+    </div>
+  </section>
+)}
+<script is:inline>
+  (function () {
+    var s = document.querySelector('[data-defile]');
+    if (!s) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { s.classList.add('defile-reduit'); return; }
+    var cv = s.querySelector('canvas'), cx = cv.getContext('2d'), N = +s.dataset.n, dos = s.dataset.dossier;
+    var etapes = [].slice.call(s.querySelectorAll('.defile-etape')), barre = s.querySelector('.defile-barre span');
+    var imgs = new Array(N), charge = false, dernier = -1;
+    function nom(i) { return dos + 'c' + ('00' + i).slice(-3) + '.webp'; }
+    function img(i, cb) { var im = new Image(); im.decoding = 'async'; im.onload = function () { imgs[i] = im; if (cb) cb(); }; im.src = nom(i); }
+    // Première image tout de suite, les autres quand la section approche (une sur quatre d'abord, puis le reste).
+    img(0, function () { dessiner(true); });
+    function charger() {
+      if (charge) return; charge = true;
+      var ordre = [];
+      for (var i = 0; i < N; i += 4) ordre.push(i);
+      for (i = 0; i < N; i++) if (i % 4) ordre.push(i);
+      var k = 0; (function suite() { var lot = ordre.slice(k, k + 6); k += 6; var r = lot.length; if (!r) return;
+        lot.forEach(function (j) { img(j, function () { if (--r === 0) suite(); dessiner(true); }); }); })();
+    }
+    new IntersectionObserver(function (es) { if (es[0].isIntersecting) charger(); }, { rootMargin: '150% 0px' }).observe(s);
+    function progres() { var r = s.getBoundingClientRect(); var p = -r.top / (r.height - innerHeight); return Math.max(0, Math.min(1, p)); }
+    function proche(i) { for (var d = 0; d < N; d++) { if (imgs[i - d]) return imgs[i - d]; if (imgs[i + d]) return imgs[i + d]; } return null; }
+    function dessiner(force) {
+      var p = progres(), i = Math.round(p * (N - 1));
+      if (i !== dernier || force) { var im = proche(i); if (im) { cx.drawImage(im, 0, 0, cv.width, cv.height); dernier = imgs[i] ? i : -1; } }
+      etapes.forEach(function (e) { var de = +e.dataset.de, a = +e.dataset.a; var v = p >= de && p < a; e.classList.toggle('visible', v); });
+      barre.style.transform = 'scaleX(' + p.toFixed(4) + ')';
+    }
+    var attente = false;
+    addEventListener('scroll', function () { if (attente) return; attente = true; requestAnimationFrame(function () { attente = false; dessiner(false); }); }, { passive: true });
+    addEventListener('resize', function () { dessiner(true); });
+  })();
+</script>
