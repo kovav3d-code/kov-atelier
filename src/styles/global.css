@@ -1324,3 +1324,10 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
 @media (max-width: 799px) { .sdf-indice { left: auto; right: 16px; bottom: auto; top: 92px; transform: none; } }
 .sdf-reduit .sdf-indice { display: none; }
 @media (prefers-reduced-motion: reduce) { .sdf-indice svg { animation: none; } }
+
+/* Accueil : aperçu des réalisations puis bouton vers la page complète */
+.real-suite { display: grid; justify-items: center; gap: 10px; margin: clamp(32px, 5vw, 48px) 0 0; text-align: center; }
+.real-suite > span { color: var(--text-2); font-size: .9rem; }
+.real-cta { gap: 10px; padding-inline: 26px; font-size: 1.05rem; border-color: var(--atelier); }
+.real-cta span { display: inline-block; transition: transform .25s cubic-bezier(.2, .8, .2, 1); }
+.real-cta:hover span, .real-cta:focus-visible span { transform: translateX(5px); }

@@ -3,15 +3,12 @@ import Base from '../layouts/Base.astro';
 import Services from '../components/Services.astro';
 import Steps from '../components/Steps.astro';
 import Modeles3D from '../components/Modeles3D.astro';
-import { Image } from 'astro:assets';
-import { ATELIER } from '../config/galerie';
 import Icon from '../components/Icon.astro';
 import IntroVideo from '../components/IntroVideo.astro';
 import DefileSculpture from '../components/DefileSculpture.astro';
 import { SITE } from '../config/site';
 import { SERVICES } from '../config/services';
 
-const photosAtelier = ATELIER.filter((m) => m.type === 'photo').slice(0, 6);
 
 // Données structurées : uniquement des informations vérifiées (les champs non confirmés sont omis).
 const url = Astro.site!.toString();
@@ -113,16 +110,13 @@ const BESOINS = [
     <div class="wrap">
       <div class="section-head">
         <h2 id="t-real">Nos réalisations</h2>
-        <p>Les modèles conçus à l’atelier, en rotation, puis les pièces bien réelles qui en sortent.</p>
+        <p>Un aperçu des modèles conçus à l’atelier. La suite est sur la page Réalisations.</p>
       </div>
-      <Modeles3D limite={6} />
-      <h3 class="sous-titre-real">En vrai, à l’atelier</h3>
-      <ul class="atelier-bande">
-        {photosAtelier.map((m) => m.type === 'photo' && (
-          <li><figure><Image src={m.src} alt={m.alt} widths={[360, 600]} sizes="(max-width: 600px) 50vw, 200px" loading="lazy" /><figcaption>{m.legende}</figcaption></figure></li>
-        ))}
-      </ul>
-      <p class="section-foot"><a class="link" href="/realisations">Voir toutes les réalisations</a></p>
+      <Modeles3D limite={4} />
+      <p class="real-suite">
+        <a class="btn btn-ghost real-cta" href="/realisations" data-cta="accueil-realisations">Voir toutes les réalisations<span aria-hidden="true">→</span></a>
+        <span>Modèles 3D, bustes et photos des pièces imprimées</span>
+      </p>
     </div>
   </section>
 
