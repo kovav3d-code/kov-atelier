@@ -1277,3 +1277,22 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
 .defile-reduit .defile-fixe { display: block; position: relative; left: auto; top: auto; transform: none; margin: 0 auto; width: min(560px, 90vw); }
 .defile-reduit .defile-textes { display: grid; gap: 32px; }
 .defile-reduit .defile-etape, .defile-reduit .defile-textes::before { position: static; width: auto; opacity: 1; visibility: visible; transform: none; }
+
+/* ---- En-tête Réalisations : interrupteur éclaté animé.
+   Arrivée : la touche descend en place, le boîtier puis la base remontent. Ensuite chaque pièce flotte doucement.
+   Défilement : les pièces s'écartent (vue éclatée qui s'ouvre), réglé par --s (0 en haut de page, 1 après 60 % d'écran). */
+.sw { --s: 0; }
+.sw-touche, .sw-boitier, .sw-base { transform: none; }
+.sw-touche { translate: 0 calc(-4px - var(--s) * 48px); rotate: calc(var(--s) * -7deg); animation: sw-arrive-haut .9s cubic-bezier(.2, .8, .2, 1) both; }
+.sw-boitier { translate: calc(-13 * var(--u)) calc(var(--s) * 22px); rotate: calc(var(--s) * 5deg); animation: sw-arrive-bas .9s cubic-bezier(.2, .8, .2, 1) .12s both; }
+.sw-base { translate: 0 calc(8px + var(--s) * 60px); rotate: calc(var(--s) * -3deg); animation: sw-arrive-bas .9s cubic-bezier(.2, .8, .2, 1) .24s both; }
+.sw-touche img { animation: sw-flotte 5s ease-in-out 1s infinite alternate; }
+.sw-boitier img { animation: sw-flotte-petit 5.6s ease-in-out 1.2s infinite alternate; }
+@keyframes sw-arrive-haut { from { transform: translateY(-56px) rotate(-6deg); opacity: 0; } }
+@keyframes sw-arrive-bas { from { transform: translateY(44px); opacity: 0; } }
+@keyframes sw-flotte { to { transform: translateY(-7px) rotate(-1deg); } }
+@keyframes sw-flotte-petit { to { transform: translateY(5px) rotate(.8deg); } }
+@media (max-width: 600px) { .sw { --u: .27px; } }
+@media (prefers-reduced-motion: reduce) {
+  .sw-touche, .sw-boitier, .sw-base, .sw-touche img, .sw-boitier img { animation: none; }
+}
