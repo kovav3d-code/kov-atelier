@@ -1,0 +1,58 @@
+---
+// Hero de l'accueil : carte sombre aux coins arrondis, grand titre sur deux lignes (fine puis grasse),
+// en dessous le masque sculpté (vrai modèle de l'atelier) qui déborde de la carte, et à droite un texte court + devis.
+// Au défilement, le masque pivote et s'éclaire : 90 images précalculées (fond transparent) dessinées dans un canvas
+// selon la position de défilement sur la hauteur du hero. Image fixe si l'utilisateur limite les animations.
+import fs from 'node:fs';
+import path from 'node:path';
+const DOSSIER = '/accueil/masque/';
+const N = 90;
+const actif = fs.existsSync(path.join(process.cwd(), 'public', DOSSIER, 'm000.webp'));
+---
+<section class="hm" aria-labelledby="hm-titre">
+  <div class="hm-carte">
+    <h1 id="hm-titre" class="hm-titre"><span class="hm-fin">Conçu à la main,</span> <span class="hm-gras">imprimé couche après couche</span></h1>
+    <div class="hm-bas">
+      <div class="hm-objet" aria-hidden="true">
+        {actif && (
+          <>
+            <canvas class="hm-canvas" data-dossier={DOSSIER} data-n={N}></canvas>
+            <img class="hm-fixe" src={`${DOSSIER}m045.webp`} alt="" decoding="async" />
+          </>
+        )}
+      </div>
+      <div class="hm-texte">
+        <p><strong>Kov Atelier</strong> modélise et imprime vos pièces sur mesure, du prototype à la pièce unique, à Florange.</p>
+        <a class="btn btn-primary" href="/devis" data-cta="hero">Demander un devis <span aria-hidden="true">›</span></a>
+        <a class="hm-lien" href="#realisations">Ou voir nos réalisations</a>
+      </div>
+    </div>
+  </div>
+</section>
+<script is:inline>
+  (function () {
+    var cv = document.querySelector('.hm-canvas');
+    if (!cv) return;
+    var hero = cv.closest('.hm'), objet = cv.parentElement, cx = cv.getContext('2d');
+    var N = +cv.dataset.n, dos = cv.dataset.dossier, imgs = new Array(N), dernier = -1;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { hero.classList.add('hm-reduit'); return; }
+    function nom(i) { return dos + 'm' + ('00' + i).slice(-3) + '.webp'; }
+    function charger(i, cb) { var im = new Image(); im.decoding = 'async'; im.onload = function () { imgs[i] = im; if (cb) cb(); }; im.src = nom(i); }
+    charger(0, function () { cv.width = imgs[0].naturalWidth; cv.height = imgs[0].naturalHeight; maj(true); hero.classList.add('hm-pret');
+      // Le reste : une image sur trois d'abord, puis les autres
+      var ordre = []; for (var i = 1; i < N; i += 3) ordre.push(i); for (i = 1; i < N; i++) if ((i - 1) % 3) ordre.push(i);
+      var k = 0; (function suite() { var lot = ordre.slice(k, k + 8); k += 8; var r = lot.length; if (!r) return;
+        lot.forEach(function (j) { charger(j, function () { if (--r === 0) suite(); maj(true); }); }); })();
+    });
+    function proche(i) { for (var d = 0; d < N; d++) { if (imgs[i - d]) return imgs[i - d]; if (imgs[i + d]) return imgs[i + d]; } return null; }
+    function maj(force) {
+      var h = hero.offsetHeight || innerHeight;
+      var p = Math.max(0, Math.min(1, scrollY / (h * 0.85)));
+      var i = Math.round(p * (N - 1));
+      if (i !== dernier || force) { var im = proche(i); if (im) { cx.clearRect(0, 0, cv.width, cv.height); cx.drawImage(im, 0, 0); dernier = imgs[i] ? i : -1; } }
+      objet.style.setProperty('--p', p.toFixed(4));
+    }
+    var attente = false;
+    addEventListener('scroll', function () { if (attente) return; attente = true; requestAnimationFrame(function () { attente = false; maj(false); }); }, { passive: true });
+  })();
+</script>

@@ -1352,3 +1352,32 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
 .real-cta { gap: 10px; padding-inline: 26px; font-size: 1.05rem; border-color: var(--atelier); }
 .real-cta span { display: inline-block; transition: transform .25s cubic-bezier(.2, .8, .2, 1); }
 .real-cta:hover span, .real-cta:focus-visible span { transform: translateX(5px); }
+
+/* ==== Hero de l'accueil (masque qui pivote au défilement) — préfixe hm- ====
+   Carte sombre en retrait des bords, titre deux lignes (fine / grasse) en capitales, masque qui déborde sous la carte. */
+.hm { padding: 12px clamp(8px, 1.4vw, 16px) clamp(96px, 14vw, 200px); }
+.hm-carte { position: relative; border-radius: 18px; background: linear-gradient(160deg, #2A3037, #1A1E22 70%); border: 1px solid rgba(255, 255, 255, .06);
+  padding: clamp(40px, 6vw, 88px) clamp(20px, 5vw, 72px) 0; min-height: min(78vh, 760px); display: grid; grid-template-rows: auto 1fr; }
+.hm-titre { margin: 0; text-transform: uppercase; line-height: .98; letter-spacing: -.01em; font-size: clamp(2.2rem, 6.2vw, 5.6rem); max-width: 14ch; }
+.hm-fin { display: block; font-weight: 300; color: rgba(247, 248, 246, .62); }
+.hm-gras { display: block; font-weight: 800; color: var(--blanc); }
+.hm-bas { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: clamp(24px, 4vw, 56px); align-items: start; margin-top: clamp(16px, 3vw, 32px); }
+/* L'objet : il dépasse vers le bas, hors de la carte, et descend un peu en défilant */
+.hm-objet { --p: 0; position: relative; z-index: 2; margin-bottom: calc(-1 * clamp(80px, 14vw, 200px)); transform: translateY(calc(var(--p) * 70px)); }
+.hm-canvas, .hm-fixe { display: block; width: min(100%, 620px); height: auto; filter: drop-shadow(0 30px 40px rgba(0, 0, 0, .45)); opacity: 0; transition: opacity .6s ease; }
+.hm-pret .hm-canvas { opacity: 1; }
+.hm-fixe { display: none; }
+.hm-reduit .hm-canvas { display: none; }
+.hm-reduit .hm-fixe { display: block; opacity: 1; }
+.hm-texte { padding-top: clamp(8px, 3vw, 40px); max-width: 26rem; display: grid; justify-items: start; gap: 18px; }
+.hm-texte p { margin: 0; font-size: clamp(1rem, 1.3vw, 1.12rem); line-height: 1.55; color: rgba(247, 248, 246, .78); }
+.hm-texte strong { color: var(--blanc); }
+.hm-lien { font-size: .8rem; font-weight: 700; letter-spacing: .02em; text-transform: uppercase; color: rgba(247, 248, 246, .7); text-decoration: none; padding: 6px 2px; }
+.hm-lien:hover { color: var(--blanc); }
+@media (max-width: 799px) {
+  .hm { padding-bottom: clamp(72px, 20vw, 130px); }
+  .hm-carte { min-height: 0; padding-bottom: 0; }
+  .hm-bas { grid-template-columns: 1fr; }
+  .hm-texte { order: -1; padding-top: 0; }
+  .hm-objet { margin: 0 auto calc(-1 * clamp(60px, 18vw, 120px)); width: min(88vw, 420px); }
+}
