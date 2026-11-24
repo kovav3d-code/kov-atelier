@@ -1,27 +1,26 @@
 ---
-// Hero de l'accueil : carte sombre aux coins arrondis, grand titre sur deux lignes (fine puis grasse),
-// en dessous le masque sculpté (vrai modèle de l'atelier) qui déborde de la carte, et à droite un texte court + devis.
-// Au défilement, le masque pivote et s'éclaire : 90 images précalculées (fond transparent) dessinées dans un canvas
-// selon la position de défilement sur la hauteur du hero. Image fixe si l'utilisateur limite les animations.
+// Hero de l'accueil : carte sombre, grand titre sur deux lignes (fine puis grasse), le masque sculpté de l'atelier
+// à gauche et un texte court + devis à droite. Sous la fumée, une deuxième structure : un buste de mannequin et une
+// lampe d'atelier, avec le texte « Ce que fait l'atelier ».
+// Au défilement, le masque quitte la carte en tournoyant, traverse la fumée, puis vient s'ajuster sur le visage du
+// buste ; à l'arrivée la lampe s'allume (halo chaud). 72 images précalculées (fond transparent, même cadrage que le
+// buste) dessinées dans un canvas qui glisse jusqu'à recouvrir exactement l'image du buste.
+// Poids : images en deux tailles (760 px ordinateur, 480 px téléphone) ; seule la première se charge à l'ouverture,
+// les autres une fois la page chargée. Animations réduites : buste masqué et lampe allumée, sans mouvement.
 import fs from 'node:fs';
 import path from 'node:path';
-const DOSSIER = '/accueil/masque/';
-const N = 90;
+const DOSSIER = '/accueil/pose/';
+const N = 72;
 // Volutes de fumée : [gauche %, haut %, taille relative]
 const FUMEE = [[-12, 30, 1.1], [2, 52, .8], [10, 18, 1.4], [22, 44, .9], [30, 24, 1.2], [40, 55, .75], [48, 30, 1.35], [58, 46, .9], [64, 16, 1.1], [72, 50, 1.25], [80, 28, .85], [88, 46, 1.3], [94, 20, .9], [-4, 62, 1]];
-const actif = fs.existsSync(path.join(process.cwd(), 'public', DOSSIER, 'm000.webp'));
+const actif = fs.existsSync(path.join(process.cwd(), 'public', DOSSIER, 'grand', 'm000.webp'));
 ---
 <section class="hm" aria-labelledby="hm-titre">
   <div class="hm-carte">
     <h1 id="hm-titre" class="hm-titre"><span class="hm-fin">Conçu à la main,</span> <span class="hm-gras">imprimé couche après couche</span></h1>
     <div class="hm-bas">
       <div class="hm-objet" aria-hidden="true">
-        {actif && (
-          <>
-            <canvas class="hm-canvas" data-dossier={DOSSIER} data-n={N}></canvas>
-            <img class="hm-fixe" src={`${DOSSIER}m045.webp`} alt="" decoding="async" />
-          </>
-        )}
+        {actif && <canvas class="hm-canvas" data-dossier={DOSSIER} data-n={N}></canvas>}
       </div>
       <div class="hm-texte">
         <p><strong>Kov Atelier</strong> modélise et imprime vos pièces sur mesure, du prototype à la pièce unique, à Florange.</p>
@@ -31,9 +30,27 @@ const actif = fs.existsSync(path.join(process.cwd(), 'public', DOSSIER, 'm000.we
     </div>
   </div>
   <div class="hm-fumee" aria-hidden="true">{FUMEE.map((f, i) => <span style={`--i:${i};left:${f[0]}%;top:${f[1]}%;--t:${f[2]}`}></span>)}</div>
-  <!-- Deuxième structure : le masque vient s'y caler à gauche pendant le défilement -->
+  <!-- Deuxième structure : le buste et la lampe ; le masque vient s'y ajuster pendant le défilement -->
   <div class="hm-suite">
-    <div class="hm-place" aria-hidden="true"></div>
+    <div class="hm-place" aria-hidden="true">
+      {actif && (
+        <>
+          <span class="hm-halo"></span>
+          <picture class="hm-buste">
+            <source media="(max-width: 799px)" srcset={`${DOSSIER}petit/buste.webp`} />
+            <img src={`${DOSSIER}grand/buste.webp`} alt="" decoding="async" />
+          </picture>
+          <picture class="hm-buste hm-buste-allume">
+            <source media="(max-width: 799px)" srcset={`${DOSSIER}petit/buste-allume.webp`} />
+            <img src={`${DOSSIER}grand/buste-allume.webp`} alt="" decoding="async" />
+          </picture>
+          <picture class="hm-buste hm-masque-fixe">
+            <source media="(max-width: 799px)" srcset={`${DOSSIER}petit/m071.webp`} />
+            <img src={`${DOSSIER}grand/m071.webp`} alt="" decoding="async" />
+          </picture>
+        </>
+      )}
+    </div>
     <div class="hm-suite-texte">
       <p class="hm-sur">Ce que fait l’atelier</p>
       <h2 class="hm-titre2"><span class="hm-fin">Modélisation, impression</span> <span class="hm-gras">et rétro-ingénierie</span></h2>
@@ -46,36 +63,39 @@ const actif = fs.existsSync(path.join(process.cwd(), 'public', DOSSIER, 'm000.we
   (function () {
     var cv = document.querySelector('.hm-canvas');
     if (!cv) return;
-    var hero = cv.closest('.hm'), objet = cv.parentElement, cx = cv.getContext('2d');
-    var N = +cv.dataset.n, dos = cv.dataset.dossier, imgs = new Array(N), dernier = -1;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { hero.classList.add('hm-reduit'); return; }
+    var hero = cv.closest('.hm'), objet = cv.parentElement, place = hero.querySelector('.hm-place'), cx = cv.getContext('2d');
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { hero.classList.add('hm-reduit', 'hm-allume'); return; }
+    var N = +cv.dataset.n, dos = cv.dataset.dossier + (innerWidth < 800 ? 'petit/' : 'grand/'), imgs = new Array(N), dernier = -1;
     function nom(i) { return dos + 'm' + ('00' + i).slice(-3) + '.webp'; }
     function charger(i, cb) { var im = new Image(); im.decoding = 'async'; im.onload = function () { imgs[i] = im; if (cb) cb(); }; im.src = nom(i); }
-    charger(0, function () { cv.width = imgs[0].naturalWidth; cv.height = imgs[0].naturalHeight; mesurer(); maj(true); hero.classList.add('hm-pret');
-      // Le reste : une image sur trois d'abord, puis les autres
+    // Seule la première image à l'ouverture ; le reste après le chargement de la page, par petits lots.
+    charger(0, function () { cv.width = imgs[0].naturalWidth; cv.height = imgs[0].naturalHeight; mesurer(); maj(true); hero.classList.add('hm-pret'); });
+    function lereste() {
       var ordre = []; for (var i = 1; i < N; i += 3) ordre.push(i); for (i = 1; i < N; i++) if ((i - 1) % 3) ordre.push(i);
-      var k = 0; (function suite() { var lot = ordre.slice(k, k + 8); k += 8; var r = lot.length; if (!r) return;
-        lot.forEach(function (j) { charger(j, function () { if (--r === 0) suite(); maj(true); }); }); })();
-    });
+      var k = 0; (function suite() { var lot = ordre.slice(k, k + 6); k += 6; var r = lot.length; if (!r) return;
+        lot.forEach(function (j) { charger(j, function () { if (--r === 0) setTimeout(suite, 30); maj(true); }); }); })();
+    }
+    if (document.readyState === 'complete') setTimeout(lereste, 200); else addEventListener('load', function () { setTimeout(lereste, 200); });
     function proche(i) { for (var d = 0; d < N; d++) { if (imgs[i - d]) return imgs[i - d]; if (imgs[i + d]) return imgs[i + d]; } return null; }
-    // Le masque part de sa place dans la carte et va se caler au centre de la deuxième structure (.hm-place).
-    // Il y arrive quand ce bloc est au milieu de l'écran ; l'animation (rotation, lumière) suit la même progression.
-    var place = hero.querySelector('.hm-place'), D = 0, FIN = 1;
-    function hautDoc(el) { var r = el.getBoundingClientRect(); return r.top + scrollY; }
+    // Le canvas a exactement le cadrage de l'image du buste : il glisse jusqu'à la recouvrir, haut contre haut.
+    var D = 0, FIN = 1;
     function mesurer() {
       objet.style.setProperty('--p', '0');
       var o = objet.getBoundingClientRect(), t = place.getBoundingClientRect();
-      var cO = o.top + scrollY + o.height / 2, cT = t.top + scrollY + t.height / 2;
-      D = Math.max(0, cT - cO); FIN = Math.max(1, cT - innerHeight / 2);
+      D = Math.max(0, (t.top - o.top) ); FIN = Math.max(1, t.top + scrollY + t.height / 2 - innerHeight / 2);
       objet.style.setProperty('--d', Math.round(D) + 'px');
+      objet.style.setProperty('--dx', Math.round(t.left - o.left) + 'px');
     }
     function maj(force) {
-      var p = Math.max(0, Math.min(1, scrollY / FIN));
+      var p = Math.max(0, Math.min(1, scrollY / (FIN * 0.92)));
       var i = Math.round(p * (N - 1));
       if (i !== dernier || force) { var im = proche(i); if (im) { cx.clearRect(0, 0, cv.width, cv.height); cx.drawImage(im, 0, 0); dernier = imgs[i] ? i : -1; } }
       objet.style.setProperty('--p', p.toFixed(4));
+      hero.classList.toggle('hm-allume', p > 0.97);
     }
     mesurer(); addEventListener('resize', function () { mesurer(); maj(true); }); addEventListener('load', function () { mesurer(); maj(true); });
+    // L'image du buste fixe la hauteur du bloc d'arrivée : on remesure dès qu'elle est là.
+    place.querySelectorAll('img').forEach(function (im) { if (!im.complete) im.addEventListener('load', function () { mesurer(); maj(true); }, { once: true }); });
     var attente = false;
     addEventListener('scroll', function () { if (attente) return; attente = true; requestAnimationFrame(function () { attente = false; maj(false); }); }, { passive: true });
   })();

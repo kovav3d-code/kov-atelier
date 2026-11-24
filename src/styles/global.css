@@ -1364,7 +1364,7 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
 .hm-gras { display: block; font-weight: 800; color: var(--blanc); }
 .hm-bas { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: clamp(24px, 4vw, 56px); align-items: start; margin-top: clamp(16px, 3vw, 32px); }
 /* L'objet : il dépasse vers le bas, hors de la carte, et descend un peu en défilant */
-.hm-objet { --p: 0; position: relative; z-index: 3; margin-bottom: calc(-1 * clamp(40px, 7vw, 110px)); transform: translateY(calc(var(--p) * var(--d, 70px))); will-change: transform; }
+.hm-objet { --p: 0; position: relative; z-index: 3; margin-bottom: calc(-1 * clamp(60px, 10vw, 160px)); transform: translate(calc(var(--p) * var(--dx, 0px)), calc(var(--p) * var(--d, 70px))); will-change: transform; }
 .hm-canvas, .hm-fixe { display: block; width: min(100%, 620px); height: auto; filter: drop-shadow(0 30px 40px rgba(0, 0, 0, .45)); opacity: 0; transition: opacity .6s ease; }
 .hm-pret .hm-canvas { opacity: 1; }
 .hm-fixe { display: none; }
@@ -1384,7 +1384,7 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
 }
 
 /* Fumée entre le hero et la section suivante : nappes floues qui dérivent lentement, posées sur le bas de la carte */
-.hm-carte { z-index: 1; }
+/* la carte ne forme pas de couche propre : le masque (z 3) passe au-dessus du bloc du buste (z 1) */
 .hm-fumee { --hf: clamp(220px, 30vw, 400px); position: relative; z-index: 4; height: var(--hf); margin: calc(var(--hf) * -0.5) calc(-1 * clamp(8px, 1.4vw, 16px)); pointer-events: none; overflow: hidden;
   -webkit-mask: linear-gradient(to bottom, transparent, #000 30%, #000 70%, transparent); mask: linear-gradient(to bottom, transparent, #000 25%, #000 75%, transparent); }
 .hm-fumee span { position: absolute; translate: 0 -50%;
@@ -1400,12 +1400,23 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
 /* Deuxième structure du hero : texte à droite, place du masque à gauche (le masque y glisse au défilement) */
 .hm-suite { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: clamp(24px, 4vw, 56px); align-items: center;
   padding: clamp(24px, 4vw, 48px) clamp(20px, 5vw, 72px) 0; }
-.hm-place { min-height: clamp(280px, 34vw, 520px); }
+.hm-place { position: relative; width: min(100%, 620px); }
+.hm-buste { display: block; }
+.hm-buste img { display: block; width: 100%; height: auto; }
+.hm-buste + .hm-buste { position: absolute; inset: 0; }
+.hm-buste-allume { opacity: 0; transition: opacity .7s ease; }
+.hm-masque-fixe { display: none; }
+.hm-allume .hm-buste-allume { opacity: 1; }
+/* Halo chaud de la lampe : il apparaît quand le masque est en place */
+.hm-halo { position: absolute; z-index: 0; left: 12%; top: 4%; width: 86%; aspect-ratio: 1; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(closest-side at 55% 42%, rgba(255, 214, 160, .32), rgba(255, 190, 120, .12) 45%, transparent 72%); opacity: 0; transition: opacity .9s ease; }
+.hm-allume .hm-halo { opacity: 1; }
+.hm-reduit .hm-masque-fixe { display: block; }
 .hm-suite-texte { display: grid; justify-items: start; gap: 16px; max-width: 30rem; }
 .hm-sur { margin: 0; font-size: .8rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--atelier); padding-bottom: 10px; border-bottom: 1px solid rgba(217, 195, 160, .35); width: 100%; }
 .hm-titre2 { margin: 0; text-transform: uppercase; line-height: 1; font-size: clamp(1.8rem, 3.6vw, 3rem); letter-spacing: -.01em; }
 .hm-suite-texte > p:not(.hm-sur) { margin: 0; color: rgba(247, 248, 246, .75); line-height: 1.6; }
 @media (max-width: 799px) {
   .hm-suite { grid-template-columns: 1fr; }
-  .hm-place { min-height: clamp(220px, 62vw, 340px); }
+  .hm-place { width: min(88vw, 420px); margin: 0 auto; }
 }

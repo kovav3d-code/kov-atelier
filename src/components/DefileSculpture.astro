@@ -44,6 +44,8 @@ const ETAPES = [
     if (!s) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { s.classList.add('sdf-reduit'); return; }
     var cv = s.querySelector('canvas'), cx = cv.getContext('2d'), N = +s.dataset.n, dos = s.dataset.dossier;
+    // Téléphone et tablette étroite : images réduites (640 px, deux fois plus légères)
+    if (innerWidth < 900) dos = dos.replace(/\/$/, '-petit/');
     var etapes = [].slice.call(s.querySelectorAll('.sdf-etape')), barre = s.querySelector('.sdf-barre span');
     var imgs = new Array(N), charge = false, dernier = -1;
     function nom(i) { return dos + 'c' + ('00' + i).slice(-3) + '.webp'; }
@@ -58,7 +60,7 @@ const ETAPES = [
       var k = 0; (function suite() { var lot = ordre.slice(k, k + 6); k += 6; var r = lot.length; if (!r) return;
         lot.forEach(function (j) { img(j, function () { if (--r === 0) suite(); dessiner(true); }); }); })();
     }
-    new IntersectionObserver(function (es) { if (es[0].isIntersecting) charger(); }, { rootMargin: '150% 0px' }).observe(s);
+    new IntersectionObserver(function (es) { if (es[0].isIntersecting) charger(); }, { rootMargin: '60% 0px' }).observe(s);
     function progres() { var r = s.getBoundingClientRect(); var p = -r.top / (r.height - innerHeight); return Math.max(0, Math.min(1, p)); }
     function proche(i) { for (var d = 0; d < N; d++) { if (imgs[i - d]) return imgs[i - d]; if (imgs[i + d]) return imgs[i + d]; } return null; }
     function dessiner(force) {
