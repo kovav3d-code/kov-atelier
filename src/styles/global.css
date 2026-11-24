@@ -1355,7 +1355,7 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
 
 /* ==== Hero de l'accueil (masque qui pivote au défilement) — préfixe hm- ====
    Carte sombre en retrait des bords, titre deux lignes (fine / grasse) en capitales, masque qui déborde sous la carte. */
-.hm { position: relative; isolation: isolate; padding: 12px clamp(8px, 1.4vw, 16px) clamp(48px, 7vw, 96px);
+.hm { position: relative; z-index: 3; isolation: isolate; padding: 12px clamp(8px, 1.4vw, 16px) clamp(48px, 7vw, 96px);
   background: linear-gradient(to bottom, transparent 55%, #15181C); }
 .hm-carte { position: relative; border-radius: 18px; background: linear-gradient(160deg, #2A3037, #1A1E22 70%); border: 1px solid rgba(255, 255, 255, .06);
   padding: clamp(40px, 6vw, 88px) clamp(20px, 5vw, 72px) 0; display: grid; grid-template-rows: auto auto; }
@@ -1364,7 +1364,7 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
 .hm-gras { display: block; font-weight: 800; color: var(--blanc); }
 .hm-bas { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: clamp(24px, 4vw, 56px); align-items: start; margin-top: clamp(16px, 3vw, 32px); }
 /* L'objet : il dépasse vers le bas, hors de la carte, et descend un peu en défilant */
-.hm-objet { --p: 0; position: relative; z-index: 3; margin-bottom: calc(-1 * clamp(40px, 7vw, 110px)); transform: translateY(calc(var(--p) * 70px)); }
+.hm-objet { --p: 0; position: relative; z-index: 3; margin-bottom: calc(-1 * clamp(40px, 7vw, 110px)); transform: translateY(calc(var(--p) * var(--d, 70px))); will-change: transform; }
 .hm-canvas, .hm-fixe { display: block; width: min(100%, 620px); height: auto; filter: drop-shadow(0 30px 40px rgba(0, 0, 0, .45)); opacity: 0; transition: opacity .6s ease; }
 .hm-pret .hm-canvas { opacity: 1; }
 .hm-fixe { display: none; }
@@ -1385,7 +1385,7 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
 
 /* Fumée entre le hero et la section suivante : nappes floues qui dérivent lentement, posées sur le bas de la carte */
 .hm-carte { z-index: 1; }
-.hm-fumee { position: absolute; z-index: 2; left: 0; right: 0; bottom: clamp(-90px, -7vw, -40px); height: clamp(220px, 30vw, 400px); pointer-events: none; overflow: hidden;
+.hm-fumee { position: absolute; z-index: 4; left: 0; right: 0; bottom: clamp(-90px, -7vw, -40px); height: clamp(220px, 30vw, 400px); pointer-events: none; overflow: hidden;
   -webkit-mask: linear-gradient(to bottom, transparent, #000 30%, #000 70%, transparent); mask: linear-gradient(to bottom, transparent, #000 25%, #000 75%, transparent); }
 .hm-fumee span { position: absolute; translate: 0 -50%;
   width: calc(clamp(200px, 26vw, 420px) * var(--t)); aspect-ratio: 1.7; border-radius: 50%;

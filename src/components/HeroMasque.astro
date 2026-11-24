@@ -55,6 +55,9 @@ const actif = fs.existsSync(path.join(process.cwd(), 'public', DOSSIER, 'm000.we
       if (i !== dernier || force) { var im = proche(i); if (im) { cx.clearRect(0, 0, cv.width, cv.height); cx.drawImage(im, 0, 0); dernier = imgs[i] ? i : -1; } }
       objet.style.setProperty('--p', p.toFixed(4));
     }
+    // Distance de descente : le masque traverse la fumée et vient se poser dans le haut de la section suivante.
+    function distance() { objet.style.setProperty('--d', Math.round(innerWidth >= 800 ? innerHeight * 0.58 : innerHeight * 0.2) + 'px'); }
+    distance(); addEventListener('resize', function () { distance(); maj(true); });
     var attente = false;
     addEventListener('scroll', function () { if (attente) return; attente = true; requestAnimationFrame(function () { attente = false; maj(false); }); }, { passive: true });
   })();
