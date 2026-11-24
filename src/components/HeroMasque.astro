@@ -1,9 +1,9 @@
 ---
 // Hero de l'accueil : carte sombre, grand titre sur deux lignes (fine puis grasse), le masque sculpté de l'atelier
 // à gauche et un texte court + devis à droite. Sous la fumée, une deuxième structure : un buste de mannequin et une
-// lampe d'atelier, avec le texte « Ce que fait l'atelier ».
+// lumière douce venant de la gauche, avec le texte « Ce que fait l'atelier ».
 // Au défilement, le masque quitte la carte en tournoyant, traverse la fumée, puis vient s'ajuster sur le visage du
-// buste ; à l'arrivée la lampe s'allume (halo chaud). 72 images précalculées (fond transparent, même cadrage que le
+// buste ; une lumière douce venue de la gauche monte à mesure que le masque s'éclaire. 72 images précalculées (fond transparent, même cadrage que le
 // buste) dessinées dans un canvas qui glisse jusqu'à recouvrir exactement l'image du buste.
 // Poids : images en deux tailles (760 px ordinateur, 480 px téléphone) ; seule la première se charge à l'ouverture,
 // les autres une fois la page chargée. Animations réduites : buste masqué et lampe allumée, sans mouvement.
@@ -35,14 +35,10 @@ const actif = fs.existsSync(path.join(process.cwd(), 'public', DOSSIER, 'grand',
     <div class="hm-place" aria-hidden="true">
       {actif && (
         <>
-          <span class="hm-halo"></span>
+          <span class="hm-lumiere"></span>
           <picture class="hm-buste">
             <source media="(max-width: 799px)" srcset={`${DOSSIER}petit/buste.webp`} />
             <img src={`${DOSSIER}grand/buste.webp`} alt="" decoding="async" />
-          </picture>
-          <picture class="hm-buste hm-buste-allume">
-            <source media="(max-width: 799px)" srcset={`${DOSSIER}petit/buste-allume.webp`} />
-            <img src={`${DOSSIER}grand/buste-allume.webp`} alt="" decoding="async" />
           </picture>
           <picture class="hm-buste hm-masque-fixe">
             <source media="(max-width: 799px)" srcset={`${DOSSIER}petit/m071.webp`} />
@@ -64,7 +60,7 @@ const actif = fs.existsSync(path.join(process.cwd(), 'public', DOSSIER, 'grand',
     var cv = document.querySelector('.hm-canvas');
     if (!cv) return;
     var hero = cv.closest('.hm'), objet = cv.parentElement, place = hero.querySelector('.hm-place'), cx = cv.getContext('2d');
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { hero.classList.add('hm-reduit', 'hm-allume'); return; }
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { hero.classList.add('hm-reduit'); hero.style.setProperty('--l', '1'); return; }
     var N = +cv.dataset.n, dos = cv.dataset.dossier + (innerWidth < 800 ? 'petit/' : 'grand/'), imgs = new Array(N), dernier = -1;
     function nom(i) { return dos + 'm' + ('00' + i).slice(-3) + '.webp'; }
     function charger(i, cb) { var im = new Image(); im.decoding = 'async'; im.onload = function () { imgs[i] = im; if (cb) cb(); }; im.src = nom(i); }
@@ -81,7 +77,7 @@ const actif = fs.existsSync(path.join(process.cwd(), 'public', DOSSIER, 'grand',
     var D = 0, FIN = 1;
     function mesurer() {
       objet.style.setProperty('--p', '0');
-      var o = objet.getBoundingClientRect(), t = place.getBoundingClientRect();
+      var o = cv.getBoundingClientRect(), t = place.getBoundingClientRect();   // le canvas lui-même (centré dans sa colonne)
       D = Math.max(0, (t.top - o.top) ); FIN = Math.max(1, t.top + scrollY + t.height / 2 - innerHeight / 2);
       objet.style.setProperty('--d', Math.round(D) + 'px');
       objet.style.setProperty('--dx', Math.round(t.left - o.left) + 'px');
@@ -91,7 +87,8 @@ const actif = fs.existsSync(path.join(process.cwd(), 'public', DOSSIER, 'grand',
       var i = Math.round(p * (N - 1));
       if (i !== dernier || force) { var im = proche(i); if (im) { cx.clearRect(0, 0, cv.width, cv.height); cx.drawImage(im, 0, 0); dernier = imgs[i] ? i : -1; } }
       objet.style.setProperty('--p', p.toFixed(4));
-      hero.classList.toggle('hm-allume', p > 0.97);
+      // Lumière venant de la gauche : elle monte en même temps que le masque s'éclaire, sans dépasser un voile léger
+      hero.style.setProperty('--l', (p * p).toFixed(3));
     }
     mesurer(); addEventListener('resize', function () { mesurer(); maj(true); }); addEventListener('load', function () { mesurer(); maj(true); });
     // L'image du buste fixe la hauteur du bloc d'arrivée : on remesure dès qu'elle est là.
