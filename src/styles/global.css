@@ -1364,23 +1364,34 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
 .hm-gras { display: block; font-weight: 800; color: var(--blanc); }
 .hm-bas { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: clamp(24px, 4vw, 56px); align-items: start; margin-top: clamp(16px, 3vw, 32px); }
 /* L'objet : il dépasse vers le bas, hors de la carte, et descend un peu en défilant */
-.hm-objet { --p: 0; position: relative; z-index: 3; margin-bottom: calc(-1 * clamp(60px, 10vw, 160px)); transform: translate(calc(var(--p) * var(--dx, 0px)), calc(var(--p) * var(--d, 70px))) scale(calc(1 + var(--p) * (var(--s, 1) - 1))); will-change: transform; }
-.hm-canvas, .hm-fixe { display: block; width: min(100%, 440px); margin-inline: auto; height: auto; filter: drop-shadow(0 30px 40px rgba(0, 0, 0, .45)); opacity: 0; transition: opacity .6s ease; }
+.hm-objet { --p: 0; position: relative; z-index: 3; pointer-events: none; margin: 0 0 calc(-1 * clamp(60px, 14vw, 240px));
+  transform: translate(calc(var(--p) * var(--dx, 0px)), calc(var(--p) * var(--d, 70px))) scale(calc(1 + var(--p) * (var(--s, 1) - 1))); will-change: transform; }
+/* Masque : rendu 3D sur fond transparent, sans cadre ni bordure */
+.hm-canvas { display: block; width: min(100%, 600px); margin-inline: auto; height: auto; filter: drop-shadow(0 28px 34px rgba(0, 0, 0, .4)); opacity: 0; transition: opacity .6s ease; }
 .hm-pret .hm-canvas { opacity: 1; }
-.hm-fixe { display: none; }
 .hm-reduit .hm-canvas { display: none; }
-.hm-reduit .hm-fixe { display: block; opacity: 1; }
 .hm-texte { padding-top: clamp(8px, 3vw, 40px); max-width: 26rem; display: grid; justify-items: start; gap: 18px; }
 .hm-texte p { margin: 0; font-size: clamp(1rem, 1.3vw, 1.12rem); line-height: 1.55; color: rgba(247, 248, 246, .78); }
 .hm-texte strong { color: var(--blanc); }
 .hm-lien { font-size: .8rem; font-weight: 700; letter-spacing: .02em; text-transform: uppercase; color: rgba(247, 248, 246, .7); text-decoration: none; padding: 6px 2px; }
 .hm-lien:hover { color: var(--blanc); }
-@media (max-width: 799px) {
-  .hm { padding-bottom: clamp(40px, 10vw, 72px); }
+/* Ordinateur : titre et texte à gauche, le masque à droite dès le haut de la carte (entièrement visible à l'ouverture) */
+@media (min-width: 900px) {
+  .hm-carte { grid-template-columns: minmax(0, 1fr) minmax(0, .9fr); grid-template-rows: auto 1fr; column-gap: clamp(24px, 4vw, 56px); }
+  .hm-titre { grid-column: 1; grid-row: 1; font-size: clamp(2.6rem, 5.2vw, 5rem); }
+  .hm-bas { display: contents; }
+  .hm-texte { grid-column: 1; grid-row: 2; align-self: start; padding: clamp(20px, 2.6vw, 36px) 0 clamp(40px, 5vw, 72px); }
+  .hm-objet { grid-column: 2; grid-row: 1 / span 2; align-self: start; margin-top: calc(-1 * clamp(16px, 3vw, 48px)); }
+}
+@media (max-width: 899px) {
   .hm-carte { min-height: 0; padding-bottom: 0; }
   .hm-bas { grid-template-columns: 1fr; }
   .hm-texte { order: -1; padding-top: 0; }
-  .hm-objet { margin: 0 auto calc(-1 * clamp(30px, 10vw, 70px)); width: min(78vw, 360px); }
+}
+@media (max-width: 799px) {
+  .hm { padding-bottom: clamp(40px, 10vw, 72px); }
+  .hm-objet { margin: -4% 0 -22%; }
+  .hm-canvas { width: 100%; }
 }
 
 /* Fumée entre le hero et la section suivante : nappes floues qui dérivent lentement, posées sur le bas de la carte */
@@ -1400,16 +1411,16 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
 /* Deuxième structure du hero : texte à droite, place du masque à gauche (le masque y glisse au défilement) */
 .hm-suite { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: clamp(24px, 4vw, 56px); align-items: center;
   padding: clamp(24px, 4vw, 48px) clamp(20px, 5vw, 72px) 0; }
-.hm-place { position: relative; width: min(100%, 600px); aspect-ratio: 1248 / 1664; margin-inline: auto; }
-/* La vidéo : fondue dans la page par un masque radial (ses bords sont plus noirs que le fond du site) */
-.hm-video, .hm-video-fixe img { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0;
-  -webkit-mask: radial-gradient(ellipse 62% 58% at 50% 48%, #000 62%, transparent 100%); mask: radial-gradient(ellipse 62% 58% at 50% 48%, #000 62%, transparent 100%); }
-.hm-video-fixe { display: none; }
-.hm-reduit .hm-video { display: none; }
-.hm-reduit .hm-video-fixe { display: block; }
-.hm-reduit .hm-video-fixe img { opacity: 1; }
-.hm-reduit .hm-objet { opacity: 0; }
-/* Brouillard léger sur la gauche et le haut du bloc vidéo */
+.hm-place { position: relative; width: min(100%, 600px); margin-inline: auto; }
+/* La tête : rendu 3D sur fond transparent (même cadrage que le masque), sans cadre ; version éclairée par-dessus */
+.hm-img, .hm-img img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.hm-img { z-index: 1; filter: drop-shadow(0 28px 34px rgba(0, 0, 0, .4)); }
+.hm-tete-allumee { opacity: 0; }
+.hm-m071 { display: none; }
+.hm-reduit .hm-tete-allumee { opacity: 1; }
+.hm-reduit .hm-m071 { display: block; }
+.hm-reduit .hm-objet { visibility: hidden; }
+/* Brouillard léger sur la gauche et le haut de la tête */
 .hm-brume { position: absolute; z-index: 2; inset: -18% 30% 10% -30%; pointer-events: none; }
 .hm-brume span { position: absolute; width: 70%; aspect-ratio: 1.6; border-radius: 50%; filter: blur(22px);
   background: radial-gradient(closest-side, rgba(205, 212, 224, .16), rgba(205, 212, 224, .05) 60%, transparent);
@@ -1424,5 +1435,5 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
 .hm-suite-texte > p:not(.hm-sur) { margin: 0; color: rgba(247, 248, 246, .75); line-height: 1.6; }
 @media (max-width: 799px) {
   .hm-suite { grid-template-columns: 1fr; }
-  .hm-place { width: min(94vw, 470px); margin: 0 auto; }
+  .hm-place { width: 100%; max-width: 470px; margin: 0 auto; }
 }
