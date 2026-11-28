@@ -44,8 +44,7 @@ const ETAPES = [
     if (!s) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { s.classList.add('sdf-reduit'); return; }
     var cv = s.querySelector('canvas'), cx = cv.getContext('2d'), N = +s.dataset.n, dos = s.dataset.dossier;
-    // Téléphone et tablette étroite : images réduites (640 px, deux fois plus légères)
-    if (innerWidth < 900) dos = dos.replace(/\/$/, '-petit/');
+    // Pleine définition (1000 px) sur tous les écrans : la version réduite était trop floue sur téléphone et tablette
     var etapes = [].slice.call(s.querySelectorAll('.sdf-etape')), barre = s.querySelector('.sdf-barre span');
     var imgs = new Array(N), charge = false, dernier = -1;
     function nom(i) { return dos + 'c' + ('00' + i).slice(-3) + '.webp'; }

@@ -4,6 +4,8 @@
 // avec, à gauche, une tête encapuchonnée (rendu 3D) sur laquelle le masque vient se poser.
 // Tout est en 3D (rendus pré-calculés, fond transparent, aucune bordure) : au défilement, le masque tournoie en gros plan,
 // traverse la fumée en reculant, rejoint la tête et s'ajuste sur le bas du visage ; une lumière douce monte par la gauche.
+// Trajet : il descend à droite de la tête, fait une boucle sur lui-même, vient se placer juste en face du visage,
+// marque un temps, puis se pose (position du masque réglée par Valéry dans Nomad).
 // Le masque reste au milieu de l'écran pendant tout le trajet : son canvas est « collant » (position: sticky, géré par le
 // navigateur, donc fluide) dans une piste qui va du hero jusqu'à la tête ; il se décolle pile quand il est posé sur elle
 // (même cadrage que l'image de la tête). Seuls le décalage horizontal et l'échelle sont réglés au défilement.
@@ -11,9 +13,14 @@
 // Animations réduites : la tête masquée, sans mouvement.
 import fs from 'node:fs';
 import path from 'node:path';
-const DOSSIER = '/accueil/pose-v4/';      // changer le nom du dossier à chaque nouvelle version (cache des navigateurs)
-const N = 72;
-const L = 880, H = 999;                    // taille des images « grand » (même cadrage pour le masque et la tête)
+const DOSSIER = '/accueil/pose-v5/';      // changer le nom du dossier à chaque nouvelle version (cache des navigateurs)
+const N = 90;
+// Deux séquences : « grand » (ordinateur, tablette) où le masque fait sa boucle à droite de la tête, et « petit »
+// (téléphone) avec un trajet plus serré pour rester dans l'écran. Pour chacune : taille de la tête, place de la tête
+// dans les images du masque (gauche, haut, largeur, hauteur en fractions) et centre du masque sur la 1re image.
+const G = { tete: [860, 1066], cadre: [0, 0, 0.5633, 0.9724], m0: [0.2827, 0.3995] };
+const P = { tete: [540, 669], cadre: [0, 0, 0.8059, 1], m0: [0.4044, 0.4113] };
+const [L, H] = G.tete;
 // Volutes de fumée : [gauche %, haut %, taille relative]
 const FUMEE = [[-12, 30, 1.1], [2, 52, .8], [10, 18, 1.4], [22, 44, .9], [30, 24, 1.2], [40, 55, .75], [48, 30, 1.35], [58, 46, .9], [64, 16, 1.1], [72, 50, 1.25], [80, 28, .85], [88, 46, 1.3], [94, 20, .9], [-4, 62, 1]];
 const actif = fs.existsSync(path.join(process.cwd(), 'public', DOSSIER, 'grand', 'm000.webp')) && fs.existsSync(path.join(process.cwd(), 'public', DOSSIER, 'grand', 'tete.webp'));
@@ -36,9 +43,9 @@ const img = (nom: string) => ({ petit: `${DOSSIER}petit/${nom}.webp`, grand: `${
   <div class="hm-fumee" aria-hidden="true">{FUMEE.map((f, i) => <span style={`--i:${i};left:${f[0]}%;top:${f[1]}%;--t:${f[2]}`}></span>)}</div>
   <!-- Deuxième structure : la tête à gauche (le masque vient s'y poser), le texte à droite -->
   <div class="hm-suite">
-    <div class="hm-place" aria-hidden="true" style={`aspect-ratio:${L}/${H}`}>
+    <div class="hm-place" aria-hidden="true" style={`--ar-g:${G.tete[0]}/${G.tete[1]};--ar-p:${P.tete[0]}/${P.tete[1]}`}>
       <span class="hm-brume">{[0, 1, 2, 3, 4, 5].map((i) => <span style={`--i:${i}`}></span>)}</span>
-      {actif && ['tete', 'tete-allumee', 'm071'].map((nom) => (
+      {actif && ['tete', 'tete-allumee', 'pose'].map((nom) => (
         <picture class={`hm-img hm-${nom}`}>
           <source media="(max-width: 799px)" srcset={img(nom).petit} />
           <img src={img(nom).grand} alt="" width={L} height={H} decoding="async" loading="lazy" />
@@ -52,7 +59,7 @@ const img = (nom: string) => ({ petit: `${DOSSIER}petit/${nom}.webp`, grand: `${
       <a class="hm-lien" href="/services">Voir les services <span aria-hidden="true">›</span></a>
     </div>
   </div>
-  {actif && <div class="hm-piste" aria-hidden="true"><canvas class="hm-canvas" width={L} height={H} data-dossier={DOSSIER} data-n={N}></canvas></div>}
+  {actif && <div class="hm-piste" aria-hidden="true"><canvas class="hm-canvas" data-dossier={DOSSIER} data-n={N} data-cadre={G.cadre.join(',')} data-m0={G.m0.join(',')} data-cadre-p={P.cadre.join(',')} data-m0-p={P.m0.join(',')}></canvas></div>}
 </section>
 <script is:inline>
   (function () {
@@ -60,7 +67,7 @@ const img = (nom: string) => ({ petit: `${DOSSIER}petit/${nom}.webp`, grand: `${
     if (!cv) return;
     var hero = cv.closest('.hm'), piste = cv.parentElement, cale = hero.querySelector('.hm-cale'), place = hero.querySelector('.hm-place'), allumee = place.querySelector('.hm-tete-allumee');
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { hero.classList.add('hm-reduit'); return; }
-    var cx = cv.getContext('2d'), n = +cv.dataset.n, dos = cv.dataset.dossier + (innerWidth < 800 ? 'petit/' : 'grand/');
+    var tel = innerWidth < 800, cx = cv.getContext('2d'), n = +cv.dataset.n, dos = cv.dataset.dossier + (tel ? 'petit/' : 'grand/');
     var imgs = new Array(n), dernier = -1;
     function nom(i) { return dos + 'm' + ('00' + i).slice(-3) + '.webp'; }
     // Images décodées à l'avance : le dessin pendant le défilement ne bloque pas
@@ -84,27 +91,31 @@ const img = (nom: string) => ({ petit: `${DOSSIER}petit/${nom}.webp`, grand: `${
     }
     if (document.readyState === 'complete') setTimeout(lereste, 200); else addEventListener('load', function () { setTimeout(lereste, 200); });
 
-    // Piste : de la position du masque dans le hero jusqu'au bas de la tête. Le canvas a la taille de la tête.
+    // Piste : de la position du masque dans le hero jusqu'à la tête. Les images du masque sont plus larges que la tête
+    // (le masque passe à sa droite, fait une boucle puis vient en face du visage) : CAD donne la place de la tête dedans.
+    var CAD = (tel ? cv.dataset.cadreP : cv.dataset.cadre).split(',').map(Number), M0 = (tel ? cv.dataset.m0P : cv.dataset.m0).split(',').map(Number);
     var DEB = 0, FIN = 1, DX = 0, S0 = 1;
     function mesurer() {
       var h = hero.getBoundingClientRect(), c = cale.getBoundingClientRect(), t = place.getBoundingClientRect();
-      var cy = c.top - h.top + c.height / 2, haut = cy - t.height / 2, bas = t.bottom - h.top;
-      piste.style.left = (t.left - h.left) + 'px'; piste.style.width = t.width + 'px';
-      piste.style.top = haut + 'px'; piste.style.height = Math.max(t.height, bas - haut) + 'px';
-      cv.style.setProperty('--demi', (t.height / 2) + 'px');
-      DX = (c.left + c.width / 2) - (t.left + t.width / 2); S0 = c.width / Math.max(1, t.width);
-      // le canvas se décolle (posé sur la tête) quand la tête arrive à la hauteur où il est collé
-      var T = parseFloat(getComputedStyle(cv).top) || (innerHeight - t.height) / 2;
-      FIN = Math.max(1, t.top + scrollY - T);
-      // l'animation démarre quand le masque atteint le milieu de l'écran (il y reste ensuite jusqu'à la tête)
-      DEB = Math.min(FIN - 1, Math.max(0, h.top + scrollY + haut - T));
+      var Wc = t.width / CAD[2], Hc = t.height / CAD[3];
+      var gauche = t.left - h.left - CAD[0] * Wc, pose = t.top - h.top - CAD[1] * Hc;   // position du canvas une fois posé
+      var haut = c.top - h.top + c.height / 2 - M0[1] * Hc;                                // départ : masque au centre de la cale
+      cv.style.width = Wc + 'px'; cv.style.height = Hc + 'px';
+      piste.style.left = gauche + 'px'; piste.style.width = Wc + 'px';
+      piste.style.top = haut + 'px'; piste.style.height = Math.max(Hc, pose + Hc - haut) + 'px';
+      cv.style.setProperty('--my', (M0[1] * Hc) + 'px');
+      cv.style.transformOrigin = (M0[0] * Wc) + 'px ' + (M0[1] * Hc) + 'px';
+      DX = (c.left + c.width / 2) - (h.left + gauche + M0[0] * Wc); S0 = c.width / Math.max(1, t.width);
+      var T = parseFloat(getComputedStyle(cv).top) || innerHeight / 2 - M0[1] * Hc;
+      FIN = Math.max(1, h.top + scrollY + pose - T);                   // le canvas se décolle posé sur la tête
+      DEB = Math.min(FIN - 1, Math.max(0, h.top + scrollY + haut - T)); // l'animation démarre quand le masque atteint le milieu de l'écran
     }
     function lis(x) { return x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x); }
     function maj(force) {
       var P = Math.max(0, Math.min(1, (scrollY - DEB) / (FIN - DEB))), k = lis(P);
       dessiner(Math.round(P * (n - 1)), force);
       cv.style.transform = 'translate3d(' + (DX * (1 - k)).toFixed(1) + 'px,0,0) scale(' + (S0 + (1 - S0) * k).toFixed(4) + ')';
-      if (allumee) allumee.style.opacity = lis((P - 0.45) / 0.55).toFixed(3);
+      if (allumee) allumee.style.opacity = lis((P - 0.5) / 0.5).toFixed(3);
     }
     function remesurer() { mesurer(); maj(true); }
     remesurer(); addEventListener('load', remesurer);
