@@ -1382,9 +1382,11 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
 .hm-cale { width: min(100%, 600px); margin-inline: auto; }
 /* Le masque : rendu 3D sur fond transparent, sans cadre ni bordure, collé au milieu de l'écran pendant tout le trajet */
 .hm-piste { position: absolute; z-index: 3; left: 0; top: 0; width: 0; height: 0; pointer-events: none; }
-.hm-canvas { position: sticky; top: calc(50vh - var(--my, 300px)); top: calc(50svh - var(--my, 300px)); display: block; max-width: none;
-  transform-origin: 50% 50%; will-change: transform; opacity: 0; transition: opacity .6s ease; }
-.hm-pret .hm-canvas { opacity: 1; }
+/* La scène : tête + masque ensemble, collés au milieu de l'écran pendant toute l'animation (rendus 3D, fond transparent) */
+.hm-scene { position: sticky; top: calc(50vh - var(--my, 300px)); top: calc(50svh - var(--my, 300px)); will-change: transform; opacity: 0; transition: opacity .6s ease; }
+.hm-pret .hm-scene { opacity: 1; }
+.hm-zone { position: absolute; z-index: 1; isolation: isolate; opacity: 0; }   /* la tête reste sous le masque */
+.hm-canvas { position: absolute; z-index: 2; inset: 0; width: 100%; height: 100%; display: block; }
 .hm-reduit .hm-piste { display: none; }
 .hm-texte { padding-top: clamp(8px, 3vw, 40px); max-width: 26rem; display: grid; justify-items: start; gap: 18px; }
 .hm-texte p { margin: 0; font-size: clamp(1rem, 1.3vw, 1.12rem); line-height: 1.55; color: rgba(247, 248, 246, .78); }
@@ -1433,9 +1435,9 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
 .hm-img { z-index: 1; }
 .hm-tete { filter: drop-shadow(0 28px 34px rgba(0, 0, 0, .4)); }
 .hm-tete-allumee { opacity: 0; }
-.hm-pose { display: none; }
-.hm-reduit .hm-tete-allumee { opacity: 1; }
-.hm-reduit .hm-pose { display: block; }
+/* image fixe (tête masquée) seulement en animations réduites */
+.hm-fixe { display: none; }
+.hm-reduit .hm-fixe { display: block; }
 /* Brouillard léger sur la gauche et le haut de la tête */
 .hm-brume { position: absolute; z-index: 2; inset: -18% 30% 10% -30%; pointer-events: none; }
 .hm-brume span { position: absolute; width: 70%; aspect-ratio: 1.6; border-radius: 50%;
@@ -1451,6 +1453,6 @@ body:has(#form-devis) .site-footer { padding-top: 56px; }
 .hm-suite-texte > p:not(.hm-sur) { margin: 0; color: rgba(247, 248, 246, .75); line-height: 1.6; }
 @media (max-width: 799px) {
   .hm-suite { grid-template-columns: 1fr; }
-  /* téléphone : la boucle du masque va jusqu'à 1,22 largeur de tête à droite, la tête reste à gauche pour qu'elle tienne dans l'écran */
-  .hm-place { width: min(100%, 470px, calc((100vw - 34px) / 1.22)); margin: 0; }
+  /* téléphone : la boucle du masque va jusqu'à 1,24 largeur de tête à droite, la tête reste à gauche pour qu'elle tienne dans l'écran */
+  .hm-place { width: min(100%, 470px, calc((100vw - 34px) / 1.24)); margin: 0; }
 }
